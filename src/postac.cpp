@@ -5,17 +5,7 @@
 #include "include/Archer.h"
 #include <conio.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-    #define CLEAR_SCREEN system("cls");
-#else
-    #define CLEAR_SCREEN system("clear");
-#endif
-
 extern std::unordered_map<int, itemStats> itemData;
-
-void clearScreenPostac() {
-    CLEAR_SCREEN
-}
 
 void postac::printstatcurrent()
 {
@@ -381,7 +371,7 @@ void postac::equip(size_t index)
     inventory.removeItem(index-1);
     stats statistics = stat;
     updateStats(itemstats, true);
-    clearScreenPostac();
+    
     std::cout<<"\nYour Stats:\n"<<std::endl;
     std::cout<<"Atk: " << statistics.ad<<" + "<< stat.ad-statistics.ad<< " ("<<stat.ad<< ")" <<std::endl;
     std::cout<<"Def: " << statistics.def<<" + "<< stat.def-statistics.def<< " ("<<stat.def<< ")" <<std::endl;
@@ -459,8 +449,8 @@ void postac::lvlup()
     int exp_treshold=pow(2, stat.lvl)*pow(3, stat.lvl);
     if(exp>=exp_treshold)
     {
-        getch();
-        clearScreenPostac();
+        
+        
         exp-=exp_treshold;
         stat.lvl++;
         std::cout<<"\nCongratulations! You have leveled up to level " << stat.lvl<<"!\n"<<std::endl;
@@ -470,7 +460,7 @@ void postac::lvlup()
         std::cout<<"Mana: " << stat.mana<<" + "<< incstats.manainc<<std::endl;
         std::cout<<"Gold Coins: " << currentgold<<" + "<< 5*stat.lvl<<std::endl;
         std::cout<<"\nHP and mana restored."<<std::endl;
-        getch();
+        
         stat.ad+=incstats.adinc;
         stat.basehp+=incstats.basehpinc*stat.lvl;
         stat.def+=incstats.definc;
@@ -482,13 +472,13 @@ void postac::lvlup()
         {
             std::cout<<"\n-------------------------------------------------------------------------------------------------------------------------------"<<std::endl;
             std::cout<<"\n\nYou have unlocked:\n  - Potions\n  - Items"<<std::endl;
-            getch();
+            
         }
         if (stat.lvl==5)
         {
             std::cout<<"\n-------------------------------------------------------------------------------------------------------------------------------"<<std::endl;
             std::cout<<"\n\nYou have unlocked:\n  - Potion of Mana Regeneration\n  - New Items"<<std::endl;
-            getch();
+            
         }
     }
 }

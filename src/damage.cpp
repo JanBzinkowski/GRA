@@ -31,7 +31,7 @@ int dmgcalc::damage(postac*& atk, postac& def, const DamageType& type)
         if (lvldif>=10)
             lvldif=9;
         float reduct=reduction(def, atk);
-        getch();
+        
         float resistancemult = def.getResistance(type);
         int dmg=static_cast<int>(1.5*atk->getAd()*atk->getLvl()*atk->getMultDmg()*(1-reduct)*resistancemult)*(1+0.1*lvldif);
         return dmg;
