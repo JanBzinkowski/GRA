@@ -4,6 +4,8 @@
 #include "include/Mage.h"
 #include "include/Archer.h"
 #include <conio.h>
+#include "include/button.h"
+
 
 extern std::unordered_map<int, itemStats> itemData;
 

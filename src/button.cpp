@@ -1,11 +1,6 @@
-/*#include "include\button.h"
+#include "button.h"
 
-void button::draw(sf::RenderWindow &window)
+bool Button::isPressed(const sf::Vector2f& mousePos)
 {
-    window.draw(button);
+    return sprite->getGlobalBounds().contains(mousePos);
 }
-
-bool button::isPressed(sf::Vector2f mousePos)
-{
-    return sprite.getGlobalBounds().contains(mousePos.x, mousePos.y);
-}*/

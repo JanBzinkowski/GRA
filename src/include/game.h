@@ -13,6 +13,7 @@
 #include "gametime.h"
 #include "enemy.h"
 #include <random>
+#include <SFML/Graphics.hpp>
 
 class game
 {
@@ -61,7 +62,7 @@ public:
     bool isUnlocked(Location location) const;
     std::string isUnlockedPrint(Location location) const;
 
-    bool mainMenu(postac*& hero);
+    void mainMenu(postac*& hero, sf::RenderWindow* window);
     void worldMap(postac*& hero);
     void city(postac*& hero);
 

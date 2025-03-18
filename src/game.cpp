@@ -4,8 +4,10 @@
 #include "include/enemyMage.h"
 #include <vector>
 #include <algorithm>
-
+#include <button.h>
+#include <SFML/Graphics/RenderWindow.hpp>
 #define PotionTime 3
+
 
 extern std::unordered_map <int, enemyStats> enemies;
 
@@ -846,125 +848,133 @@ void game::inventoryMenagment(postac*& hero)
     }
 }
 
-bool game::mainMenu(postac*& hero)
+void game::mainMenu(postac*& hero, sf::RenderWindow* window)
 {
-    while (true)
-    {
-        
-        std::cout<<"Welcome To \"The Arcane Trials: Pray, Fight, Repeat\"\n\nChoose an option:\n\n1. Continue\n2. New Game\n3. Load Game\n\n0. Exit"<<std::endl;
-        int menu;
-        std::cin >> menu;
-        if (menu == 1)
-        {
-            if(hero!=nullptr)
-                setLocation(Location::Map);
-            else
-            {
-                
-                std::cout<<"Your character is not loaded yet.\n\nLoad existing save or start a new game."<<std::endl;
-                
-            }
-            
-            break;
-        }
-        else if (menu==2)
-        {
-            
-            
-            std::string name1;
-            std::cout << "\nName your character: ";
-            std::cin >> name1;
+    Button play(1.f, 100.f, "C:\\Users\\janek\\Desktop\\gra\\GRA\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
 
-            int klasa;
-            while (true)
-            {
-                std::cout << "\nChoose character's class:\n\n1. Warrior\n2. Mage\n3. Archer"<<std::endl;
-                std::cin >> klasa;
-                if (klasa == 1)
-                {
-                    stats stat = {1, 18, 8, 9, 10, 1};
-                    hero = new Warrior(name1, stat);
-                    break;
-                }
-                if (klasa == 2)
-                {
-                    stats stat = {1, 13, 12, 7, 10, 1};
-                    hero = new Mage(name1, stat);
-                    break;
-                }
-                if (klasa == 3)
-                {
-                    stats stat = {1, 14, 10, 8, 8, 2};
-                    hero = new Archer(name1, stat);
-                    break;
-                }
-                else
-                {
-                    std::cout << "\nInvalid class. Please choose again." << std::endl;
-                }
-            }
-            Time.resetTime();
-            lvl0(hero);
-            
-            
-            break;
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
         }
-        else if(menu==3)
-        {
-            
-            
-            int saveslot;
-            std::cout<<"Choose save that you want to load:\n1. Save 1\n2. Save 2\n3. Save 3\n\n4. Exit"<<std::endl;
-            std::cin>>saveslot;
-            if (saveslot==1)
-            {
-                const std::string filename = "saves/saveFile1.txt";
-                if(hero->load_from_file(filename, hero))
-                {
-                    if(hero->prologueState())
-                        setLocation(Location::City);
-                    else
-                        lvl0(hero);
-                    break;
-                }
-            }
-            else if (saveslot==2)
-            {
-                const std::string filename="saves/saveFile2.txt";
-                if(hero->load_from_file(filename, hero))
-                {
-                    if(hero->prologueState())
-                        setLocation(Location::City);
-                    else
-                        lvl0(hero);
-                    break;
-                }
-            }
-            else if (saveslot==3)
-            {
-                const std::string filename = "saves/saveFile3.txt";
-                if(hero->load_from_file(filename, hero))
-                {
-                    if(hero->prologueState())
-                        setLocation(Location::City);
-                    else
-                        lvl0(hero);
-                    break;
-                }
-            }
-            else if (saveslot==4)
-            {
-                break;
-            }
-            Time.resetTime();
-        }
-        else if(menu==0)
-        {
-            return true;
-            break;
-        }
+
+        window->clear();
+        window->draw(play);
+        window->display();
+        
+        // std::cout<<"Welcome To \"The Arcane Trials: Pray, Fight, Repeat\"\n\nChoose an option:\n\n1. Continue\n2. New Game\n3. Load Game\n\n0. Exit"<<std::endl;
+        // int menu;
+        // std::cin >> menu;
+        // if (menu == 1)
+        // {
+        //     if(hero!=nullptr)
+        //         setLocation(Location::Map);
+        //     else
+        //     {
+        //
+        //         std::cout<<"Your character is not loaded yet.\n\nLoad existing save or start a new game."<<std::endl;
+        //
+        //     }
+        //
+        //     break;
+        // }
+        // else if (menu==2)
+        // {
+        //
+        //
+        //     std::string name1;
+        //     std::cout << "\nName your character: ";
+        //     std::cin >> name1;
+        //
+        //     int klasa;
+        //     while (true)
+        //     {
+        //         std::cout << "\nChoose character's class:\n\n1. Warrior\n2. Mage\n3. Archer"<<std::endl;
+        //         std::cin >> klasa;
+        //         if (klasa == 1)
+        //         {
+        //             stats stat = {1, 18, 8, 9, 10, 1};
+        //             hero = new Warrior(name1, stat);
+        //             break;
+        //         }
+        //         if (klasa == 2)
+        //         {
+        //             stats stat = {1, 13, 12, 7, 10, 1};
+        //             hero = new Mage(name1, stat);
+        //             break;
+        //         }
+        //         if (klasa == 3)
+        //         {
+        //             stats stat = {1, 14, 10, 8, 8, 2};
+        //             hero = new Archer(name1, stat);
+        //             break;
+        //         }
+        //         else
+        //         {
+        //             std::cout << "\nInvalid class. Please choose again." << std::endl;
+        //         }
+        //     }
+        //     Time.resetTime();
+        //     lvl0(hero);
+        //
+        //
+        //     break;
+        // }
+        // else if(menu==3)
+        // {
+        //
+        //
+        //     int saveslot;
+        //     std::cout<<"Choose save that you want to load:\n1. Save 1\n2. Save 2\n3. Save 3\n\n4. Exit"<<std::endl;
+        //     std::cin>>saveslot;
+        //     if (saveslot==1)
+        //     {
+        //         const std::string filename = "saves/saveFile1.txt";
+        //         if(hero->load_from_file(filename, hero))
+        //         {
+        //             if(hero->prologueState())
+        //                 setLocation(Location::City);
+        //             else
+        //                 lvl0(hero);
+        //             break;
+        //         }
+        //     }
+        //     else if (saveslot==2)
+        //     {
+        //         const std::string filename="saves/saveFile2.txt";
+        //         if(hero->load_from_file(filename, hero))
+        //         {
+        //             if(hero->prologueState())
+        //                 setLocation(Location::City);
+        //             else
+        //                 lvl0(hero);
+        //             break;
+        //         }
+        //     }
+        //     else if (saveslot==3)
+        //     {
+        //         const std::string filename = "saves/saveFile3.txt";
+        //         if(hero->load_from_file(filename, hero))
+        //         {
+        //             if(hero->prologueState())
+        //                 setLocation(Location::City);
+        //             else
+        //                 lvl0(hero);
+        //             break;
+        //         }
+        //     }
+        //     else if (saveslot==4)
+        //     {
+        //         break;
+        //     }
+        //     Time.resetTime();
+        // }
+        // else if(menu==0)
+        // {
+        //     break;
+        // }
     }
-    return false;
 }
 
 void game::worldMap(postac*& hero)
