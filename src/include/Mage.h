@@ -23,5 +23,8 @@ public:
     {
         return "Mage";
     }
+    Mage* clone() const override {
+        return new Mage(*this);
+    }
 };
 

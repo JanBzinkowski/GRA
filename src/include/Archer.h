@@ -24,6 +24,9 @@ public:
     {
         return "Archer";
     }
+    Archer* clone() const override {
+        return new Archer(*this);
+    }
 };
 
 

@@ -1,6 +1,9 @@
 enum class Location
 {
+    Quit,
     MainMenu,
+    Options,
+    Saves,
     Map,
     City,
     Church,

@@ -142,7 +142,7 @@ void game::lvl0(postac*& hero)
     
     std::cout<<"Currently playing: Tutorial"<<std::endl;
     postac* enemy1=createEnemy(enemies.at(0));
-    enemy1->setExpworth(6);
+    enemy1->setExpworth(18);
     enemy1->setGoldworth(10);
     
     
@@ -355,20 +355,19 @@ Location game::getLocation() const
 
 bool game::isUnlocked(Location location) const
 {
-    return unlockedLocations.at(location);
+    return unlockedLocations.find(location) != unlockedLocations.end() && unlockedLocations.at(location);
 }
 
 std::string game::isUnlockedPrint(Location location) const
 {
-    if (isUnlocked(location))
+    if (unlockedLocations.find(location) != unlockedLocations.end() && unlockedLocations.at(location))
         return "[Unlocked]";
     return "[Locked]";
 }
 
 void game::unlockLocations(Location locationToUnlock)
 {
-    if(!isUnlocked(locationToUnlock))
-        unlockedLocations.at(locationToUnlock)=true;
+    unlockedLocations[locationToUnlock] = true;
 }
 
 void game::updateBlacksmith()
@@ -555,63 +554,23 @@ void game::tavern(postac*& hero)
         {
             hero->currentgold-=5;
             std::cout << "You lay down in bed to rest."<<std::endl;
-            while (true)
-            {
-                
-                
-                int saveslot;
-                std::cout<<"Choose save slot that you want to save in:\n1. Save 1\n2. Save 2\n3. Save 3\n\n4. Exit"<<std::endl;
-                std::cin>>saveslot;
-                if (saveslot==1)
-                {
-                    const std::string filename = "saves/saveFile1.txt";
-                    hero->save_to_file(filename, hero);
-                    setLocation(Location::City);
-                    break;
-                }
-                else if (saveslot==2)
-                {
-                    const std::string filename="saves/saveFile2.txt";
-                    hero->save_to_file(filename, hero);
-                    setLocation(Location::City);
-                    break;
-                }
-                else if (saveslot==3)
-                {
-                    const std::string filename = "saves/saveFile3.txt";
-                    hero->save_to_file(filename, hero);
-                    setLocation(Location::City);
-                    break;
-                }
-                else if (saveslot==4)
-                {
-                    std::cout<<"Gold refunded."<< std::endl;
-                    hero->currentgold+=5;
-                    break;
-                }
-            }
-            
-            
+            hero->save_to_file(hero);
+            setLocation(Location::City);
+            break;
             Time.resetTime();
         }
         else if(dest==2&&hero->currentgold<5)
         {
             std::cout << "\nNot enough Gold Coins."<<std::endl;
-            
-            
         }
         else if (dest==3)
         {
             std::cout << "\nTBA"<<std::endl;
-            
-            
         }
         else if (dest==4)
         {
             setLocation(Location::City);
             std::cout << "\nReturning to the city"<<std::endl;
-            
-            
             break;
         }
     }
@@ -643,8 +602,6 @@ void game::itemRandomize(postac*& hero, std::mt19937& gen)
 
         for(int i=0; i<6; i++)
         {
-
-
             int ItemId=dist(gen);
             Item item(ItemId);
             item.generateStats(gen, hero);
@@ -667,7 +624,6 @@ void game::blacksmith(postac*& hero)
             if (blacksmithInv.empty())
             {
                 std::cout << "The blacksmith currently has no items for sale. Returning to previous menu.\n";
-                
                 break;
             }
             
@@ -689,8 +645,6 @@ void game::blacksmith(postac*& hero)
             {
                 setLocation(Location::City);
                 std::cout << "\nReturning to the city"<<std::endl;
-                
-                
                 break;
             }
             else if (dest==1)
@@ -752,8 +706,6 @@ void game::itemBuy(postac*& hero)
         if(dest==0)
         {
             setLocation(Location::Blacksmith);
-            
-            
             break;
         }
         else if(dest>0&&blacksmithInv.size()>=1)
@@ -810,8 +762,6 @@ void game::inventoryMenagment(postac*& hero)
         else if(eq==1)
         {
             int index;
-            
-            
             std::cout<<"Choose item that you want to equip:\n\n0. Cancel\n"<<std::endl;
             hero->displayInv();
             while (true)
@@ -842,138 +792,214 @@ void game::inventoryMenagment(postac*& hero)
                 std::cout<<"\nNo item in that slot.";
             else
                 hero->unequip(hero->getItemByIndex(index));
-            
-            
         }
     }
 }
 
 void game::mainMenu(postac*& hero, sf::RenderWindow* window)
 {
-    Button play(1.f, 100.f, "C:\\Users\\janek\\Desktop\\gra\\GRA\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
-
+    saveRead(hero, window, "saves\\saveFile1.txt");
+    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
+    // hero->lvlup();
+    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
+    // hero->lvlup();
+    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
+    // hero->lvlup();
+    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
+    // hero->lvlup();
+    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
+    // hero->lvlup();
+    // hero->exp += 300;
+    AllTimeGUI gui(hero);
+    Button play(170.f, 150.f, "src\\textures\\background\\MainMenu\\ENG\\play_button.png");
+    Button options (170.f, 200.f, "src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+    Button quit(470.f, 280.f, "src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+    Button credits(30.f, 280.f, "src\\textures\\background\\MainMenu\\ENG\\credits_button.png");
     while (window->isOpen())
     {
         while (const std::optional event = window->pollEvent()) {
             if (event->is<sf::Event::Closed>())
                 window->close();
         }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (play.isPressed(mousePos)) {
+                setLocation(Location::Saves);
+                break;
+            }
+            else if (quit.isPressed(mousePos)) {
+                setLocation(Location::Quit);
+                break;
+            }
+        }
 
         window->clear();
         window->draw(play);
+        window->draw(options);
+        window->draw(quit);
+        window->draw(credits);
+        window->draw(gui);
         window->display();
-        
-        // std::cout<<"Welcome To \"The Arcane Trials: Pray, Fight, Repeat\"\n\nChoose an option:\n\n1. Continue\n2. New Game\n3. Load Game\n\n0. Exit"<<std::endl;
-        // int menu;
-        // std::cin >> menu;
-        // if (menu == 1)
-        // {
-        //     if(hero!=nullptr)
-        //         setLocation(Location::Map);
-        //     else
-        //     {
-        //
-        //         std::cout<<"Your character is not loaded yet.\n\nLoad existing save or start a new game."<<std::endl;
-        //
-        //     }
-        //
-        //     break;
-        // }
-        // else if (menu==2)
-        // {
-        //
-        //
-        //     std::string name1;
-        //     std::cout << "\nName your character: ";
-        //     std::cin >> name1;
-        //
-        //     int klasa;
-        //     while (true)
-        //     {
-        //         std::cout << "\nChoose character's class:\n\n1. Warrior\n2. Mage\n3. Archer"<<std::endl;
-        //         std::cin >> klasa;
-        //         if (klasa == 1)
-        //         {
-        //             stats stat = {1, 18, 8, 9, 10, 1};
-        //             hero = new Warrior(name1, stat);
-        //             break;
-        //         }
-        //         if (klasa == 2)
-        //         {
-        //             stats stat = {1, 13, 12, 7, 10, 1};
-        //             hero = new Mage(name1, stat);
-        //             break;
-        //         }
-        //         if (klasa == 3)
-        //         {
-        //             stats stat = {1, 14, 10, 8, 8, 2};
-        //             hero = new Archer(name1, stat);
-        //             break;
-        //         }
-        //         else
-        //         {
-        //             std::cout << "\nInvalid class. Please choose again." << std::endl;
-        //         }
-        //     }
-        //     Time.resetTime();
-        //     lvl0(hero);
-        //
-        //
-        //     break;
-        // }
-        // else if(menu==3)
-        // {
-        //
-        //
-        //     int saveslot;
-        //     std::cout<<"Choose save that you want to load:\n1. Save 1\n2. Save 2\n3. Save 3\n\n4. Exit"<<std::endl;
-        //     std::cin>>saveslot;
-        //     if (saveslot==1)
-        //     {
-        //         const std::string filename = "saves/saveFile1.txt";
-        //         if(hero->load_from_file(filename, hero))
-        //         {
-        //             if(hero->prologueState())
-        //                 setLocation(Location::City);
-        //             else
-        //                 lvl0(hero);
-        //             break;
-        //         }
-        //     }
-        //     else if (saveslot==2)
-        //     {
-        //         const std::string filename="saves/saveFile2.txt";
-        //         if(hero->load_from_file(filename, hero))
-        //         {
-        //             if(hero->prologueState())
-        //                 setLocation(Location::City);
-        //             else
-        //                 lvl0(hero);
-        //             break;
-        //         }
-        //     }
-        //     else if (saveslot==3)
-        //     {
-        //         const std::string filename = "saves/saveFile3.txt";
-        //         if(hero->load_from_file(filename, hero))
-        //         {
-        //             if(hero->prologueState())
-        //                 setLocation(Location::City);
-        //             else
-        //                 lvl0(hero);
-        //             break;
-        //         }
-        //     }
-        //     else if (saveslot==4)
-        //     {
-        //         break;
-        //     }
-        //     Time.resetTime();
-        // }
-        // else if(menu==0)
-        // {
-        //     break;
-        // }
+    }
+}
+
+std::string getName(sf::RenderWindow *window, sf::Font& font) {
+    sf::Texture frame;
+    if (!frame.loadFromFile("src\\textures\\GUI\\324x44border.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\GUI\\324x44border.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\324x44border.png");
+    }
+    sf::Sprite frame1 (frame);
+    frame1.setPosition({scale*158.f, scale*158.f});
+    frame1.scale({scale, scale});
+    std::string inputText = "";
+    sf::Text text(font, "",  int(scale*24));
+    text.setFillColor(sf::Color::Black);
+    text.setPosition({scale*166.f, scale*162.f});
+
+    while (window->isOpen()) {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>()){
+                window->close();
+            }
+            if (event->is<sf::Event::TextEntered>()) {
+                auto textEvent = event->getIf<sf::Event::TextEntered>(); // Pobranie poprawnego obiektu
+                auto unicode = textEvent->unicode;
+
+                if (unicode == 13) {
+                    return inputText;
+                } else if (unicode == 8 && !inputText.empty()) {
+                    inputText.pop_back();
+                } else if (unicode >= 32 && unicode <= 126) {
+                    if (inputText.length() < 10) {
+                        inputText += static_cast<char>(unicode);
+                    }
+                }
+                text.setString(inputText);
+            }
+        }
+        sf::Vector2f bounds = text.getGlobalBounds().size;
+        text.setPosition({scale*320.f-bounds.x/2, scale*162.f});
+        window->clear();
+        window->draw(frame1);
+        window->draw(text);
+        window->display();
+    }
+    return inputText;
+}
+
+void game::createhero(postac*& hero, sf::RenderWindow* window) {
+    sf::Texture choose;
+    if (!choose.loadFromFile("src\\textures\\background\\Saves\\choose class.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\choose class.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\choose class.png");
+    }
+    std::string name = "BlankName";
+    sf::Sprite ch(choose);
+    Button mage(240.f, 100.f, "src\\textures\\background\\Saves\\classes\\mage.png");
+    Button warr(300.f, 100.f, "src\\textures\\background\\Saves\\classes\\warrior.png");
+    Button arch(360.f, 100.f, "src\\textures\\background\\Saves\\classes\\archer.png");
+    ch.setPosition({scale*170.f, scale*200});
+    ch.scale({scale, scale});
+    while (window->isOpen()) {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (mage.isPressed(mousePos)){
+                name = getName(window, font);
+                hero = new Mage(name, mageStats);
+                break;
+            }
+            else if (warr.isPressed(mousePos)){
+                name = getName(window, font);
+                hero = new Warrior(name, warriorStats);
+                break;
+            }
+            else if (arch.isPressed(mousePos)){
+                name = getName(window, font);
+                hero = new Archer(name, archerStats);
+                break;
+            }
+        }
+        window->clear();
+        window->draw(ch);
+        window->draw(mage);
+        window->draw(warr);
+        window->draw(arch);
+        window->display();
+    }
+}
+
+bool isFileEmpty(std::string filename) {
+    std::ifstream file(filename, std::ios::ate);
+    if (!file) {
+        std::cerr << "Nie udało się otworzyć pliku!" << std::endl;
+        return true;
+    }
+    file.seekg(0, std::ios::end);
+    return file.tellg() == 0;
+}
+
+void game::saveRead(postac*& hero, sf::RenderWindow* window, std::string filename) {
+    if (!isFileEmpty(filename)) {
+        if (hero->load_from_file(filename, hero))
+        {
+            if(hero->prologueState())
+                setLocation(Location::City);
+            else
+                lvl0(hero);
+        }
+    }
+    else {
+        createhero(hero, window);
+        setLocation(Location::City);
+        lvl0(hero);
+    }
+}
+
+void game::saves(postac*& hero, sf::RenderWindow* window) {
+    Button s1 (110.f, 100.f, "src\\textures\\background\\Saves\\save.png");
+    Button s2 (270.f, 100.f, "src\\textures\\background\\Saves\\save.png");
+    Button s3 (430.f, 100.f, "src\\textures\\background\\Saves\\save.png");
+    Button back (170.f, 300.f, "src\\textures\\background\\Saves\\go_back.png");
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (s1.isPressed(mousePos)){
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                saveRead(hero, window, "saves\\saveFile1.txt");
+                break;
+            }
+            else if (s2.isPressed(mousePos)){
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                saveRead(hero, window, "saves\\saveFile2.txt");
+                break;
+            }
+            else if (s3.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                saveRead(hero, window, "saves\\saveFile3.txt");
+                break;
+            }
+            else if (back.isPressed(mousePos)) {
+                setLocation(Location::MainMenu);
+                break;
+            }
+        }
+
+        window->clear();
+        window->draw(s1);
+        window->draw(s2);
+        window->draw(s3);
+        window->draw(back);
+        window->display();
     }
 }
 
@@ -1092,6 +1118,7 @@ void game::worldMap(postac*& hero)
 
 void game::city(postac*& hero)
 {
+    Button forge(120.f, 180.f, "src\\textures\\background\\City\\Buildings\\blacksmith.png");
     
     if(hero->cityState())
     {

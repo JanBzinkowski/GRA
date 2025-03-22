@@ -14,6 +14,7 @@
 #include "enemy.h"
 #include <random>
 #include <SFML/Graphics.hpp>
+#include "AllTimeGUI.h"
 
 class game
 {
@@ -24,6 +25,8 @@ private:
     Location currentLocation=Location::MainMenu;
     std::unordered_map<Location, bool> unlockedLocations =
     {
+        {Location::Quit, true},
+        {Location::Saves, true},
         {Location::MainMenu, true},
         {Location::Map, true},
         {Location::City, true},
@@ -44,14 +47,17 @@ private:
     bool BlacksmithNewItems=true;
     std::vector<Item> blacksmithInv;
     void updateBlacksmith();
-
+    sf::Font font;
 public:
     game(postac*& hero, std::mt19937& gen)
-        : hero(hero), gen(gen){}
+        : hero(hero), gen(gen) {
+        if (!font.openFromFile("src\\fonts\\pixel-8x8.ttf")) {
+            std::cerr <<"Failed to load font from file: " << "src\\fonts\\pixel-8x8.ttf" << std::endl;
+            throw std::runtime_error("Failed to load font from file: src\\fonts\\pixel-8x8.ttf");
+        }
+    }
 
     postac* createEnemy(const enemyStats& stats);
-
-
 
     bool areShopsOpen() const;
 
@@ -63,6 +69,9 @@ public:
     std::string isUnlockedPrint(Location location) const;
 
     void mainMenu(postac*& hero, sf::RenderWindow* window);
+    void saves(postac*& hero, sf::RenderWindow* window);
+    void createhero(postac*& hero, sf::RenderWindow* window);
+    void saveRead(postac*& hero, sf::RenderWindow* window, std::string filename);
     void worldMap(postac*& hero);
     void city(postac*& hero);
 

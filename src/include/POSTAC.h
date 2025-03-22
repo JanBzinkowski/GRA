@@ -12,6 +12,7 @@
 #pragma once
 #include "stats.h"
 
+class AllTimeGUI;
 
 class postac
 {
@@ -21,6 +22,9 @@ private:
     stats stat;
     statsincrese incstats;
     Inventory inventory;
+
+    std::string save;
+
     int expworth=0;
     int goldworth=0;
     int currentLocation;
@@ -55,11 +59,15 @@ private:
     std::optional<Item> weaponslot=std::nullopt;
 
 public:
+    virtual postac* clone() const = 0;
     int currenthp;
     int currentgold = 10;
     int currentmana;
     int exp = 0;
     int atktypenb='0';
+
+    void setSave(const std::string fileName);
+    const std::string getSave();
 
     postac(const std::string& name, const stats& stat, const statsincrese& incstats)
         : name(name), stat(stat), incstats(incstats), currenthp(stat.basehp), currentmana(stat.mana)
@@ -166,12 +174,12 @@ public:
 
     void pray();
 
-    void save_to_file(const std::string filename, postac*& hero);
+    void save_to_file(postac*& hero);
     bool load_from_file(const std::string filename, postac*& hero);
 
 
 
-
+    friend class AllTimeGUI;
     virtual ~postac() = default;
 };
 

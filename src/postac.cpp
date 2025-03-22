@@ -9,6 +9,17 @@
 
 extern std::unordered_map<int, itemStats> itemData;
 
+void postac::setSave(const std::string fileName) {
+    save = fileName;
+}
+
+
+const std::string postac::getSave() {
+    return save;
+}
+
+
+
 void postac::printstatcurrent()
 {
     if(currenthp<=0)
@@ -448,7 +459,7 @@ void postac::unequip(const Item& item)
 
 void postac::lvlup()
 {
-    int exp_treshold=pow(2, stat.lvl)*pow(3, stat.lvl);
+    int exp_treshold=5 * pow(stat.lvl, 2.2) + 25;
     if(exp>=exp_treshold)
     {
         
@@ -479,8 +490,12 @@ void postac::lvlup()
         if (stat.lvl==5)
         {
             std::cout<<"\n-------------------------------------------------------------------------------------------------------------------------------"<<std::endl;
-            std::cout<<"\n\nYou have unlocked:\n  - Potion of Mana Regeneration\n  - New Items"<<std::endl;
-            
+            std::cout<<"\n\nYou have unlocked:\n  - Potion of Mana Regeneration"<<std::endl;
+        }
+        if (stat.lvl==8)
+        {
+            std::cout<<"\n-------------------------------------------------------------------------------------------------------------------------------"<<std::endl;
+            std::cout<<"\n\nYou have unlocked:\n  - Potion of Fast Action\n  - Uncommon Items"<<std::endl;
         }
     }
 }
@@ -842,8 +857,9 @@ int postac::getPotionCD() const
     return potionCD;
 }
 
-void postac::save_to_file(const std::string filename, postac*& hero)
+void postac::save_to_file(postac*& hero)
 {
+    std::string filename = hero->getSave();
     std::ofstream file(filename);
     if (file.is_open())
     {
@@ -1084,8 +1100,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
         std::string isSlot;
         file>>isSlot;
         std::cout << isSlot << std::endl;
-        if (isSlot == "NOHELMET")
-            std::cout<<"OK";
+        if (isSlot == "NOHELMET");
         else
         {
             int id;
@@ -1099,8 +1114,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->helmetslot = std::make_optional<Item>(helmet);
         }
         file>>isSlot;
-        if (isSlot == "NONECKLACE")
-            std::cout<<"OK";
+        if (isSlot == "NONECKLACE");
         else
         {
             int id;
@@ -1114,8 +1128,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->necklaceslot = std::make_optional<Item>(necklace);
         }
         file>>isSlot;
-        if (isSlot == "NOCHEST")
-            std::cout<<"OK";
+        if (isSlot == "NOCHEST");
         else
         {
             int id;
@@ -1129,8 +1142,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->chestplateslot = std::make_optional<Item>(chest);
         }
         file>>isSlot;
-        if (isSlot == "NOGLOVES")
-            std::cout<<"OK";
+        if (isSlot == "NOGLOVES");
         else
         {
             int id;
@@ -1144,8 +1156,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->glovesslot = std::make_optional<Item>(gloves);
         }
         file>>isSlot;
-        if (isSlot == "NORING")
-            std::cout<<"OK";
+        if (isSlot == "NORING");
         else
         {
             int id;
@@ -1159,8 +1170,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->ringslot = std::make_optional<Item>(ring);
         }
         file>>isSlot;
-        if (isSlot == "NOLEGS")
-            std::cout<<"OK";
+        if (isSlot == "NOLEGS");
         else
         {
             int id;
@@ -1174,8 +1184,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->leggingsslot = std::make_optional<Item>(leg);
         }
         file>>isSlot;
-        if (isSlot == "NOBOOTS")
-            std::cout<<"OK";
+        if (isSlot == "NOBOOTS");
         else
         {
             int id;
@@ -1189,8 +1198,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             hero->bootsslot = std::make_optional<Item>(boots);
         }
         file>>isSlot;
-        if (isSlot == "NOWEAPON")
-            std::cout<<"OK";
+        if (isSlot == "NOWEAPON");
         else
         {
             int id;
@@ -1203,6 +1211,7 @@ bool postac::load_from_file(const std::string filename, postac*& hero)
             >>weapon.stats.speed;
             hero->weaponslot = std::make_optional<Item>(weapon);
         }
+        hero->setSave(filename);
         file.close();
         return true;
     }

@@ -26,5 +26,8 @@ public:
     {
         return "enemyWarrior";
     }
+    enemyWarrior* clone() const override {
+        return new enemyWarrior(*this);
+    }
 };
 

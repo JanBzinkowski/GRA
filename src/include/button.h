@@ -25,10 +25,11 @@ public:
         }
 
         sprite = std::make_unique<sf::Sprite>(texture);
-        sprite->setPosition({x, y});
+        sprite->setPosition({scale*x, scale*y});
         sprite->scale({scale, scale});
     }
-    bool isPressed(const sf::Vector2f& mousePos);
+    bool isPressed(const sf::Vector2i& mousePos);
+    void setTexture(const sf::Texture &texture);
 };
 
 #endif

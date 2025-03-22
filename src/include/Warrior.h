@@ -24,4 +24,7 @@ public:
     {
         return "Warrior";
     }
+    Warrior* clone() const override {
+        return new Warrior(*this);
+    }
 };
