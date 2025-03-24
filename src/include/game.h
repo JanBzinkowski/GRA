@@ -27,6 +27,7 @@ private:
     {
         {Location::Quit, true},
         {Location::Saves, true},
+        {Location::Options, true},
         {Location::MainMenu, true},
         {Location::Map, true},
         {Location::City, true},

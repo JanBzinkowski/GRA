@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <button.h>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <fstream>
 #define PotionTime 3
 
 
@@ -798,19 +799,6 @@ void game::inventoryMenagment(postac*& hero)
 
 void game::mainMenu(postac*& hero, sf::RenderWindow* window)
 {
-    saveRead(hero, window, "saves\\saveFile1.txt");
-    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
-    // hero->lvlup();
-    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
-    // hero->lvlup();
-    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
-    // hero->lvlup();
-    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
-    // hero->lvlup();
-    // hero->exp += 5 * pow(hero->getLvl(), 2.2) + 25;
-    // hero->lvlup();
-    // hero->exp += 300;
-    AllTimeGUI gui(hero);
     Button play(170.f, 150.f, "src\\textures\\background\\MainMenu\\ENG\\play_button.png");
     Button options (170.f, 200.f, "src\\textures\\background\\MainMenu\\ENG\\options_button.png");
     Button quit(470.f, 280.f, "src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
@@ -838,7 +826,6 @@ void game::mainMenu(postac*& hero, sf::RenderWindow* window)
         window->draw(options);
         window->draw(quit);
         window->draw(credits);
-        window->draw(gui);
         window->display();
     }
 }
@@ -943,6 +930,14 @@ bool isFileEmpty(std::string filename) {
     return file.tellg() == 0;
 }
 
+void clearFile(std::string filename) {
+    std::ofstream file(filename, std::ios::trunc);
+    if (!file) {
+        std::cerr << "Acces violation at path: " + filename << std::endl;
+        throw std::runtime_error("Acces violation at path: " + filename);
+    }
+}
+
 void game::saveRead(postac*& hero, sf::RenderWindow* window, std::string filename) {
     if (!isFileEmpty(filename)) {
         if (hero->load_from_file(filename, hero))
@@ -965,6 +960,23 @@ void game::saves(postac*& hero, sf::RenderWindow* window) {
     Button s2 (270.f, 100.f, "src\\textures\\background\\Saves\\save.png");
     Button s3 (430.f, 100.f, "src\\textures\\background\\Saves\\save.png");
     Button back (170.f, 300.f, "src\\textures\\background\\Saves\\go_back.png");
+    Button del1 (110.f, 230.f, "src\\textures\\background\\MainMenu\\ENG\\delete.png");
+    Button del2 (270.f, 230.f, "src\\textures\\background\\MainMenu\\ENG\\delete.png");
+    Button del3 (430.f, 230.f, "src\\textures\\background\\MainMenu\\ENG\\delete.png");
+    Button yes(364.f, 195.f, "src\\textures\\GUI\\checkbox_yes.png");
+    Button no(274.f, 195.f, "src\\textures\\GUI\\checkbox_no.png");
+    sf::Texture sure;
+    if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\ENG\\you_sure.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\you_sure.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\you_sure.png");
+    }
+    sf::Sprite yousure(sure);
+    yousure.scale({scale, scale});
+    yousure.setPosition({scale*270, scale*128});
+    bool del=false;
+    bool delete1=false;
+    bool delete2=false;
+    bool delete3=false;
     while (window->isOpen())
     {
         while (const std::optional event = window->pollEvent()) {
@@ -973,22 +985,59 @@ void game::saves(postac*& hero, sf::RenderWindow* window) {
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (s1.isPressed(mousePos)){
+            if (yes.isPressed(mousePos)&&del==true) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                if (delete1==true) {
+                    clearFile("saves\\saveFile1.txt");
+                    delete1=false;
+                    del=false;
+                }
+                if (delete2==true) {
+                    clearFile("saves\\saveFile2.txt");
+                    delete2=false;
+                    del=false;
+                }
+                if (delete3==true) {
+                    clearFile("saves\\saveFile3.txt");
+                    delete3=false;
+                    del=false;
+                }
+            }
+            else if (no.isPressed(mousePos)&&del) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                del=false;
+            }
+            else if (s1.isPressed(mousePos)&&del==false) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 saveRead(hero, window, "saves\\saveFile1.txt");
                 break;
             }
-            else if (s2.isPressed(mousePos)){
+            else if (s2.isPressed(mousePos)&&del==false){
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 saveRead(hero, window, "saves\\saveFile2.txt");
                 break;
             }
-            else if (s3.isPressed(mousePos)) {
+            else if (s3.isPressed(mousePos)&&del==false) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 saveRead(hero, window, "saves\\saveFile3.txt");
                 break;
             }
-            else if (back.isPressed(mousePos)) {
+            else if (del1.isPressed(mousePos)&&del==false) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                del=true;
+                delete1=true;
+            }
+            else if (del2.isPressed(mousePos)&&del==false) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                del=true;
+                delete2=true;
+            }
+            else if (del3.isPressed(mousePos)&&del==false) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                del=true;
+                delete3=true;
+            }
+            else if (back.isPressed(mousePos)&&del==false) {
                 setLocation(Location::MainMenu);
                 break;
             }
@@ -999,6 +1048,14 @@ void game::saves(postac*& hero, sf::RenderWindow* window) {
         window->draw(s2);
         window->draw(s3);
         window->draw(back);
+        window->draw(del1);
+        window->draw(del2);
+        window->draw(del3);
+        if (del) {
+            window->draw(yousure);
+            window->draw(yes);
+            window->draw(no);
+        }
         window->display();
     }
 }
