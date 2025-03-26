@@ -42,35 +42,35 @@ void Options::setMode(Mode m) {
   mode = m;
 }
 
-void Options::setenviromentVolume(float v){
+void Options::setenviromentVolume(int v){
   enviromentVolume = v;
 }
 
-float Options::getenviromentVolume(){
+int Options::getenviromentVolume(){
   return enviromentVolume;
 }
 
-void Options::seteffectsVolume(float v){
+void Options::seteffectsVolume(int v){
   effectsVolume = v;
 }
 
-float Options::geteffectsVolume(){
+int Options::geteffectsVolume(){
   return effectsVolume;
 }
 
-void Options::setmusicVolume(float v){
+void Options::setmusicVolume(int v){
   musicVolume = v;
 }
 
-float Options::getmusicVolume(){
+int Options::getmusicVolume(){
   return musicVolume;
 }
 
-void Options::setmasterVolume(float v) {
+void Options::setmasterVolume(int v) {
   masterVolume = v;
 }
 
-float Options::getmasterVolume() {
+int Options::getmasterVolume() {
   return masterVolume;
 }
 
@@ -90,9 +90,10 @@ void Options::saveToFile() {
     file << masterVolume << std::endl;
     file.close();
   }
-  else
+  else{
     std::cerr << "Acces violation at path: " + filename << std::endl;
     throw std::runtime_error("Acces violation at path: " + filename);
+  }
 }
 
 bool Options::loadFromFile() {

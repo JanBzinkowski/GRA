@@ -2,7 +2,9 @@ enum class Location
 {
     Quit,
     MainMenu,
-    Options,
+    OptionsG,
+    OptionsGraph,
+    OptionsS,
     Saves,
     Map,
     City,

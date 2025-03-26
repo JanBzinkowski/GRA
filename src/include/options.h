@@ -12,6 +12,7 @@ enum class FPS{
 enum class Mode{
   fullscreen,
   borderless,
+  windowed
 };
 
 enum class Language{
@@ -34,10 +35,10 @@ class Options {
     Mode mode = Mode::fullscreen;
     FPS fps = FPS::_60;
     Language language = Language::ENG;
-    float enviromentVolume = 100.f;
-    float effectsVolume = 100.f;
-    float musicVolume = 100.f;
-    float masterVolume = 100.f;
+    int enviromentVolume = 100;
+    int effectsVolume = 100;
+    int musicVolume = 100;
+    int masterVolume = 100;
 
   public:
     Options() {
@@ -54,14 +55,14 @@ class Options {
     void setFPS(FPS f);
     Language getLanguage();
     void setLanguage(Language l);
-    float getenviromentVolume();
-    void setenviromentVolume(float v);
-    float geteffectsVolume();
-    void seteffectsVolume(float v);
-    float getmusicVolume();
-    void setmusicVolume(float v);
-    float getmasterVolume();
-    void setmasterVolume(float v);
+    int getenviromentVolume();
+    void setenviromentVolume(int v);
+    int geteffectsVolume();
+    void seteffectsVolume(int v);
+    int getmusicVolume();
+    void setmusicVolume(int v);
+    int getmasterVolume();
+    void setmasterVolume(int v);
 
     bool loadFromFile();
     void saveToFile();

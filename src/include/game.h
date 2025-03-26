@@ -15,11 +15,13 @@
 #include <random>
 #include <SFML/Graphics.hpp>
 #include "AllTimeGUI.h"
+#include "options.h"
 
 class game
 {
 private:
     postac* hero;
+    Options option;
     std::mt19937 gen;
     gameTime Time;
     Location currentLocation=Location::MainMenu;
@@ -27,7 +29,9 @@ private:
     {
         {Location::Quit, true},
         {Location::Saves, true},
-        {Location::Options, true},
+        {Location::OptionsG, true},
+        {Location::OptionsGraph, true},
+        {Location::OptionsS, true},
         {Location::MainMenu, true},
         {Location::Map, true},
         {Location::City, true},
@@ -50,8 +54,8 @@ private:
     void updateBlacksmith();
     sf::Font font;
 public:
-    game(postac*& hero, std::mt19937& gen)
-        : hero(hero), gen(gen) {
+    game(postac*& hero, std::mt19937& gen, Options& opt)
+        : hero(hero), gen(gen), option(opt) {
         if (!font.openFromFile("src\\fonts\\pixel-8x8.ttf")) {
             std::cerr <<"Failed to load font from file: " << "src\\fonts\\pixel-8x8.ttf" << std::endl;
             throw std::runtime_error("Failed to load font from file: src\\fonts\\pixel-8x8.ttf");
@@ -71,6 +75,9 @@ public:
 
     void mainMenu(postac*& hero, sf::RenderWindow* window);
     void saves(postac*& hero, sf::RenderWindow* window);
+    void optionsG(sf::RenderWindow* window);
+    void optionsGraph(sf::RenderWindow* window);
+    void optionsS(sf::RenderWindow* window);
     void createhero(postac*& hero, sf::RenderWindow* window);
     void saveRead(postac*& hero, sf::RenderWindow* window, std::string filename);
     void worldMap(postac*& hero);

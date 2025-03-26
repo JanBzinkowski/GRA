@@ -30,6 +30,8 @@ public:
     }
     bool isPressed(const sf::Vector2i& mousePos);
     void setTexture(const sf::Texture &texture);
+    void setTextureFile(std::string filePath);
+    void setPosition(const sf::Vector2f &pos);
 };
 
 #endif

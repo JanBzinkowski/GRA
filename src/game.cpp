@@ -7,6 +7,7 @@
 #include <button.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <fstream>
+#include "Slider.h"
 #define PotionTime 3
 
 
@@ -815,6 +816,10 @@ void game::mainMenu(postac*& hero, sf::RenderWindow* window)
                 setLocation(Location::Saves);
                 break;
             }
+            else if (options.isPressed(mousePos)) {
+                setLocation(Location::OptionsG);
+                break;
+            }
             else if (quit.isPressed(mousePos)) {
                 setLocation(Location::Quit);
                 break;
@@ -1060,6 +1065,562 @@ void game::saves(postac*& hero, sf::RenderWindow* window) {
     }
 }
 
+void game::optionsG(sf::RenderWindow *window) {
+    if (!option.loadFromFile()) {
+        std::cerr << "Failed to load texture from file: " << "src\\options\\options.txt" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\options\\options.txt");
+    }
+    Button general (66.f, 10.f, "src\\textures\\background\\Options\\ENG\\general.png");
+    Button sound (247.f, 10.f, "src\\textures\\background\\Options\\ENG\\sound.png");
+    Button graphics (435.f, 10.f, "src\\textures\\background\\Options\\ENG\\graphics.png");
+    Button back (170.f, 300.f, "src\\textures\\background\\Saves\\go_back.png");
+    sf::Texture language;
+    sf::Texture tutorials;
+    if (!language.loadFromFile("src\\textures\\background\\Options\\ENG\\language.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\language.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\language.png");
+    }
+    if (!tutorials.loadFromFile("src\\textures\\background\\Options\\ENG\\tutorials.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\tutorials.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\tutorials.png");
+    }
+    sf::Sprite lang(language);
+    sf::Sprite tutorial(tutorials);
+    lang.setPosition({scale*15.f, scale*70.f});
+    tutorial.setPosition({scale*15.f, scale*120.f});
+    lang.scale({scale, scale});
+    tutorial.scale({scale, scale});
+    Button checkboxOff(415.f, 120.f, "src\\textures\\GUI\\checkbox_no.png");
+    Button checkboxOn(415.f, 120.f, "src\\textures\\GUI\\checkbox_yes.png");
+    Button currentLng(370.f, 70.f, "src\\textures\\background\\Options\\ENG\\eng.png");
+    Button nextLng(370.f, 105.f, "src\\textures\\background\\Options\\PL\\pl.png");
+    if (option.getLanguage()==Language::PL) {
+        currentLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
+        nextLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
+    }
+    bool choosingLanguage = false;
+    bool checkbox = option.getTutorials();
+    sf::Texture background;
+    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    }
+    sf::Sprite bg(background);
+    bg.setPosition({0.f, scale*45.f});
+    bg.scale({scale, scale});
+
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (back.isPressed(mousePos)&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::MainMenu);
+                option.saveToFile();
+                break;
+            }
+            else if (checkboxOn.isPressed(mousePos)&&checkbox&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                option.setTutorials(false);
+                checkbox = false;
+            }
+            else if (checkboxOff.isPressed(mousePos)&&!checkbox&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                option.setTutorials(true);
+                checkbox = true;
+            }
+            else if (currentLng.isPressed(mousePos)&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingLanguage = true;
+            }
+            else if (currentLng.isPressed(mousePos)&&choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingLanguage = false;
+            }
+            else if (nextLng.isPressed(mousePos)&&choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingLanguage = false;
+                if (option.getLanguage()==Language::ENG) {
+                    option.setLanguage(Language::PL);
+                    currentLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
+                    nextLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
+                }
+                else {
+                    option.setLanguage(Language::ENG);
+                    currentLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
+                    nextLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
+                }
+            }
+            else if (graphics.isPressed(mousePos)&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsGraph);
+                break;
+            }
+            else if (sound.isPressed(mousePos)&&!choosingLanguage) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsS);
+                break;
+            }
+        }
+
+        window->clear();
+        window->draw(bg);
+        window->draw(general);
+        window->draw(sound);
+        window->draw(graphics);
+        window->draw(back);
+        window->draw(tutorial);
+        window->draw(lang);
+        window->draw(currentLng);
+        if (!checkbox)
+            window->draw(checkboxOff);
+        else
+            window->draw(checkboxOn);
+        if (choosingLanguage) {
+            window->draw(nextLng);
+        }
+        window->display();
+    }
+}
+
+void game::optionsGraph(sf::RenderWindow *window) {
+    Button general (66.f, 10.f, "src\\textures\\background\\Options\\ENG\\general.png");
+    Button sound (247.f, 10.f, "src\\textures\\background\\Options\\ENG\\sound.png");
+    Button graphics (435.f, 10.f, "src\\textures\\background\\Options\\ENG\\graphics.png");
+    Button back (170.f, 300.f, "src\\textures\\background\\Saves\\go_back.png");
+    sf::Texture lim;
+    sf::Texture mode;
+    sf::Texture resolution;
+    if (!lim.loadFromFile("src\\textures\\background\\Options\\ENG\\FPS_limit.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\FPS_limit.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\FPS_limit.png");
+    }
+    if (!mode.loadFromFile("src\\textures\\background\\Options\\ENG\\display_mode.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\display_mode.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\display_mode.png");
+    }
+    if (!resolution.loadFromFile("src\\textures\\background\\Options\\ENG\\resolution.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\resolution.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\resolution.png");
+    }
+    sf::Sprite FPS(lim);
+    sf::Sprite display(mode);
+    sf::Sprite res(resolution);
+    FPS.setPosition({scale*15.f, scale*70.f});
+    display.setPosition({scale*15.f, scale*120.f});
+    res.setPosition({scale*15.f, scale*170.f});
+    FPS.scale({scale, scale});
+    display.scale({scale, scale});
+    res.scale({scale, scale});
+
+    Button currentFPS(395.f, 70.f, "src\\textures\\background\\Options\\ENG\\60.png");
+    Button secondFPS(395.f, 105.f, "src\\textures\\background\\Options\\ENG\\30.png");
+    Button thirdFPS(395.f, 140.f, "src\\textures\\background\\Options\\ENG\\140.png");
+    if (option.getFPS()==FPS::_30) {
+        currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+        secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+    }
+    else if (option.getFPS()==FPS::_144) {
+        currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+        thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+    }
+    Button currentMode(370.f, 120.f, "src\\textures\\background\\Options\\ENG\\fullscreen.png");
+    Button secondMode(370.f, 155.f, "src\\textures\\background\\Options\\ENG\\borderless.png");
+    Button thirdMode(370.f, 190.f, "src\\textures\\background\\Options\\ENG\\window.png");
+    if (option.getMode()==Mode::borderless) {
+        currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+        secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+    }
+    else if (option.getMode()==Mode::windowed) {
+        currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\window.png");
+        secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+        thirdMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+    }
+    Button currentRes(395.f, 170.f, "src\\textures\\background\\Options\\1080p.png");
+    Button secondRes(395.f, 205.f, "src\\textures\\background\\Options\\360p.png");
+    Button thirdRes(395.f, 240.f, "src\\textures\\background\\Options\\1440p.png");
+    if (option.getResolution()==Resolution::p360) {
+        currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+        secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+    }
+    else if (option.getResolution()==Resolution::p1440) {
+        currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+        thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+    }
+    bool choosingFPS = false;
+    bool choosingMode = false;
+    bool choosingResolution = false;
+
+    sf::Texture background;
+    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    }
+    sf::Sprite bg(background);
+    bg.setPosition({0.f, scale*45.f});
+    bg.scale({scale, scale});
+
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (back.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::MainMenu);
+                option.saveToFile();
+                sf::Vector2u windowsize;
+                if (option.getResolution()==Resolution::p1080) {
+                    windowsize = {1920, 1080};
+                    scale = 3.0f;
+                }
+                else if (option.getResolution()==Resolution::p1440) {
+                    windowsize = {2560, 1440};
+                    scale = 4.0f;
+                }
+                else {
+                    windowsize = {640, 360};
+                    scale = 1.0f;
+                }
+                if (option.getFPS()==FPS::_144)
+                    window->setFramerateLimit(144);
+                else if (option.getFPS()==FPS::_30)
+                    window->setFramerateLimit(30);
+                else
+                    window->setFramerateLimit(60);
+                if (option.getMode()==Mode::fullscreen)
+                    window->create(sf::VideoMode(windowsize), "Gra 1.0", sf::Style::None, sf::State::Fullscreen);
+                else if (option.getMode()==Mode::windowed)
+                    window->create(sf::VideoMode(windowsize), "Gra 1.0", sf::Style::Default, sf::State::Windowed);
+                else
+                    window->create(sf::VideoMode(windowsize), "Gra 1.0", sf::Style::None, sf::State::Windowed);
+                break;
+            }
+            else if (general.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsG);
+                break;
+            }
+            else if (sound.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsS);
+                break;
+            }
+            else if (currentFPS.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingFPS = true;
+            }
+            else if (currentFPS.isPressed(mousePos)&&choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingFPS = false;
+            }
+            else if (secondFPS.isPressed(mousePos)&&choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingFPS = false;
+                if (option.getFPS()==FPS::_60) {
+                    option.setFPS(FPS::_30);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    window->setFramerateLimit(30);
+                }
+                else if (option.getFPS()==FPS::_30) {
+                    option.setFPS(FPS::_60);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+                    window->setFramerateLimit(60);
+                }
+                else {
+                    option.setFPS(FPS::_30);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    window->setFramerateLimit(30);
+                }
+            }
+            else if (thirdFPS.isPressed(mousePos)&&choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingFPS = false;
+                if (option.getFPS()==FPS::_60) {
+                    option.setFPS(FPS::_144);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    window->setFramerateLimit(144);
+                }
+                else if (option.getFPS()==FPS::_30) {
+                    option.setFPS(FPS::_144);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    window->setFramerateLimit(144);
+                }
+                else {
+                    option.setFPS(FPS::_60);
+                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    window->setFramerateLimit(60);
+                }
+            }
+            else if (currentMode.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingMode = true;
+            }
+            else if (currentMode.isPressed(mousePos)&&!choosingFPS&&choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingMode = false;
+            }
+            else if (secondMode.isPressed(mousePos)&&!choosingFPS&&choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingMode = false;
+                if (option.getMode()==Mode::borderless) {
+                    option.setMode(Mode::fullscreen);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+                    secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                }
+                else if (option.getMode()==Mode::fullscreen) {
+                    option.setMode(Mode::borderless);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                    secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+                }
+                else {
+                    option.setMode(Mode::fullscreen);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+                    secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                    thirdMode.setTextureFile("src\\textures\\background\\Options\\ENG\\window.png");
+                }
+            }
+            else if (thirdMode.isPressed(mousePos)&&!choosingFPS&&choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingMode = false;
+                if (option.getMode()==Mode::borderless) {
+                    option.setMode(Mode::windowed);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\window.png");
+                    secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+                    thirdMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                }
+                else if (option.getMode()==Mode::fullscreen) {
+                    option.setMode(Mode::windowed);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\window.png");
+                    secondMode.setTextureFile("src\\textures\\background\\Options\\ENG\\fullscreen.png");
+                    thirdMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                }
+                else {
+                    option.setMode(Mode::borderless);
+                    currentMode.setTextureFile("src\\textures\\background\\Options\\ENG\\borderless.png");
+                    thirdMode.setTextureFile("src\\textures\\background\\Options\\ENG\\window.png");
+                }
+            }
+            else if (currentRes.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&!choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingResolution = true;
+            }
+            else if (currentRes.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingResolution = false;
+            }
+            else if (secondRes.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingResolution = false;
+                if (option.getResolution()==Resolution::p360) {
+                    option.setResolution(Resolution::p1080);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+
+                }
+                else if (option.getResolution()==Resolution::p1080) {
+                    option.setResolution(Resolution::p360);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+                    secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                }
+                else {
+                    option.setResolution(Resolution::p360);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+                    secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                }
+            }
+            else if (thirdRes.isPressed(mousePos)&&!choosingFPS&&!choosingMode&&choosingResolution) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                choosingResolution = false;
+                if (option.getResolution()==Resolution::p360) {
+                    option.setResolution(Resolution::p1440);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                }
+                else if (option.getResolution()==Resolution::p1080) {
+                    option.setResolution(Resolution::p1440);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                }
+                else {
+                    option.setResolution(Resolution::p1080);
+                    currentRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                }
+            }
+        }
+
+        window->clear();
+        window->draw(bg);
+        window->draw(general);
+        window->draw(sound);
+        window->draw(graphics);
+        window->draw(back);
+        window->draw(FPS);
+        window->draw(display);
+        window->draw(res);
+        window->draw(currentFPS);
+        window->draw(currentRes);
+        window->draw(currentMode);
+        if (choosingFPS&&!choosingMode&&!choosingResolution) {
+            window->draw(secondFPS);
+            window->draw(thirdFPS);
+        }
+        if (choosingMode&&!choosingFPS&&!choosingResolution) {
+            window->draw(secondMode);
+            window->draw(thirdMode);
+        }
+        if (choosingResolution&&!choosingFPS&&!choosingMode) {
+            window->draw(secondRes);
+            window->draw(thirdRes);
+        }
+        window->display();
+    }
+}
+
+void game::optionsS(sf::RenderWindow *window) {
+    Button general (66.f, 10.f, "src\\textures\\background\\Options\\ENG\\general.png");
+    Button sound (247.f, 10.f, "src\\textures\\background\\Options\\ENG\\sound.png");
+    Button graphics (435.f, 10.f, "src\\textures\\background\\Options\\ENG\\graphics.png");
+    Button back (170.f, 300.f, "src\\textures\\background\\Saves\\go_back.png");
+    sf::Texture enviroment;
+    sf::Texture effect;
+    sf::Texture music;
+    sf::Texture main;
+    sf::Texture background;
+    if (!enviroment.loadFromFile("src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png");
+    }
+    if (!effect.loadFromFile("src\\textures\\background\\Options\\ENG\\sound_effects_volume.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\sound_effects_volume.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\sound_effects_volume.png");
+    }
+    if (!music.loadFromFile("src\\textures\\background\\Options\\ENG\\music_volume.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\music_volume.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\music_volume.png");
+    }
+    if (!main.loadFromFile("src\\textures\\background\\Options\\ENG\\master_volume.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\ENG\\master_volume.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\ENG\\master_volume.png");
+    }
+    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    }
+    sf::Sprite env(enviroment);
+    sf::Sprite eff(effect);
+    sf::Sprite mus(music);
+    sf::Sprite g(main);
+    sf::Sprite bg(background);
+    g.setPosition({scale*15.f, scale*70.f});
+    env.setPosition({scale*15.f, scale*250.f});
+    eff.setPosition({scale*15.f, scale*120.f});
+    mus.setPosition({scale*15.f, scale*200.f});
+    bg.setPosition({0.f, scale*45.f});
+    env.scale({scale, scale});
+    eff.scale({scale, scale});
+    mus.scale({scale, scale});
+    g.scale({scale, scale});
+    bg.scale({scale, scale});
+
+    Slider master_slider(340.f, 70.f);
+    Slider env_slider(340.f, 265.f);
+    Slider effect_slider(340.f, 135.f);
+    Slider music_slider(340.f, 200.f);
+
+    master_slider.setSlider(option.getmasterVolume());
+    env_slider.setSlider(option.getenviromentVolume());
+    effect_slider.setSlider(option.geteffectsVolume());
+    music_slider.setSlider(option.getmusicVolume());
+
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (back.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::MainMenu);
+                option.saveToFile();
+                break;
+            }
+            else if (general.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsG);
+                break;
+            }
+            else if (graphics.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::OptionsGraph);
+                break;
+            }
+            else if (master_slider.isPressed(mousePos)) {
+                mousePos = sf::Mouse::getPosition(*window);
+                int volume;
+                master_slider.slide(mousePos, volume, 0, 100);
+                option.setmasterVolume(volume);
+            }
+            else if (env_slider.isPressed(mousePos)) {
+                mousePos = sf::Mouse::getPosition(*window);
+                int volume;
+                env_slider.slide(mousePos, volume, 0, 100);
+                option.setenviromentVolume(volume);
+            }
+            else if (effect_slider.isPressed(mousePos)) {
+                mousePos = sf::Mouse::getPosition(*window);
+                int volume;
+                effect_slider.slide(mousePos, volume, 0, 100);
+                option.seteffectsVolume(volume);
+            }
+            else if (music_slider.isPressed(mousePos)) {
+                mousePos = sf::Mouse::getPosition(*window);
+                int volume;
+                music_slider.slide(mousePos, volume, 0, 100);
+                option.setmusicVolume(volume);
+            }
+        }
+
+        window->clear();
+        window->draw(bg);
+        window->draw(general);
+        window->draw(sound);
+        window->draw(graphics);
+        window->draw(back);
+        window->draw(env);
+        window->draw(g);
+        window->draw(eff);
+        window->draw(mus);
+        window->draw(master_slider);
+        window->draw(env_slider);
+        window->draw(effect_slider);
+        window->draw(music_slider);
+        window->display();
+    }
+}
+
 void game::worldMap(postac*& hero)
 {
     while (true)
@@ -1079,16 +1640,12 @@ void game::worldMap(postac*& hero)
         if(loc==0)
         {
             setLocation(Location::MainMenu);
-            
-            
             break;
         }
         if(loc==1)
         {
             setLocation(Location::City);
             std::cout<<"You have entered to the city."<<std::endl;
-            
-            
             break;
         }
         else if(loc==2)
