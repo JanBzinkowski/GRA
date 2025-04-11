@@ -14,7 +14,7 @@
 
 class AllTimeGUI;
 
-class postac
+class character
 {
 private:
     std::map <DamageType, float> resistance;
@@ -59,7 +59,7 @@ private:
     std::optional<Item> weaponslot=std::nullopt;
 
 public:
-    virtual postac* clone() const = 0;
+    virtual character* clone() const = 0;
     int currenthp;
     int currentgold = 10;
     int currentmana;
@@ -69,7 +69,7 @@ public:
     void setSave(const std::string fileName);
     const std::string getSave();
 
-    postac(const std::string& name, const stats& stat, const statsincrese& incstats)
+    character(const std::string& name, const stats& stat, const statsincrese& incstats)
         : name(name), stat(stat), incstats(incstats), currenthp(stat.basehp), currentmana(stat.mana)
         {
             resistance[DamageType::MagicEnergy] = 1.0f;
@@ -134,10 +134,10 @@ public:
     int getMaxManaInc() const;
     int getSpeedInc() const;
 
-    float getAtkChance(postac*& atk, postac& def) const;
+    float getAtkChance(character*& atk, character& def) const;
     float getMultDmg() const;
 
-    void getDamaged(postac*& atk, const DamageType& type);
+    void getDamaged(character*& atk, const DamageType& type);
     void regen();
     void potionregen();
     void instaHP();
@@ -174,12 +174,12 @@ public:
 
     void pray();
 
-    void save_to_file(postac*& hero);
-    bool load_from_file(const std::string filename, postac*& hero);
+    void save_to_file(character*& hero);
+    bool load_from_file(const std::string filename, character*& hero);
 
 
 
     friend class AllTimeGUI;
-    virtual ~postac() = default;
+    virtual ~character() = default;
 };
 

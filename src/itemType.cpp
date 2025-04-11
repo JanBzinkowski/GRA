@@ -2,17 +2,17 @@
 #include <iostream>
 #include <string>
 #include <random>
-#include "include/POSTAC.h"
+#include "character.h"
 
-std::unordered_map<int, itemStats> itemData =
-{
+std::unordered_map<int, itemStats> itemData = {
+    {0, {"Error Item", itemType::ERROR, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false}},
     //warrior/crossbow/berserker lvl 1-7
     {1, {"Rotten Guardian's Boots", itemType::Boots, 2, 5, 0, 0, 0, 0, 2, 5, 0, 0, 0, 0, 1, 2, 0, 1, 15, false}},
     {2, {"Warrior's Worn Boots", itemType::Boots, 2, 4, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 1, 2, 0, 1, 15, false}},
     {3, {"Defender's Torn Boots", itemType::Boots, 2, 4, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 1, 2, 0, 1, 15, false}},
     {4, {"Bent Steel Boots", itemType::Boots, 2, 4, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 1, 2, 0, 1, 15, false}},
     {5, {"Ripped Armored Pants", itemType::Leggings, 3, 6, 0, 0, 0, 0, 3, 6, 0, 1, 1, 0, 0, 0, 0, 1, 20, false}},
-    {6, {"Pants with Scrached Knee Pads", itemType::Leggings, 3, 6, 0, 0, 0, 0, 3, 6, 0, 1, 1, 0, 0, 0, 0, 1, 20, false}},
+    {6,{"Pants with Scrached Knee Pads", itemType::Leggings, 3, 6, 0, 0, 0, 0, 3, 6, 0, 1, 1, 0, 0, 0, 0, 1, 20, false}},
     {7, {"Worn Combat Pants", itemType::Leggings, 3, 6, 0, 0, 0, 0, 3, 6, 0, 1, 1, 0, 0, 0, 0, 1, 20, false}},
     {8, {"Knight's Torn Leggings", itemType::Leggings, 3, 6, 0, 0, 0, 0, 3, 6, 0, 1, 1, 0, 0, 0, 0, 1, 20, false}},
     {9, {"Ripped Armor", itemType::Chestplate, 3, 8, 0, 0, 0, 0, 3, 8, 0, 1, 1, 0, 0, 0, 0, 1, 25, false}},
@@ -72,110 +72,103 @@ std::unordered_map<int, itemStats> itemData =
 };
 
 
-itemStats Item::getStats() const
-{
+itemStats Item::getStats () const {
     return stats;
 }
 
-int Item::getId() const
-{
+int Item::getId () const {
     return id;
 }
 
-itemType Item::getType() const
-{
-    return itemData.at(id).type;
+itemType Item::getType () const {
+    return itemData . at(id) . type;
 }
 
-std::string Item::getTypeString() const
-{
-    switch (getType())
-    {
-        case itemType::Boots: return "Boots";
-        case itemType::Leggings: return "Leggings";
-        case itemType::Chestplate: return "Chestplate";
-        case itemType::Helmet: return "Helmet";
-        case itemType::Gloves: return "Gloves";
-        case itemType::Ring: return "Ring";
-        case itemType::Necklace: return "Necklace";
-        case itemType::Weapon: return "Weapon";
-        default: return "Unknown";
+std::string Item::getTypeString () const {
+    switch (getType()) {
+        case itemType::Boots:
+            return "Boots";
+        case itemType::Leggings:
+            return "Leggings";
+        case itemType::Chestplate:
+            return "Chestplate";
+        case itemType::Helmet:
+            return "Helmet";
+        case itemType::Gloves:
+            return "Gloves";
+        case itemType::Ring:
+            return "Ring";
+        case itemType::Necklace:
+            return "Necklace";
+        case itemType::Weapon:
+            return "Weapon";
+        default:
+            return "Unknown";
     }
 }
 
-void Inventory::addItem(const Item& item)
-{
-    items.push_back(item);
+void Inventory::addItem (const Item& item) {
+    items . push_back(item);
 }
 
-void Inventory::removeItem(int index)
-{
-    if (index >= 0 && index < static_cast<int>(items.size()))
-    {
-        items.erase(items.begin() + index);
+void Inventory::removeItem (int index) {
+    if (index >= 0 && index < static_cast<int>(items . size())) {
+        items . erase(items . begin() + index);
     }
 }
 
-std::optional<Item> Inventory::getItemByIndex(size_t index) const
-{
-    return items[index-1];
+std::optional<Item> Inventory::getItemByIndex (size_t index) const {
+    return items[index - 1];
 }
 
-void Inventory::printInv() const
-{
-    if (items.empty())
-    {
+void Inventory::printInv () const {
+    if (items . empty()) {
         std::cout << "Inventory is empty.\n";
         return;
     }
 
-    std::cout << "Items in inventory:\n"<<std::endl;
-    for (size_t i = 0; i < items.size(); ++i)
-    {
-        const auto& stats = items[i].getStats();
-        std::cout << i + 1 << ". " << stats.name
-          << " Type: " << items[i].getTypeString()
-          << ",\nItem LVL: "<< stats.itemLvl;
-            if(stats.hp>0)
-                std::cout<< ", HP: " << stats.hp;
-            if(stats.def>0)
-                std::cout<< ", DEF: " << stats.def;
-            if(stats.ad>0)
-                std::cout<< ", AD: " << stats.ad;
-            if(stats.mana>0)
-                std::cout<< ", Mana: "<< stats.mana;
-            if(stats.speed>0)
-                std::cout<< ", Speed: " << stats.speed << std::endl;
-            std::cout<<std::endl;
+    std::cout << "Items in inventory:\n" << std::endl;
+    for (size_t i = 0; i < items . size(); ++i) {
+        const auto& stats = items[i] . getStats();
+        std::cout << i + 1 << ". " << stats . name << " Type: " << items[i] . getTypeString() << ",\nItem LVL: " <<
+                stats . itemLvl;
+        if (stats . hp > 0)
+            std::cout << ", HP: " << stats . hp;
+        if (stats . def > 0)
+            std::cout << ", DEF: " << stats . def;
+        if (stats . ad > 0)
+            std::cout << ", AD: " << stats . ad;
+        if (stats . mana > 0)
+            std::cout << ", Mana: " << stats . mana;
+        if (stats . speed > 0)
+            std::cout << ", Speed: " << stats . speed << std::endl;
+        std::cout << std::endl;
     }
 }
 
-void Item::generateStats(std::mt19937& gen, postac*& hero)
-{
-    auto randomize = [&gen](int min, int max) -> int
-    {
+void Item::generateStats (std::mt19937& gen, character*& hero) {
+    auto randomize = [&gen] (int min, int max) -> int {
         std::uniform_int_distribution<> dist(min, max);
         return dist(gen);
     };
 
-    stats.hp = randomize(stats.hpmin, stats.hpmax);
-    stats.ad = randomize(stats.admin, stats.admax);
-    stats.def = randomize(stats.defmin, stats.defmax);
-    stats.mana = randomize(stats.manamin, stats.manamax);
-    stats.speed = randomize(stats.speedmin, stats.speedmax);
-    if (stats.hpmax>0)
-        stats.hp+=hero->getLvl();
-    if (stats.admax>0)
-        stats.ad+=hero->getLvl();
-    if (stats.defmax>0)
-        stats.def+=hero->getLvl();
-    if (stats.manamax>0)
-        stats.mana+=hero->getLvl();
-    if (stats.speedmax>0)
-        stats.speed+=hero->getLvl();
+    stats . hp = randomize(stats . hpmin, stats . hpmax);
+    stats . ad = randomize(stats . admin, stats . admax);
+    stats . def = randomize(stats . defmin, stats . defmax);
+    stats . mana = randomize(stats . manamin, stats . manamax);
+    stats . speed = randomize(stats . speedmin, stats . speedmax);
+    if (stats . hpmax > 0)
+        stats . hp += hero -> getLvl();
+    if (stats . admax > 0)
+        stats . ad += hero -> getLvl();
+    if (stats . defmax > 0)
+        stats . def += hero -> getLvl();
+    if (stats . manamax > 0)
+        stats . mana += hero -> getLvl();
+    if (stats . speedmax > 0)
+        stats . speed += hero -> getLvl();
 }
 
-int Inventory::getInvSize() const
-{
-    return items.size();
+int Inventory::getInvSize () const {
+    return items . size();
 }

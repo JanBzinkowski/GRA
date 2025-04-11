@@ -15,3 +15,14 @@ bool AllTimeGUI::regenIsClicked(const sf::Vector2i& mousePos){
 bool AllTimeGUI::actionIsClicked(const sf::Vector2i& mousePos){
   return actionpotion->isPressed(mousePos);
 }
+
+bool AllTimeGUI::atk1IsClicked(const sf::Vector2i& mousePos) {
+  return light->isPressed(mousePos);
+}
+bool AllTimeGUI::atk2IsClicked(const sf::Vector2i& mousePos) {
+  return medium->isPressed(mousePos);
+}
+
+bool AllTimeGUI::atk3IsClicked(const sf::Vector2i& mousePos) {
+  return heavy->isPressed(mousePos);
+}

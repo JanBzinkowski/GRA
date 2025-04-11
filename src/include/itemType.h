@@ -5,7 +5,7 @@
 #include <random>
 #pragma once
 
-class postac;
+class character;
 
 enum class itemType
 {
@@ -16,7 +16,8 @@ enum class itemType
     Gloves,
     Ring,
     Necklace,
-    Weapon
+    Weapon,
+    ERROR
 };
 
 struct itemStats
@@ -47,7 +48,7 @@ extern std::unordered_map<int, itemStats> itemData;
 
 class Item
 {
-friend class postac;
+friend class character;
 
 private:
     int id;
@@ -60,7 +61,7 @@ public:
     }
 
     itemStats getStats() const;
-    void generateStats(std::mt19937& gen, postac*& hero);
+    void generateStats(std::mt19937& gen, character*& hero);
     int getId() const;
     itemType getType() const;
     std::string getTypeString() const;
@@ -68,7 +69,7 @@ public:
 
 class Inventory
 {
-friend class postac;
+friend class character;
 
 private:
     std::vector<Item> items;
