@@ -899,7 +899,6 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         }
         std::string isSlot;
         file >> isSlot;
-        std::cout << isSlot << std::endl;
         if (isSlot == "NOHELMET");
         else {
             int id;

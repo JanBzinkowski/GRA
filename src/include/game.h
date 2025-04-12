@@ -48,13 +48,14 @@ class game {
         };
 
         bool BlacksmithNewItems = true;
-        std::vector<Item> blacksmithInv;
+        std::array<Item, 6> blacksmithInv = {Item(0), Item(0), Item(0), Item(0), Item(0), Item(0)};
+        std::vector<int> blacksmithAvaiable;
         void updateBlacksmith ();
         sf::Font font;
 
     public:
         game (character*& hero, std::mt19937& gen, Options& opt) : hero(hero), gen(gen), option(opt) {
-            if (!font . openFromFile("src\\fonts\\pixel-8x8.ttf")) {
+            if (!font.openFromFile("src\\fonts\\pixel-8x8.ttf")) {
                 std::cerr << "Failed to load font from file: " << "src\\fonts\\pixel-8x8.ttf" << std::endl;
                 throw std::runtime_error("Failed to load font from file: src\\fonts\\pixel-8x8.ttf");
             }
@@ -79,11 +80,11 @@ class game {
         void createhero (character*& hero, sf::RenderWindow* window);
         void saveRead (character*& hero, sf::RenderWindow* window, std::string filename);
         void worldMap (character*& hero);
-        void city (character*& hero);
+        void city (character*& hero, sf::RenderWindow* window);
 
-        void church (character*& hero);
-        void tavern (character*& hero);
-        void blacksmith (character*& hero);
+        void church (character*& hero, sf::RenderWindow* window);
+        void tavern (character*& hero, sf::RenderWindow* window);
+        void blacksmith (character*& hero, sf::RenderWindow* window);
 
         int fight (character*& hero, int enemyID, sf::RenderWindow* window);
 
