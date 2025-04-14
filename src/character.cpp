@@ -35,10 +35,6 @@ void character::updateStats (itemStats stats, bool equip) {
     stat.speed += stats.speed * mod;
 }
 
-void character::displayInv () const {
-    inventory.printInv();
-}
-
 int character::getInvSize () const {
     return inventory.getInvSize();
 }
@@ -183,93 +179,48 @@ void character::displayEqp () const {
         std::cout << "8. Weapon: NONE" << std::endl;
 }
 
-Item character::getItemByIndex (int index) const {
-    switch (index) {
-        case 1: {
-            if (helmetslot)
-                return *helmetslot;
-            break;
-        }
-        case 2: {
-            if (chestplateslot)
-                return *chestplateslot;
-            break;
-        }
-        case 3: {
-            if (necklaceslot)
-                return *necklaceslot;
-            break;
-        }
-        case 4: {
-            if (glovesslot)
-                return *glovesslot;
-            break;
-        }
-        case 5: {
-            if (ringslot)
-                return *ringslot;
-            break;
-        }
-        case 6: {
-            if (leggingsslot)
-                return *leggingsslot;
-            break;
-        }
-        case 7: {
-            if (bootsslot)
-                return *bootsslot;
-            break;
-        }
-        case 8: {
-            if (weaponslot)
-                return *weaponslot;
-            break;
-        }
-        default: {
-            Item error(0);
-            return error;
-        }
-    }
+Item character::getItemFromInventory (int slot) const {
+    return inventory.inventory[slot];
 }
 
-bool character::checkIfEqp (int index) const {
-    switch (index) {
-        case 1: {
+bool character::checkIfEqp (itemType type) const {
+    switch (type) {
+        case itemType::Helmet: {
             if (helmetslot)
                 return true;
             break;
         }
-        case 2: {
+        case itemType::Chestplate: {
             if (chestplateslot)
                 return true;
             break;
         }
-        case 3: {
+        case itemType::Necklace: {
             if (necklaceslot)
                 return true;
             break;
         }
-        case 4: {
+        case itemType::Gloves: {
             if (glovesslot)
                 return true;
             break;
         }
-        case 5: {
+        case itemType::Ring: {
             if (ringslot)
                 return true;
             break;
         }
-        case 6: {
+        case itemType::Leggings: {
             if (leggingsslot)
                 return true;
             break;
         }
-        case 7: {
+        case itemType::Boots: {
             if (bootsslot)
                 return true;
             break;
         }
-        case 8: {
+        case itemType::Weapon: {
             if (weaponslot)
                 return true;
             break;
@@ -277,10 +228,60 @@ bool character::checkIfEqp (int index) const {
         default:
             return false;
     }
+    return false;
 }
 
-void character::addToInv (const Item& item) {
-    inventory.addItem(item);
+Item character::getItemFromEqp (itemType type) const {
+    switch (type) {
+        case itemType::Helmet: {
+            if (helmetslot)
+                return *helmetslot;
+            break;
+        }
+        case itemType::Chestplate: {
+            if (chestplateslot)
+                return *chestplateslot;
+            break;
+        }
+        case itemType::Necklace: {
+            if (necklaceslot)
+                return *necklaceslot;
+            break;
+        }
+        case itemType::Gloves: {
+            if (glovesslot)
+                return *glovesslot;
+            break;
+        }
+        case itemType::Ring: {
+            if (ringslot)
+                return *ringslot;
+            break;
+        }
+        case itemType::Leggings: {
+            if (leggingsslot)
+                return *leggingsslot;
+            break;
+        }
+        case itemType::Boots: {
+            if (bootsslot)
+                return *bootsslot;
+            break;
+        }
+        case itemType::Weapon: {
+            if (weaponslot)
+                return *weaponslot;
+            break;
+        }
+        default:
+            return Item(0);
+    }
+    return Item(0);
+}
+
+
+void character::addToInv (const Item& item, const int slot) {
+    inventory.addItem(item, slot);
 }
 
 void character::equip (size_t index) {
@@ -359,7 +360,7 @@ void character::equip (size_t index) {
 
 void character::unequip (const Item& item) {
     itemStats stats = item.getStats();
-    inventory.addItem(item);
+    inventory.addItem(item, inventory.avaiableSlot[0]);
     switch (item.getType()) {
         case itemType::Helmet: {
             if (helmetslot && helmetslot->getId() == item.getId())
@@ -745,6 +746,14 @@ int character::getPotionCD () const {
     return potionCD;
 }
 
+int character::getExtraSlot () const {
+    return extraSlot;
+}
+
+void character::setExtraSlot (int extra) {
+    extraSlot = extra;
+}
+
 void character::save_to_file (character*& hero) {
     std::string filename = hero->getSave();
     std::ofstream file(filename);
@@ -760,12 +769,19 @@ void character::save_to_file (character*& hero) {
                 hero->getResistance(DamageType::MagicEarth) << "\n" << hero->getResistance(DamageType::MagicWater) <<
                 "\n" << hero->getResistance(DamageType::MagicPoison) << "\n" << hero->
                 getResistance(DamageType::MagicAir) << "\n" << hero->getResistance(DamageType::Physical) << "\n" << hero
-                ->getResistance(DamageType::Enviroment) << "\n" << hero->inventory.items.size() << "\n";
+                ->getResistance(DamageType::Enviroment) << "\n" << hero->getExtraSlot() << "\n";
 
-        for (size_t i = 0; i < inventory.items.size(); i++) {
-            file << inventory.items[i].getId() << "\n" << inventory.items[i].stats.hp << "\n" << inventory.items[i].
-                    stats.ad << "\n" << inventory.items[i].stats.def << "\n" << inventory.items[i].stats.mana << "\n" <<
-                    inventory.items[i].stats.speed << "\n";
+        int invSize = inventory.getInvSize() - inventory.getAvaiableAmount();
+        file << invSize << "\n";
+
+        const auto& inv = hero->inventory.inventory;
+
+        for (size_t i = 0; i < inv.size(); ++i) {
+            const Item& item = inv[i];
+            if (item.getId() > 0) {
+                file << i << "\n" << item.getId() << "\n" << item.stats.hp << "\n" << item.stats.ad << "\n" << item.
+                        stats.def << "\n" << item.stats.mana << "\n" << item.stats.speed << "\n";
+            }
         }
 
         if (helmetslot) {
@@ -883,10 +899,15 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         hero->setResist(DamageType::MagicAir, air);
         hero->setResist(DamageType::Physical, phys);
         hero->setResist(DamageType::Enviroment, env);
-        int invSize;
 
+        int invSize;
+        int extra;
+        file >> extra;
+        hero->setExtraSlot(extra);
         file >> invSize;
         for (int i = 0; i < invSize; i++) {
+            int slot;
+            file >> slot;
             int id;
             file >> id;
             Item item(id);
@@ -895,7 +916,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
             file >> item.stats.def;
             file >> item.stats.mana;
             file >> item.stats.speed;
-            hero->inventory.items.push_back(item);
+            hero->inventory.addItem(item, slot);
         }
         std::string isSlot;
         file >> isSlot;

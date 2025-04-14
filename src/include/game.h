@@ -95,8 +95,6 @@ class game {
         void fightEnd (character*& hero, character*& enemy);
 
         void itemRandomize (character*& hero, std::mt19937& gen);
-        void itemBuy (character*& hero);
-        void inventoryMenagment (character*& hero);
 
         void loss (character*& hero);
         bool retcity ();

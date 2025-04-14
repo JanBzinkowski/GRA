@@ -1,8 +1,8 @@
 #include <charconv>
-#include "include/game.h"
-#include "include/enemyWarrior.h"
-#include "include/enemyArcher.h"
-#include "include/enemyMage.h"
+#include "game.h"
+#include "enemyWarrior.h"
+#include "enemyArcher.h"
+#include "enemyMage.h"
 #include <vector>
 #include <algorithm>
 #include <button.h>
@@ -270,6 +270,8 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
     bool heroAction = false;
     bool heroChosen = false;
     bool regenHandled = true;
+    bool turnHero = false;
+    bool turnEnemy = false;
     if ((hero->getSpeed()) > (enemy->getSpeed()))
         whofirst = 1;
     if ((hero->getSpeed()) < (enemy->getSpeed()))
@@ -319,6 +321,11 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
                 potionCD = 4;
             }
         }
+        if (turnHero && turnEnemy) {
+            regenHandled = false;
+            turnHero = false;
+            turnEnemy = false;
+        }
         if (!regenHandled) {
             hero->regen();
             if (hero->getHPRegpotT() > 0) {
@@ -335,6 +342,7 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
             if (!hero->getFastAction()) {
                 heroAction = false;
                 clock.restart();
+                turnHero = true;
             }
             heroaction(enemy, hero);
             if (enemy->currenthp <= 0) {
@@ -351,6 +359,7 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
             enemy->atktypenb = rand() % 3;
             enemyaction(enemy, hero);
             heroAction = true;
+            turnEnemy = true;
             if (hero->currenthp <= 0) {
                 hero->setFastAction(false);
                 hero->setHPRegpotT(-(hero->getHPRegpotT()));
@@ -568,15 +577,15 @@ void game::itemRandomize (character*& hero, std::mt19937& gen) {
     if (BlacksmithNewItems) {
         int min_id, max_id;
         blacksmithAvaiable.clear();
-        if (hero->getClass() == "Warrior" && hero->getLvl() <= 7) {
+        if (hero->getClass() == "Warrior") {//&& hero->getLvl() <= 7
             min_id = 1;
             max_id = 20;
         }
-        else if (hero->getClass() == "Mage" && hero->getLvl() <= 7) {
+        else if (hero->getClass() == "Mage") {//&& hero->getLvl() <= 7
             min_id = 21;
             max_id = 40;
         }
-        else if (hero->getClass() == "Archer" && hero->getLvl() <= 7) {
+        else if (hero->getClass() == "Archer") {//&& hero->getLvl() <= 7
             min_id = 41;
             max_id = 60;
         }
@@ -615,6 +624,10 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
 
     AllTimeGUI gui(hero);
 
+    Button arrow_l(281.f, 95.f, "src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 95.f, "src\\textures\\GUI\\arrow_key_right.png");
+    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
+
     std::vector<Button> items;
     int startX = 377;
     int startY = 199;
@@ -623,15 +636,111 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     for (int i = 0; i < 6; ++i) {
         int x = startX + (i % 3) * spacingX;
         int y = startY + (i / 3) * spacingY;
-        std::cout << blacksmithInv[i].getPath() << std::endl;
         items.emplace_back(x, y, blacksmithInv[i].getPath());
     }
+
+    std::vector<Button> inventory;
+    int startXinv = 304;
+    int startYinv = 91;
+    int spacingXinv = 49;
+    for (int i = 0; i < hero->getInvSize(); ++i) {
+        int x = startXinv + spacingXinv * i;
+        if (hero->getItemFromInventory(i).getId() > 0)
+            items.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
+        else
+            items.emplace_back(x, startYinv, "src\\textures\\items\\Buty.png");
+    }
+
+
+    std::vector<std::string> texts;
+    for (int i = 0; i < 6; ++i) {
+        texts.push_back(blacksmithInv[i].getData());
+    }
+
+    std::vector<std::string> texts_inv;
+    for (int i = 0; i < hero->getInvSize(); ++i) {
+        if (hero->getItemFromInventory(i).getId() > 0) {
+            texts_inv.push_back(hero->getItemFromInventory(i).getData());
+            texts.push_back(Item(0).getData());
+        }
+    }
+
+    std::vector<std::pair<bool, Button>> eqp;
+    std::vector<std::string> texts_eqp;
+    if (hero->checkIfEqp(itemType::Helmet)) {
+        eqp.emplace_back(true, Button(59.f, 91.f, hero->getItemFromEqp(itemType::Helmet).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Helmet).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(59.f, 91.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Chestplate)) {
+        eqp.emplace_back(true, Button(59.f, 140.f, hero->getItemFromEqp(itemType::Chestplate).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Chestplate).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(59.f, 140.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Leggings)) {
+        eqp.emplace_back(true, Button(59.f, 189.f, hero->getItemFromEqp(itemType::Leggings).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Leggings).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(59.f, 189.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Necklace)) {
+        eqp.emplace_back(true, Button(238.f, 91.f, hero->getItemFromEqp(itemType::Necklace).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Necklace).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(238.f, 91.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Gloves)) {
+        eqp.emplace_back(true, Button(238.f, 140.f, hero->getItemFromEqp(itemType::Gloves).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Gloves).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(238.f, 140.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Boots)) {
+        eqp.emplace_back(true, Button(238.f, 189.f, hero->getItemFromEqp(itemType::Boots).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Boots).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(238.f, 189.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Weapon)) {
+        eqp.emplace_back(true, Button(108.f, 238.f, hero->getItemFromEqp(itemType::Weapon).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Weapon).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(108.f, 238.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+    if (hero->checkIfEqp(itemType::Ring)) {
+        eqp.emplace_back(true, Button(157.f, 238.f, hero->getItemFromEqp(itemType::Ring).getPath()));
+        texts_eqp.push_back(hero->getItemFromEqp(itemType::Ring).getData());
+    }
+    else {
+        eqp.emplace_back(false, Button(157.f, 238.f, Item(0).getPath()));
+        texts_eqp.push_back(Item(0).getData());
+    }
+
 
     sf::Text hover(font);
     hover.setFillColor(sf::Color::Black);
     hover.setCharacterSize(8 * scale);
-
     bool hovering = false;
+    bool hoverAvaiable = true;
+
+    int isDragged = -1;
+    bool isDraggedFlag = false;
     while (window->isOpen()) {
         hovering = false;
         while (const std::optional event = window->pollEvent()) {
@@ -640,30 +749,63 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (!blacksmithAvaiable.empty() && !isDraggedFlag) {
+                for (int i = 0; i < blacksmithAvaiable.size(); i++) {
+                    int x = blacksmithAvaiable[i];
+                    if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
+                        items[x].setPosition({mousePos.x - 10.f, mousePos.y - 10.f});
+                        isDragged = x;
+                        isDraggedFlag = true;
+                        hoverAvaiable = false;
+                        break;
+                    }
+                }
+            }
+            if (back.isPressed(mousePos) && isDraggedFlag) {
+                break;
+            }
         }
-        if (!blacksmithAvaiable.empty()) {
-            for (int i = 0; i < blacksmithAvaiable.size(); i++) {
-                int x = blacksmithAvaiable[i];
+        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag) {
+            isDraggedFlag = false;
+            items[isDragged].setPosition({
+                                             startX + (isDragged % 3) * spacingX * 1.f,
+                                             startY + (isDragged / 3) * spacingY * 1.f
+                                         });
+            isDragged = -1;
+            hoverAvaiable = true;
+        }
+        if (isDraggedFlag && isDragged >= 0) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            items[isDragged].setPosition({static_cast<float>(mousePos.x - 10), static_cast<float>(mousePos.y - 10)});
+        }
+
+        if (!blacksmithAvaiable.empty() && hoverAvaiable) {
+            for (auto id: blacksmithAvaiable) {
+                int x = blacksmithAvaiable[id];
                 if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
-                    itemStats stats = blacksmithInv[x].getStats();
-                    std::string text;
-                    text = stats.name + " \nType: " + blacksmithInv[i].getTypeString() + ",\nItem LVL: " +
-                           std::to_string(stats.itemLvl);
-                    if (stats.hp > 0)
-                        text += ",\nHP: " + std::to_string(stats.hp);
-                    if (stats.def > 0)
-                        text += ",\nDEF: " + std::to_string(stats.def);
-                    if (stats.ad > 0)
-                        text += ",\nAD: " + std::to_string(stats.ad);
-                    if (stats.mana > 0)
-                        text += ",\nMana: " + std::to_string(stats.mana);
-                    if (stats.speed > 0)
-                        text += ",\nSpeed: " + std::to_string(stats.speed);
-                    hover.setString(text);
-                    hover.setPosition({items[x].getPosition().x - 85 * scale, items[x].getPosition().y + 36 * scale});
+                    hover.setString(texts[id]);
+                    hover.setPosition({items[x].getPosition().x - 85 * scale, items[x].getPosition().y + 34 * scale});
                     hover_frame.setPosition({
                                                 items[x].getPosition().x - 95 * scale,
                                                 items[x].getPosition().y + 27 * scale
+                                            });
+                    hovering = true;
+                    break;
+                }
+            }
+        }
+        if (hoverAvaiable) {
+            for (int i = 0; i < inventory.size(); i++) {
+                if (inventory[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() >
+                    0) {
+                    hover.setString(texts_inv[i]);
+                    hover.setPosition({
+                                          inventory[i].getPosition().x - 85 * scale,
+                                          inventory[i].getPosition().y + 34 * scale
+                                      });
+                    hover_frame.setPosition({
+                                                inventory[i].getPosition().x - 95 * scale,
+                                                inventory[i].getPosition().y + 27 * scale
                                             });
                     hovering = true;
                     break;
@@ -678,123 +820,29 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                 window->draw(items[id]);
             }
         }
+        if (!inventory.empty()) {
+            for (int i = 0; i < inventory.size(); i++) {
+                if (hero->getItemFromInventory(i).getId() > 0)
+                    window->draw(items[i]);
+            }
+        }
+        if (!eqp.empty()) {
+            for (int i = 0; i < eqp.size(); i++) {
+                if (eqp[i].first)
+                    window->draw(eqp[i].second);
+            }
+        }
+        window->draw(arrow_l);
+        window->draw(arrow_r);
+        window->draw(back);
+        if (isDraggedFlag && isDragged >= 0) {
+            window->draw(items[isDragged]);
+        }
         if (hovering) {
             window->draw(hover_frame);
             window->draw(hover);
         }
         window->display();
-    }
-}
-
-void game::itemBuy (character*& hero) {
-    while (true) {
-        if (blacksmithInv.empty()) {
-            continue;
-        }
-
-        std::cout << "Items List:\n" << std::endl;
-        for (size_t i = 0; i < blacksmithInv.size(); i++) {
-            itemStats stats = blacksmithInv[i].getStats();
-            std::cout << "\n" << i + 1 << ". " << stats.name << " (";
-            if (stats.hp != 0)
-                std::cout << "HP: " << stats.hp << ", ";
-            if (stats.def != 0)
-                std::cout << "DEF: " << stats.def << ", ";
-            if (stats.ad != 0)
-                std::cout << "AD: " << stats.ad << ", ";
-            if (stats.mana != 0)
-                std::cout << "Mana: " << stats.mana << ", ";
-            if (stats.speed != 0)
-                std::cout << "Speed: " << stats.speed;
-            std::cout << ") Price: " << stats.price << std::endl;
-        }
-
-        std::cout << "\n\n0. Go back." <<
-                "\n\n\n-------------------------------------------------------------------------------\n" << "\tMoney: "
-                << hero->currentgold << " Gold Coins\t\t Current HP: " << hero->currenthp << "\n\n" << std::endl;
-        hero->displayInv();
-        hero->displayEqp();
-        size_t dest;
-        while (true) {
-            std::cin >> dest;
-            if (dest >= 0 && dest <= blacksmithInv.size())
-                break;
-        }
-        if (dest == 0) {
-            setLocation(Location::Blacksmith);
-            break;
-        }
-        else if (dest > 0 && blacksmithInv.size() >= 1) {
-            itemStats stats = blacksmithInv[dest - 1].getStats();
-            if (stats.price <= hero->currentgold) {
-                hero->currentgold -= stats.price;
-                std::cout << "You have Bought " << stats.name << ". Item added to your inventory.";
-                hero->addToInv(blacksmithInv[dest - 1]);
-                //blacksmithAvaiable.erase(blacksmithAvaiable.begin() + (dest - 1));
-            }
-            else
-                std::cout << "You dont have enough money." << std::endl;
-        }
-    }
-}
-
-void game::inventoryMenagment (character*& hero) {
-    while (true) {
-        int eq;
-        std::cout << "------------==INVENTORY==------------\n\n" << "\tMoney: " << hero->currentgold <<
-                " Gold Coins\t\t Current HP: " << hero->currenthp <<
-                "\n\n\n-------------------------------------------------------------------------------\n\n" <<
-                "1. Equip\n2. Unequip\n\n0. Return\n\n" <<
-                "-------------------------------------------------------------------------------\n\n" <<
-                "\tPotions in Inventory:\n\n\t\t1. Instant Health Potion: x" << hero->getHPpot() <<
-                "\n\t\t2. Potion of Regeneration: x" << hero->getHPRegpot() << std::endl;
-        if (hero->getLvl() >= 5)
-            std::cout << "\t\t3. Potion of Mana Regeneration: x" << hero->getManapot() << std::endl;
-        if (hero->getLvl() >= 10)
-            std::cout << "\t\t4. Potion of Fast Action: x" << hero->getActionpot() << std::endl;
-        std::cout << "\n\n-------------------------------------------------------------------------------\n\n";
-        hero->displayEqp();
-        std::cout << "\n\n-------------------------------------------------------------------------------\n\n";
-        hero->displayInv();
-        while (true) {
-            std::cin >> eq;
-            if (eq >= 0 && eq <= 2)
-                break;
-        }
-        if (eq == 0) {
-            std::cout << "\nReturning..." << std::endl;
-
-
-            break;
-        }
-        else if (eq == 1) {
-            int index;
-            std::cout << "Choose item that you want to equip:\n\n0. Cancel\n" << std::endl;
-            hero->displayInv();
-            while (true) {
-                std::cin >> index;
-                if (index >= 0 && index <= hero->getInvSize())
-                    break;
-            }
-            if (index != 0)
-                hero->equip(index);
-        }
-        else if (eq == 2) {
-            int index;
-
-
-            std::cout << "Choose item that you want to unequip:\n" << std::endl;
-            hero->displayEqp();
-            while (true) {
-                std::cin >> index;
-                if (index >= 1 && index <= 8)
-                    break;
-            }
-            if (!hero->checkIfEqp(index))
-                std::cout << "\nNo item in that slot.";
-            else
-                hero->unequip(hero->getItemByIndex(index));
-        }
     }
 }
 

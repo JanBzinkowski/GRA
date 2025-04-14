@@ -1,9 +1,9 @@
+#ifndef ITEMTYPE_H
+#define ITEMTYPE_H
+
 #include <unordered_map>
-#include <vector>
-#include <optional>
 #include <string>
 #include <random>
-#pragma once
 
 class character;
 
@@ -45,38 +45,4 @@ struct itemStats {
 
 extern std::unordered_map<int, itemStats> itemData;
 
-class Item {
-    friend class character;
-
-    private:
-        int id;
-        itemStats stats = itemData.at(id);
-        std::mt19937 gen;
-
-    public:
-        Item (int ItemId): id(ItemId) {
-            stats = itemData.at(ItemId);
-        }
-
-        itemStats getStats () const;
-        void generateStats (std::mt19937& gen, character*& hero);
-        int getId () const;
-        itemType getType () const;
-        std::string getTypeString () const;
-        std::string getPath () const;
-};
-
-class Inventory {
-    friend class character;
-
-    private:
-        std::vector<Item> items;
-
-    public:
-        void addItem (const Item& item);
-        void removeItem (int index);
-
-        std::optional<Item> getItemByIndex (size_t index) const;
-        void printInv () const;
-        int getInvSize () const;
-};
+#endif //ITEMTYPE_H
