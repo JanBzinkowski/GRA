@@ -65,7 +65,7 @@ void Item::generateStats (std::mt19937& gen, character*& hero) {
 
 std::string Item::getData () const {
     std::string text;
-    text = stats.name + " \nType: Helmet,\nItem LVL: " + std::to_string(stats.itemLvl);
+    text = stats.name + " \nType: " + getTypeString() + ",\nItem LVL: " + std::to_string(stats.itemLvl);
     if (stats.hp > 0)
         text += ",\nHP: " + std::to_string(stats.hp);
     if (stats.def > 0)

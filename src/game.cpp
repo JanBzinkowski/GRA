@@ -607,6 +607,8 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     updateBlacksmith();
     itemRandomize(hero, gen);
 
+    sf::FloatRect shop_rect({377.f * scale, 199.f * scale}, {130.f * scale, 81.f * scale});
+
     sf::Texture blacksmith_bg;
     if (!blacksmith_bg.loadFromFile("src\\textures\\GUI\\gui_blacksmith.png")) {
         std::cerr << "Failed to load texture from file: src\\textures\\GUI\\gui_blacksmith.png" << std::endl;
@@ -629,13 +631,13 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
 
     std::vector<Button> items;
-    int startX = 377;
-    int startY = 199;
+    float startX = 377;
+    float startY = 199;
     int spacingX = 49;
     int spacingY = 49;
     for (int i = 0; i < 6; ++i) {
-        int x = startX + (i % 3) * spacingX;
-        int y = startY + (i / 3) * spacingY;
+        float x = startX + (i % 3) * spacingX;
+        float y = startY + (i / 3) * spacingY;
         items.emplace_back(x, y, blacksmithInv[i].getPath());
     }
 
@@ -646,9 +648,9 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     for (int i = 0; i < hero->getInvSize(); ++i) {
         int x = startXinv + spacingXinv * i;
         if (hero->getItemFromInventory(i).getId() > 0)
-            items.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
+            inventory.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
         else
-            items.emplace_back(x, startYinv, "src\\textures\\items\\Buty.png");
+            inventory.emplace_back(x, startYinv, "src\\textures\\items\\Buty.png");
     }
 
 
@@ -661,75 +663,33 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     for (int i = 0; i < hero->getInvSize(); ++i) {
         if (hero->getItemFromInventory(i).getId() > 0) {
             texts_inv.push_back(hero->getItemFromInventory(i).getData());
-            texts.push_back(Item(0).getData());
+        }
+        else {
+            texts_inv.push_back(Item(0).getData());
         }
     }
 
     std::vector<std::pair<bool, Button>> eqp;
     std::vector<std::string> texts_eqp;
-    if (hero->checkIfEqp(itemType::Helmet)) {
-        eqp.emplace_back(true, Button(59.f, 91.f, hero->getItemFromEqp(itemType::Helmet).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Helmet).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(59.f, 91.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Chestplate)) {
-        eqp.emplace_back(true, Button(59.f, 140.f, hero->getItemFromEqp(itemType::Chestplate).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Chestplate).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(59.f, 140.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Leggings)) {
-        eqp.emplace_back(true, Button(59.f, 189.f, hero->getItemFromEqp(itemType::Leggings).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Leggings).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(59.f, 189.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Necklace)) {
-        eqp.emplace_back(true, Button(238.f, 91.f, hero->getItemFromEqp(itemType::Necklace).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Necklace).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(238.f, 91.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Gloves)) {
-        eqp.emplace_back(true, Button(238.f, 140.f, hero->getItemFromEqp(itemType::Gloves).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Gloves).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(238.f, 140.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Boots)) {
-        eqp.emplace_back(true, Button(238.f, 189.f, hero->getItemFromEqp(itemType::Boots).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Boots).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(238.f, 189.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Weapon)) {
-        eqp.emplace_back(true, Button(108.f, 238.f, hero->getItemFromEqp(itemType::Weapon).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Weapon).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(108.f, 238.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
-    }
-    if (hero->checkIfEqp(itemType::Ring)) {
-        eqp.emplace_back(true, Button(157.f, 238.f, hero->getItemFromEqp(itemType::Ring).getPath()));
-        texts_eqp.push_back(hero->getItemFromEqp(itemType::Ring).getData());
-    }
-    else {
-        eqp.emplace_back(false, Button(157.f, 238.f, Item(0).getPath()));
-        texts_eqp.push_back(Item(0).getData());
+    std::vector<itemType> types = {
+        itemType::Helmet,
+        itemType::Chestplate,
+        itemType::Leggings,
+        itemType::Necklace,
+        itemType::Gloves,
+        itemType::Boots,
+        itemType::Weapon,
+        itemType::Ring
+    };
+
+    std::vector<float> xs = {59.f, 59.f, 59.f, 206.f, 206.f, 206.f, 108.f, 157.f};
+    std::vector<float> ys = {91.f, 140.f, 189.f, 91.f, 140.f, 189.f, 238.f, 238.f};
+
+    for (size_t i = 0; i < types.size(); ++i) {
+        bool has = hero->checkIfEqp(types[i]);
+        Item item = has? hero->getItemFromEqp(types[i]) : Item(0);
+        eqp.emplace_back(has, Button(xs[i], ys[i], item.getPath()));
+        texts_eqp.push_back(item.getData());
     }
 
 
@@ -740,6 +700,8 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     bool hoverAvaiable = true;
 
     int isDragged = -1;
+    int isDraggedInv = -1;
+    int isDraggedEqp = -1;
     bool isDraggedFlag = false;
     while (window->isOpen()) {
         hovering = false;
@@ -749,11 +711,16 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (!blacksmithAvaiable.empty() && !isDraggedFlag) {
+            if (back.isPressed(mousePos) && !isDraggedFlag) {
+                break;
+            }
+            if (!blacksmithAvaiable.empty() && !isDraggedFlag && shop_rect.
+                contains(static_cast<sf::Vector2f>(mousePos))) {
                 for (int i = 0; i < blacksmithAvaiable.size(); i++) {
                     int x = blacksmithAvaiable[i];
-                    if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
-                        items[x].setPosition({mousePos.x - 10.f, mousePos.y - 10.f});
+                    if (items[x].isPressed(mousePos)) {
+                        startX = items[x].getPosition().x;
+                        startY = items[x].getPosition().y;
                         isDragged = x;
                         isDraggedFlag = true;
                         hoverAvaiable = false;
@@ -761,40 +728,158 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                     }
                 }
             }
-            if (back.isPressed(mousePos) && isDraggedFlag) {
-                break;
+            else if (!isDraggedFlag) {
+                bool check = true;
+                for (int i = 0; i < inventory.size(); i++) {
+                    if (inventory[i].isPressed(mousePos) && hero->getItemFromInventory(i).getId() > 0) {
+                        startX = inventory[i].getPosition().x;
+                        startY = inventory[i].getPosition().y;
+                        isDraggedFlag = true;
+                        isDraggedInv = i;
+                        hoverAvaiable = false;
+                        check = false;
+                        break;
+                    }
+                }
+                if (check) {
+                    for (int i = 0; i < eqp.size(); i++) {
+                        if (eqp[i].second.isPressed(mousePos) && hero->checkIfEqp(types[i])) {
+                            startX = eqp[i].second.getPosition().x;
+                            startY = eqp[i].second.getPosition().y;
+                            isDraggedFlag = true;
+                            isDraggedEqp = i;
+                            hoverAvaiable = false;
+                            break;
+                        }
+                    }
+                }
             }
         }
-        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag) {
+        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            bool checkEqp = true;
+            for (int i = 0; i < inventory.size(); i++) {
+                if (inventory[i].isPressed(mousePos) && hero->isAvailable(i)) {
+                    hero->addToInv(blacksmithInv[isDragged], i);
+                    hero->goldInc(-blacksmithInv[isDragged].getStats().price);
+                    for (int z = 0; z < blacksmithAvaiable.size(); z++) {
+                        if (blacksmithAvaiable[z] == isDragged) {
+                            blacksmithAvaiable.erase(blacksmithAvaiable.begin() + z);
+                        }
+                    }
+                    inventory[i].setTextureFile(blacksmithInv[isDragged].getPath());
+                    texts_inv[i] = blacksmithInv[isDragged].getData();
+                    checkEqp = false;
+                    break;
+                }
+            }
+            if (checkEqp) {
+                for (int i = 0; i < eqp.size(); ++i) {
+                    if (eqp[i].second.isPressed(mousePos)) {
+                        if (blacksmithInv[isDragged].getType() == types[i]) {
+                            if (hero->checkIfEqp(types[i])) {
+                                inventory[hero->get1stAvaiableIndex()].
+                                        setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                texts_inv[hero->get1stAvaiableIndex()] = hero->getItemFromEqp(types[i]).getData();
+                            }
+                            hero->equipItem(blacksmithInv[isDragged]);
+                            hero->goldInc(-blacksmithInv[isDragged].getStats().price);
+                            for (int z = 0; z < blacksmithAvaiable.size(); z++) {
+                                if (blacksmithAvaiable[z] == isDragged) {
+                                    blacksmithAvaiable.erase(blacksmithAvaiable.begin() + z);
+                                }
+                            }
+                            eqp[i].first = true;
+                            eqp[i].second.setTextureFile(blacksmithInv[isDragged].getPath());
+                            texts_eqp[i] = blacksmithInv[isDragged].getData();
+                        }
+                        break;
+                    }
+                }
+            }
             isDraggedFlag = false;
-            items[isDragged].setPosition({
-                                             startX + (isDragged % 3) * spacingX * 1.f,
-                                             startY + (isDragged / 3) * spacingY * 1.f
-                                         });
+            items[isDragged].setPosition({startX / scale, startY / scale});
             isDragged = -1;
+            hoverAvaiable = true;
+            //     eqp[isDraggedEqp].second.setPosition({startX * 1.f, startY * 1.f});
+            //     isDragged = -1;
+            //     hoverAvaiable = true;
+        }
+        else if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDraggedInv >= 0) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            bool checkEqp = true;
+            bool checkShop = checkShop = shop_rect.contains(static_cast<sf::Vector2f>(mousePos));
+            if (!checkShop)
+                for (int i = 0; i < inventory.size(); i++) {
+                    if (inventory[i].isPressed(mousePos)) {
+                        hero->swapItems(isDraggedInv, i);
+                        inventory[i].setTextureFile(hero->getItemFromInventory(i).getPath());
+                        texts_inv[i] = hero->getItemFromInventory(i).getData();
+                        inventory[isDraggedInv].setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                        texts_inv[isDraggedInv] = hero->getItemFromInventory(isDraggedInv).getData();
+                        checkEqp = false;
+                        break;
+                    }
+                }
+            if (checkEqp && !checkShop) {
+                for (int i = 0; i < eqp.size(); ++i) {
+                    if (eqp[i].second.isPressed(mousePos)) {
+                        if (hero->getItemFromInventory(isDraggedInv).getType() == types[i]) {
+                            if (hero->checkIfEqp(types[i])) {
+                                inventory[isDraggedInv].setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                texts_inv[hero->get1stAvaiableIndex()] = hero->getItemFromEqp(types[i]).getData();
+                            }
+                            hero->equipFromInv(isDraggedInv);
+                            eqp[i].first = true;
+                            eqp[i].second.setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                            texts_eqp[i] = hero->getItemFromInventory(isDraggedInv).getData();
+                        }
+                        break;
+                    }
+                }
+            }
+            else if (checkShop) {
+                hero->goldInc(hero->getItemFromInventory(isDraggedInv).getStats().price);
+                hero->removeFromInv(isDraggedInv);
+                inventory[isDraggedInv].setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                texts_inv[isDraggedInv] = hero->getItemFromInventory(isDraggedInv).getData();
+            }
+            inventory[isDraggedInv].setPosition({startX / scale, startY / scale});
+            isDraggedFlag = false;
+            isDraggedInv = -1;
             hoverAvaiable = true;
         }
         if (isDraggedFlag && isDragged >= 0) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            items[isDragged].setPosition({static_cast<float>(mousePos.x - 10), static_cast<float>(mousePos.y - 10)});
+            items[isDragged].setPosition({mousePos.x / scale - 14, mousePos.y / scale - 14});
         }
-
-        if (!blacksmithAvaiable.empty() && hoverAvaiable) {
-            for (auto id: blacksmithAvaiable) {
-                int x = blacksmithAvaiable[id];
-                if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
-                    hover.setString(texts[id]);
-                    hover.setPosition({items[x].getPosition().x - 85 * scale, items[x].getPosition().y + 34 * scale});
-                    hover_frame.setPosition({
-                                                items[x].getPosition().x - 95 * scale,
-                                                items[x].getPosition().y + 27 * scale
-                                            });
-                    hovering = true;
-                    break;
-                }
-            }
+        if (isDraggedFlag && isDraggedInv >= 0) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            inventory[isDraggedInv].setPosition({mousePos.x / scale - 14, mousePos.y / scale - 14});
+        }
+        if (isDraggedFlag && isDraggedEqp >= 0) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            eqp[isDraggedEqp].second.setPosition({mousePos.x / scale - 14, mousePos.y / scale - 14});
         }
         if (hoverAvaiable) {
+            if (!blacksmithAvaiable.empty()) {
+                for (int i = 0; i < blacksmithAvaiable.size(); i++) {
+                    int x = blacksmithAvaiable[i];
+                    if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
+                        hover.setString(texts[x]);
+                        hover.setPosition({
+                                              items[x].getPosition().x - 85 * scale,
+                                              items[x].getPosition().y + 34 * scale
+                                          });
+                        hover_frame.setPosition({
+                                                    items[x].getPosition().x - 95 * scale,
+                                                    items[x].getPosition().y + 27 * scale
+                                                });
+                        hovering = true;
+                        break;
+                    }
+                }
+            }
             for (int i = 0; i < inventory.size(); i++) {
                 if (inventory[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() >
                     0) {
@@ -811,7 +896,23 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                     break;
                 }
             }
+            for (int i = 0; i < eqp.size(); i++) {
+                if (eqp[i].second.isPressed(sf::Mouse::getPosition(*window)) && hero->checkIfEqp(types[i])) {
+                    hover.setString(texts_eqp[i]);
+                    sf::Vector2f pos = {
+                        eqp[i].second.getPosition().x - 85 * scale,
+                        eqp[i].second.getPosition().y + 34 * scale
+                    };
+                    if (pos.x - 10 < 0)
+                        pos.x += -(pos.x - 20 * scale);
+                    hover.setPosition({pos.x, pos.y});
+                    hover_frame.setPosition({pos.x - 10 * scale, pos.y - 7 * scale});
+                    hovering = true;
+                    break;
+                }
+            }
         }
+
         window->clear();
         window->draw(blacksmith_background);
         window->draw(gui);
@@ -820,17 +921,13 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                 window->draw(items[id]);
             }
         }
-        if (!inventory.empty()) {
-            for (int i = 0; i < inventory.size(); i++) {
-                if (hero->getItemFromInventory(i).getId() > 0)
-                    window->draw(items[i]);
-            }
+        for (int i = 0; i < inventory.size(); i++) {
+            if (hero->getItemFromInventory(i).getId() > 0)
+                window->draw(inventory[i]);
         }
-        if (!eqp.empty()) {
-            for (int i = 0; i < eqp.size(); i++) {
-                if (eqp[i].first)
-                    window->draw(eqp[i].second);
-            }
+        for (int i = 0; i < eqp.size(); i++) {
+            if (eqp[i].first)
+                window->draw(eqp[i].second);
         }
         window->draw(arrow_l);
         window->draw(arrow_r);

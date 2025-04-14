@@ -21,7 +21,7 @@ class character {
         stats stat;
         statsincrese incstats;
         int extraSlot = 0;
-        Inventory inventory;
+        Inventory heroInv;
 
         std::string save;
 
@@ -78,18 +78,23 @@ class character {
             resistance[DamageType::Physical] = 1.0f;
             resistance[DamageType::Enviroment] = 1.0f;
             for (int i = 0; i < extra; i++) {
-                inventory.addSlot();
+                heroInv.addSlot();
             }
         }
 
         void updateStats (itemStats stats, bool equip);
         int getInvSize () const;
+        int get1stAvaiableIndex () const;
+        bool isAvailable (const int slot) const;
+        void swapItems (size_t i, size_t x);
         void displayEqp () const;
         bool checkIfEqp (itemType type) const;
         Item getItemFromEqp (itemType type) const;
         void addToInv (const Item& item, const int slot);
-        void equip (size_t index);
-        void unequip (const Item& item);
+        void removeFromInv (const int slot);
+        void equipItem (const Item& item);
+        void equipFromInv (const int& slot);
+        void unequip (const itemType type, int slot = -1);
         Item getItemFromInventory (int slot) const;
 
         virtual std::string getClass () const = 0;

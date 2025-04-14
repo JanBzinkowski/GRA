@@ -22,7 +22,9 @@ class Inventory {
         int getInvSize () const;
         int get1stAvailableSlot () const;
         int getAvaiableAmount () const;
-        std::optional<Item> getItemByIndex (size_t index) const;
+        Item getItemByIndex (size_t index) const;
+        void swapItems (size_t index1, size_t index2);
+        bool isAvaiable (const int index) const;
 };
 
 

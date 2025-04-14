@@ -36,8 +36,21 @@ void character::updateStats (itemStats stats, bool equip) {
 }
 
 int character::getInvSize () const {
-    return inventory.getInvSize();
+    return heroInv.getInvSize();
 }
+
+int character::get1stAvaiableIndex () const {
+    return heroInv.get1stAvailableSlot();
+}
+
+bool character::isAvailable (const int slot) const {
+    return heroInv.isAvaiable(slot);
+}
+
+void character::swapItems (size_t i, size_t x) {
+    heroInv.swapItems(i, x);
+}
+
 
 void character::displayEqp () const {
     std::cout << "Equipment:\n" << std::endl;
@@ -180,7 +193,7 @@ void character::displayEqp () const {
 }
 
 Item character::getItemFromInventory (int slot) const {
-    return inventory.inventory[slot];
+    return heroInv.inventory[slot];
 }
 
 bool character::checkIfEqp (itemType type) const {
@@ -281,134 +294,171 @@ Item character::getItemFromEqp (itemType type) const {
 
 
 void character::addToInv (const Item& item, const int slot) {
-    inventory.addItem(item, slot);
+    heroInv.addItem(item, slot);
 }
 
-void character::equip (size_t index) {
-    std::optional<Item> item = inventory.getItemByIndex(index);
-    itemStats itemstats = item->getStats();
-    switch (item->getType()) {
+void character::removeFromInv (const int slot) {
+    heroInv.removeItem(slot);
+}
+
+
+void character::equipItem (const Item& item) {
+    itemType type = item.getType();
+    unequip(type);
+    switch (type) {
         case itemType::Helmet: {
-            if (helmetslot)
-                unequip(*helmetslot);
             helmetslot = item;
             break;
         }
-        case itemType::Necklace: {
-            if (necklaceslot)
-                unequip(*necklaceslot);
-            necklaceslot = item;
-            break;
-        }
         case itemType::Chestplate: {
-            if (chestplateslot)
-                unequip(*chestplateslot);
             chestplateslot = item;
             break;
         }
+        case itemType::Necklace: {
+            necklaceslot = item;
+            break;
+        }
         case itemType::Gloves: {
-            if (glovesslot)
-                unequip(*glovesslot);
             glovesslot = item;
             break;
         }
         case itemType::Ring: {
-            if (ringslot)
-                unequip(*ringslot);
             ringslot = item;
             break;
         }
         case itemType::Leggings: {
-            if (leggingsslot)
-                unequip(*leggingsslot);
             leggingsslot = item;
             break;
         }
         case itemType::Boots: {
-            if (bootsslot)
-                unequip(*bootsslot);
             bootsslot = item;
             break;
         }
         case itemType::Weapon: {
-            if (weaponslot)
-                unequip(*weaponslot);
             weaponslot = item;
             break;
         }
-        default: {
-            std::cout << "ERROR" << std::endl;
-            return;
-            break;
-        }
     }
-    inventory.removeItem(index - 1);
-    stats statistics = stat;
-    updateStats(itemstats, true);
-
-    std::cout << "\nYour Stats:\n" << std::endl;
-    std::cout << "Atk: " << statistics.ad << " + " << stat.ad - statistics.ad << " (" << stat.ad << ")" << std::endl;
-    std::cout << "Def: " << statistics.def << " + " << stat.def - statistics.def << " (" << stat.def << ")" <<
-            std::endl;
-    std::cout << "HP: " << statistics.basehp << " + " << stat.basehp - statistics.basehp << "(" << stat.basehp << ")" <<
-            std::endl;
-    std::cout << "Mana: " << statistics.mana << " + " << stat.mana - statistics.mana << " (" << stat.mana << ")" <<
-            std::endl;
-    std::cout << "Speed: " << statistics.speed << " + " << stat.speed - statistics.speed << " (" << stat.speed << ")" <<
-            std::endl;
+    itemStats stats = item.getStats();
+    updateStats(stats, true);
 }
 
-void character::unequip (const Item& item) {
-    itemStats stats = item.getStats();
-    inventory.addItem(item, inventory.avaiableSlot[0]);
-    switch (item.getType()) {
+void character::equipFromInv (const int& slot) {
+    Item item = heroInv.getItemByIndex(slot);
+    itemType type = item.getType();
+    unequip(type, slot);
+    switch (type) {
         case itemType::Helmet: {
-            if (helmetslot && helmetslot->getId() == item.getId())
-                helmetslot.reset();
+            helmetslot = item;
             break;
         }
         case itemType::Chestplate: {
-            if (chestplateslot && chestplateslot->getId() == item.getId())
-                chestplateslot.reset();
+            chestplateslot = item;
             break;
         }
         case itemType::Necklace: {
-            if (necklaceslot && necklaceslot->getId() == item.getId())
-                necklaceslot.reset();
+            necklaceslot = item;
             break;
         }
         case itemType::Gloves: {
-            if (glovesslot && glovesslot->getId() == item.getId())
-                glovesslot.reset();
+            glovesslot = item;
             break;
         }
         case itemType::Ring: {
-            if (ringslot && ringslot->getId() == item.getId())
-                ringslot.reset();
+            ringslot = item;
             break;
         }
         case itemType::Leggings: {
-            if (leggingsslot && leggingsslot->getId() == item.getId())
-                leggingsslot.reset();
+            leggingsslot = item;
             break;
         }
         case itemType::Boots: {
-            if (bootsslot && bootsslot->getId() == item.getId())
-                bootsslot.reset();
+            bootsslot = item;
             break;
         }
         case itemType::Weapon: {
-            if (weaponslot && weaponslot->getId() == item.getId())
+            weaponslot = item;
+            break;
+        }
+    }
+    itemStats stats = item.getStats();
+    updateStats(stats, true);
+}
+
+void character::unequip (const itemType type, int slot) {
+    if (slot < 0)
+        slot = heroInv.get1stAvailableSlot();
+    itemStats stats = Item(0).getStats();
+    switch (type) {
+        case itemType::Helmet: {
+            if (helmetslot) {
+                stats = helmetslot->getStats();
+                heroInv.inventory[slot] = *helmetslot;
+                helmetslot.reset();
+            }
+            break;
+        }
+        case itemType::Chestplate: {
+            if (chestplateslot) {
+                stats = chestplateslot->getStats();
+                heroInv.inventory[slot] = *chestplateslot;
+                chestplateslot.reset();
+            }
+            break;
+        }
+        case itemType::Necklace: {
+            if (necklaceslot) {
+                stats = necklaceslot->getStats();
+                heroInv.inventory[slot] = *necklaceslot;
+                necklaceslot.reset();
+            }
+            break;
+        }
+        case itemType::Gloves: {
+            if (glovesslot) {
+                stats = glovesslot->getStats();
+                heroInv.inventory[slot] = *glovesslot;
+                glovesslot.reset();
+            }
+            break;
+        }
+        case itemType::Ring: {
+            if (ringslot) {
+                stats = ringslot->getStats();
+                heroInv.inventory[slot] = *ringslot;
+                ringslot.reset();
+            }
+            break;
+        }
+        case itemType::Leggings: {
+            if (leggingsslot) {
+                stats = leggingsslot->getStats();
+                heroInv.inventory[slot] = *leggingsslot;
+                leggingsslot.reset();
+            }
+            break;
+        }
+        case itemType::Boots: {
+            if (bootsslot) {
+                stats = bootsslot->getStats();
+                heroInv.inventory[slot] = *bootsslot;
+                bootsslot.reset();
+            }
+            break;
+        }
+        case itemType::Weapon: {
+            if (weaponslot) {
+                stats = weaponslot->getStats();
+                heroInv.inventory[slot] = *weaponslot;
                 weaponslot.reset();
+            }
             break;
         }
         default: {
-            std::cout << "Item is not Eqipped" << std::endl;
             return;
         }
     }
     updateStats(stats, false);
-    std::cout << "\nUneqipped " << itemData.at(item.getId()).name << std::endl;
 }
 
 void character::lvlup () {
@@ -771,10 +821,10 @@ void character::save_to_file (character*& hero) {
                 getResistance(DamageType::MagicAir) << "\n" << hero->getResistance(DamageType::Physical) << "\n" << hero
                 ->getResistance(DamageType::Enviroment) << "\n" << hero->getExtraSlot() << "\n";
 
-        int invSize = inventory.getInvSize() - inventory.getAvaiableAmount();
+        int invSize = heroInv.getInvSize() - heroInv.getAvaiableAmount();
         file << invSize << "\n";
 
-        const auto& inv = hero->inventory.inventory;
+        const auto& inv = hero->heroInv.inventory;
 
         for (size_t i = 0; i < inv.size(); ++i) {
             const Item& item = inv[i];
@@ -916,7 +966,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
             file >> item.stats.def;
             file >> item.stats.mana;
             file >> item.stats.speed;
-            hero->inventory.addItem(item, slot);
+            hero->heroInv.addItem(item, slot);
         }
         std::string isSlot;
         file >> isSlot;
