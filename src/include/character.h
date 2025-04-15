@@ -95,6 +95,7 @@ class character {
         void equipItem (const Item& item);
         void equipFromInv (const int& slot);
         void unequip (const itemType type, int slot = -1);
+        void removeFromEqp (const itemType type);
         Item getItemFromInventory (int slot) const;
 
         virtual std::string getClass () const = 0;

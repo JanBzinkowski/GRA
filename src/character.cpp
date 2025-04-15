@@ -344,9 +344,13 @@ void character::equipItem (const Item& item) {
 }
 
 void character::equipFromInv (const int& slot) {
+    bool remove = false;
     Item item = heroInv.getItemByIndex(slot);
     itemType type = item.getType();
-    unequip(type, slot);
+    if (checkIfEqp(type))
+        unequip(type, slot);
+    else
+        remove = true;
     switch (type) {
         case itemType::Helmet: {
             helmetslot = item;
@@ -383,6 +387,8 @@ void character::equipFromInv (const int& slot) {
     }
     itemStats stats = item.getStats();
     updateStats(stats, true);
+    if (remove)
+        removeFromInv(slot);
 }
 
 void character::unequip (const itemType type, int slot) {
@@ -460,6 +466,54 @@ void character::unequip (const itemType type, int slot) {
     }
     updateStats(stats, false);
 }
+
+void character::removeFromEqp (const itemType type) {
+    Item item(0);
+    switch (type) {
+        case itemType::Helmet: {
+            item = *helmetslot;
+            helmetslot = std::nullopt;
+            break;
+        }
+        case itemType::Chestplate: {
+            item = *chestplateslot;
+            chestplateslot = std::nullopt;
+            break;
+        }
+        case itemType::Necklace: {
+            item = *necklaceslot;
+            necklaceslot = std::nullopt;
+            break;
+        }
+        case itemType::Gloves: {
+            item = *glovesslot;
+            glovesslot = std::nullopt;
+            break;
+        }
+        case itemType::Ring: {
+            item = *ringslot;
+            ringslot = std::nullopt;
+            break;
+        }
+        case itemType::Leggings: {
+            item = *leggingsslot;
+            leggingsslot = std::nullopt;
+            break;
+        }
+        case itemType::Boots: {
+            item = *bootsslot;
+            bootsslot = std::nullopt;
+            break;
+        }
+        case itemType::Weapon: {
+            item = *weaponslot;
+            weaponslot = std::nullopt;
+            break;
+        }
+    }
+    updateStats(item.getStats(), false);
+}
+
 
 void character::lvlup () {
     int exp_treshold = 5 * pow(stat.lvl, 2.2) + 25;
@@ -821,7 +875,7 @@ void character::save_to_file (character*& hero) {
                 getResistance(DamageType::MagicAir) << "\n" << hero->getResistance(DamageType::Physical) << "\n" << hero
                 ->getResistance(DamageType::Enviroment) << "\n" << hero->getExtraSlot() << "\n";
 
-        int invSize = heroInv.getInvSize() - heroInv.getAvaiableAmount();
+        int invSize = hero->heroInv.getInvSize() - hero->heroInv.getAvaiableAmount();
         file << invSize << "\n";
 
         const auto& inv = hero->heroInv.inventory;
