@@ -86,6 +86,8 @@ class game {
         void tavern (character*& hero, sf::RenderWindow* window);
         void blacksmith (character*& hero, sf::RenderWindow* window);
 
+        void inventory (character*& hero, sf::RenderWindow* window);
+
         int fight (character*& hero, int enemyID, sf::RenderWindow* window);
 
         void heroaction (character*& enemy, character*& hero);
