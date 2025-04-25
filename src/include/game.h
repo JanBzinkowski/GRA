@@ -78,13 +78,18 @@ class game {
         void optionsGraph (sf::RenderWindow* window);
         void optionsS (sf::RenderWindow* window);
         void createhero (character*& hero, sf::RenderWindow* window);
+
+        std::string getTextSave (std::string filename);
         void saveRead (character*& hero, sf::RenderWindow* window, std::string filename);
-        void worldMap (character*& hero);
+        void worldMap (character*& hero, sf::RenderWindow* window);
         void city (character*& hero, sf::RenderWindow* window);
 
         void church (character*& hero, sf::RenderWindow* window);
         void tavern (character*& hero, sf::RenderWindow* window);
         void blacksmith (character*& hero, sf::RenderWindow* window);
+        std::string getBlacksmithInvPath (character*& hero);
+        void saveBlacksmithInv (character*& hero);
+        void loadBlacksmithInv (character*& hero);
 
         void inventory (character*& hero, sf::RenderWindow* window);
 
@@ -93,7 +98,8 @@ class game {
         void heroaction (character*& enemy, character*& hero);
         void enemyaction (character*& enemy, character*& hero);
 
-        int fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3);
+        int fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3,
+                    sf::RenderWindow* window);
         void fightEnd (character*& hero, character*& enemy);
 
         void itemRandomize (character*& hero, std::mt19937& gen);

@@ -16,6 +16,15 @@ class Item {
             stats = itemData.at(ItemId);
         }
 
+        Item (int ItemId, itemStats stat): id(ItemId) {
+            stats = itemData.at(ItemId);
+            stats.hp = stat.hp;
+            stats.ad = stat.ad;
+            stats.def = stat.def;
+            stats.mana = stat.mana;
+            stats.speed = stat.speed;
+        }
+
         itemStats getStats () const;
         void generateStats (std::mt19937& gen, character*& hero);
         int getId () const;

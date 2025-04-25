@@ -61,7 +61,7 @@ int main () {
                 game.optionsS(window);
             }
             else if (game.getLocation() == Location::Map) {
-                game.worldMap(hero);
+                game.worldMap(hero, window);
             }
             else if (game.getLocation() == Location::City) {
                 game.city(hero, window);

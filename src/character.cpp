@@ -649,6 +649,10 @@ std::string character::getName () const {
     return name;
 }
 
+std::string character::getPath () const {
+    return stat.path;
+}
+
 int character::getSpeed () const {
     return stat.speed;
 }

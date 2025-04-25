@@ -5,10 +5,9 @@
 #include <string>
 #include "include/enemy.h"
 
-std::unordered_map <int, enemyStats> enemies
-{
+std::unordered_map<int, enemyStats> enemies{
     //prologue
-    {0, {{1, 20, 5, 7, 0, 1}, "Killer Bunny", enemyClasses::enemyWarrior}},
+    {0, {{1, 20, 2, 7, 0, 1}, "Killer Bunny", enemyClasses::enemyWarrior}},
     {1, {{2, 37, 5, 10, 0, 1}, "Butt-kicking Rabbit", enemyClasses::enemyWarrior}},
     {2, {{2, 25, 7, 7, 0, 1}, "Magical Crow", enemyClasses::enemyMage}},
     {3, {{2, 28, 6, 7, 0, 2}, "Stinger-shooting Bee", enemyClasses::enemyArcher}},

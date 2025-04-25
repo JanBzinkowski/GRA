@@ -109,6 +109,7 @@ class character {
         int getMaxMana () const;
         int getSpeed () const;
         std::string getName () const;
+        std::string getPath () const;
 
         void setHPpot (int x);
         int getHPpot () const;

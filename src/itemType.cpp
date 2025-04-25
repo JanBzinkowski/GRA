@@ -1,8 +1,5 @@
 #include "include/itemType.h"
-#include <iostream>
 #include <string>
-#include <random>
-#include "character.h"
 // @formatter:off
 std::unordered_map<int, itemStats> itemData = {
     {0,{"Error Item",itemType::ERROR,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,"src\\textures\\items\\Buty.png"}},
