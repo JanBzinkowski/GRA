@@ -8,6 +8,8 @@
 #include <button.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <fstream>
+
+#include "HealthBar.h"
 #include "Slider.h"
 #define PotionTime 3
 
@@ -29,7 +31,7 @@ character* game::createEnemy (const enemyStats& stats) {
 }
 
 bool game::areShopsOpen () const {
-    if (Time.gettime() >= 480 && Time.gettime() < 1320)
+    if (time.gettime().x >= 7 && time.gettime().x < 22)
         return true;
     return false;
 }
@@ -134,9 +136,10 @@ bool game::retcity () {
 // }
 
 void game::lvl0 (character*& hero, sf::RenderWindow* window) {
+    time.pause();
     std::cout << "Currently playing: Tutorial" << std::endl;
     character* enemy1 = createEnemy(enemies.at(0));
-    enemy1->setExpworth(18);
+    enemy1->setExpworth(30);
     enemy1->setGoldworth(10);
 
 
@@ -153,11 +156,11 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
             "\nThe King got attacked by a bunny. But there was something wrong with that bunny... You came to help and then the Killer Bunny attacked you."
             << std::endl;
 
-    if (fight(hero, 0, window) == 0) {
+    if (fight(hero, enemy1, window) == 0) {
         std::cout << "Sadly you have been badly injured by your enemy." << std::endl;
         std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
         std::cout << "\nBut won or lost, this fight taught you various things. You gain 6XP." << std::endl;
-        hero->exp += 6;
+        hero->exp += 30;
         hero->lvlup();
         std::cout << "You have been brought to the church." << std::endl;
         std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
@@ -170,8 +173,14 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
     else {
         std::cout << "Watch out! New wave of enemies incoming!" << std::endl;
         character* enemy2 = createEnemy(enemies.at(1));
+        enemy2->setExpworth(20);
+        enemy2->setGoldworth(10);
         character* enemy3 = createEnemy(enemies.at(2));
+        enemy3->setExpworth(20);
+        enemy3->setGoldworth(10);
         character* enemy4 = createEnemy(enemies.at(3));
+        enemy4->setExpworth(20);
+        enemy4->setGoldworth(10);
 
         if (fight3(hero, enemy2, enemy3, enemy4, window) == 0) {
             std::cout << "Sadly you have been badly injured by your enemies." << std::endl;
@@ -192,9 +201,12 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
             hero->currentgold += 20;
         }
         hero->prologueSet(true);
-        delete enemy2;
-        delete enemy3;
-        delete enemy4;
+        enemy2 = nullptr;
+        enemy3 = nullptr;
+        enemy4 = nullptr;
+        // delete enemy2;
+        // delete enemy3;
+        // delete enemy4;
     }
     setLocation(Location::City);
     hero->citySet(true);
@@ -203,7 +215,8 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
     hero->blacksmithSet(true);
     hero->mapSet(true);
     delete enemy1;
-    Time.resetTime();
+    time.resetTimeMorning();
+    time.resume();
 }
 
 // void game::forest(postac*& hero)
@@ -256,10 +269,9 @@ void game::enemyaction (character*& enemy, character*& hero) {
         hero->getDamaged(enemy, DamageType::Physical);
 }
 
-int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
-    AllTimeGUI gui(hero);
+int game::fight (character*& hero, character*& enemy, sf::RenderWindow* window) {
+    AllTimeGUI gui(hero, &time);
     sf::Clock clock;
-    character* enemy = createEnemy(enemies.at(enemyID));
     int whofirst;
     int potionCD = 0;
     bool heroAction = false;
@@ -276,6 +288,8 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
     if (whofirst == 1)
         heroAction = true;
 
+    HealthBar enemyBar(395.f, 130.f, enemy);
+
     Button heroGraphics(100.f, 150.f, hero->getPath());
     Button enemyGraphics(400.f, 150.f, enemy->getPath());
 
@@ -290,11 +304,11 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
                 hero->atktypenb = 1;
                 heroChosen = true;
             }
-            else if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
                 hero->atktypenb = 2;
                 heroChosen = true;
             }
-            else if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
                 hero->atktypenb = 3;
                 heroChosen = true;
             }
@@ -344,6 +358,7 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
             }
             heroaction(enemy, hero);
             potionCD--;
+            heroChosen = false;
             if (enemy->currenthp <= 0) {
                 fightEnd(hero, enemy);
                 hero->setFastAction(false);
@@ -371,6 +386,8 @@ int game::fight (character*& hero, int enemyID, sf::RenderWindow* window) {
         window->draw(gui);
         window->draw(heroGraphics);
         window->draw(enemyGraphics);
+        enemyBar.updateRed();
+        window->draw(enemyBar);
         window->display();
     }
     delete enemy;
@@ -388,7 +405,7 @@ int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, char
         return a->getSpeed() > b->getSpeed();
     });
 
-    AllTimeGUI gui(hero);
+    AllTimeGUI gui(hero, &time);
     sf::Clock clock;
     int turnOrder = 0;
     int potionCD = 0;
@@ -400,6 +417,10 @@ int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, char
     bool chooseEnemy = false;
 
     character* enemy = nullptr;
+
+    HealthBar enemyBar1(395.f, 130.f, enemy1);
+    HealthBar enemyBar2(495.f, 130.f, enemy2);
+    HealthBar enemyBar3(295.f, 130.f, enemy2);
 
     Button heroGraphics(100.f, 150.f, hero->getPath());
     Button enemy1Graphics(400.f, 150.f, enemy1->getPath());
@@ -417,11 +438,11 @@ int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, char
                 hero->atktypenb = 1;
                 heroChosen = true;
             }
-            else if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
                 hero->atktypenb = 2;
                 heroChosen = true;
             }
-            else if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
                 hero->atktypenb = 3;
                 heroChosen = true;
             }
@@ -491,12 +512,13 @@ int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, char
             heroaction(enemy, hero);
             potionCD--;
             turnOrder++;
+            heroChosen = false;
+            chooseEnemy = true;
             if (enemy->currenthp <= 0) {
                 fightEnd(hero, enemy);
                 hero->setFastAction(false);
                 hero->setHPRegpotT(-hero->getHPRegpotT());
                 hero->setManapotT(-hero->getManapotT());
-                turn[turnOrder] = nullptr;
                 turn.erase(turn.begin() + turnOrder);
                 if (turn.size() == 1) {
                     enemy = nullptr;
@@ -527,12 +549,18 @@ int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, char
         window->draw(heroGraphics);
         if (enemy1 != nullptr) {
             window->draw(enemy1Graphics);
+            enemyBar1.updateRed();
+            window->draw(enemyBar1);
         }
         if (enemy2 != nullptr) {
             window->draw(enemy2Graphics);
+            enemyBar2.updateRed();
+            window->draw(enemyBar2);
         }
         if (enemy3 != nullptr) {
             window->draw(enemy3Graphics);
+            enemyBar3.updateRed();
+            window->draw(enemyBar3);
         }
         window->display();
     }
@@ -571,15 +599,20 @@ void game::unlockLocations (Location locationToUnlock) {
 }
 
 void game::updateBlacksmith () {
-    if (Time.newDayBlacksith) {
+    if (time.getNewDayBlacksmith()) {
+        std::cout << "x" << std::endl;
         BlacksmithNewItems = true;
-        Time.newDayBlacksith = false;
+        time.setNewDayBlacksmith(false);
     }
-    else
+    else {
+        std::cout << "x" << std::endl;
         BlacksmithNewItems = false;
+    }
+    std::cout << "x" << std::endl;
 }
 
 void game::church (character*& hero, sf::RenderWindow* window) {
+    time.pause();
     Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
     Button hppot(122.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
     Button regenpot(244.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
@@ -601,7 +634,7 @@ void game::church (character*& hero, sf::RenderWindow* window) {
         a.setTextureFile("src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
 
 
-    AllTimeGUI gui(hero);
+    AllTimeGUI gui(hero, &time);
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
             if (event->is<sf::Event::Closed>())
@@ -665,9 +698,12 @@ void game::church (character*& hero, sf::RenderWindow* window) {
         window->draw(gui);
         window->display();
     }
+    time.timeFlow();
+    time.resume();
 }
 
 void game::tavern (character*& hero, sf::RenderWindow* window) {
+    time.pause();
     Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
     Button sleep(100.f, 100.f, "src\\textures\\GUI\\32x32border.png");
     Button drink(400.f, 100.f, "src\\textures\\GUI\\32x32border.png");
@@ -689,6 +725,7 @@ void game::tavern (character*& hero, sf::RenderWindow* window) {
                     hero->currentgold -= 5;
                     hero->save_to_file(hero);
                     saveBlacksmithInv(hero);
+                    time.resetTimeMorning();
                     break;
                 }
             }
@@ -705,6 +742,8 @@ void game::tavern (character*& hero, sf::RenderWindow* window) {
         window->draw(drink);
         window->display();
     }
+    time.timeFlow();
+    time.resume();
 }
 
 void game::itemRandomize (character*& hero, std::mt19937& gen) {
@@ -738,6 +777,7 @@ void game::itemRandomize (character*& hero, std::mt19937& gen) {
 }
 
 void game::blacksmith (character*& hero, sf::RenderWindow* window) {
+    time.pause();
     updateBlacksmith();
     itemRandomize(hero, gen);
 
@@ -758,7 +798,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     blacksmith_background.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    AllTimeGUI gui(hero);
+    AllTimeGUI gui(hero, &time);
 
     Button arrow_l(281.f, 95.f, "src\\textures\\GUI\\arrow_key_left.png");
     Button arrow_r(588.f, 95.f, "src\\textures\\GUI\\arrow_key_right.png");
@@ -1105,6 +1145,8 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
         }
         window->display();
     }
+    time.timeFlow();
+    time.resume();
 }
 
 std::string game::getBlacksmithInvPath (character*& hero) {
@@ -1123,7 +1165,7 @@ void game::saveBlacksmithInv (character*& hero) {
     std::ofstream file(filename, std::ios::out | std::ios::trunc);
     BlacksmithNewItems = true;
     itemRandomize(hero, gen);
-    Time.newDayBlacksith = false;
+    time.setNewDayBlacksmith(false);
     if (file.is_open()) {
         for (int i = 0; i < 6; i++) {
             itemStats item = blacksmithInv[i].getStats();
@@ -1155,7 +1197,7 @@ void game::loadBlacksmithInv (character*& hero) {
         }
         file.close();
         BlacksmithNewItems = false;
-        Time.newDayBlacksith = false;
+        time.setNewDayBlacksmith(false);
     }
     else
         std::cerr << "Error: Unable to open file " << filename << std::endl;
@@ -1163,6 +1205,7 @@ void game::loadBlacksmithInv (character*& hero) {
 
 
 void game::inventory (character*& hero, sf::RenderWindow* window) {
+    time.pause();
     sf::Texture inv_background;
     if (!inv_background.loadFromFile("src\\textures\\GUI\\gui_equipment.png")) {
         std::cerr << "Failed to load texture from file: src\\textures\\GUI\\gui_equipment.png" << std::endl;
@@ -1178,7 +1221,7 @@ void game::inventory (character*& hero, sf::RenderWindow* window) {
     inv_bg.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    AllTimeGUI gui(hero);
+    AllTimeGUI gui(hero, &time);
 
     Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
 
@@ -1399,6 +1442,8 @@ void game::inventory (character*& hero, sf::RenderWindow* window) {
         }
         window->display();
     }
+    time.timeFlow();
+    time.resume();
 }
 
 void game::mainMenu (character*& hero, sf::RenderWindow* window) {
@@ -1568,6 +1613,7 @@ void game::saveRead (character*& hero, sf::RenderWindow* window, std::string fil
             if (hero->prologueState()) {
                 setLocation(Location::City);
                 loadBlacksmithInv(hero);
+                time.resetTimeMorning();
             }
             else
                 lvl0(hero, window);
@@ -2413,6 +2459,7 @@ void game::worldMap (character*& hero, sf::RenderWindow* window) {
                 break;
             }
         }
+        time.timeFlow();
         window->clear();
         window->draw(back);
         window->draw(forestButton);
@@ -2438,7 +2485,7 @@ void game::worldMap (character*& hero, sf::RenderWindow* window) {
 }
 
 void game::city (character*& hero, sf::RenderWindow* window) {
-    AllTimeGUI gui(hero);
+    AllTimeGUI gui(hero, &time);
     Button forge(60.f, 170.f, "src\\textures\\background\\City\\Buildings\\blacksmith.png");
     Button tavern_building(420.f, 190.f, "src\\textures\\background\\City\\Buildings\\tavern.png");
     Button gate(246.f, 100.f, "src\\textures\\background\\City\\Buildings\\city_gate.png");
@@ -2475,6 +2522,7 @@ void game::city (character*& hero, sf::RenderWindow* window) {
                 tavern(hero, window);
             }
         }
+        time.timeFlow();
         window->clear();
         window->draw(gate);
         window->draw(church_building);

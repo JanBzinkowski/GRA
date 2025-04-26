@@ -22,7 +22,7 @@ class game {
         character* hero;
         Options option;
         std::mt19937 gen;
-        gameTime Time;
+        GameTime time;
         Location currentLocation = Location::MainMenu;
         std::unordered_map<Location, bool> unlockedLocations = {
             {Location::Quit, true},
@@ -93,7 +93,7 @@ class game {
 
         void inventory (character*& hero, sf::RenderWindow* window);
 
-        int fight (character*& hero, int enemyID, sf::RenderWindow* window);
+        int fight (character*& hero, character*& enemy, sf::RenderWindow* window);
 
         void heroaction (character*& enemy, character*& hero);
         void enemyaction (character*& enemy, character*& hero);

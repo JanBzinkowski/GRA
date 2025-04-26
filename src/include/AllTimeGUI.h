@@ -1,5 +1,6 @@
 #ifndef ALLTIMEGUI_H
 #define ALLTIMEGUI_H
+#include <gametime.h>
 #include <SFML/Graphics.hpp>
 #include "character.h"
 #include "global.h"
@@ -31,6 +32,7 @@ class AllTimeGUI: public sf::Drawable {
     std::unique_ptr<Button> light;
     std::unique_ptr<Button> medium;
     std::unique_ptr<Button> heavy;
+    GameTime* game_time;
 
   protected:
     void draw (sf::RenderTarget& target, sf::RenderStates states) const override {
@@ -39,6 +41,9 @@ class AllTimeGUI: public sf::Drawable {
       hp->setString(std::to_string(main->currenthp) + "/" + std::to_string(main->stat.basehp));
       mana->setString(std::to_string(main->currentmana) + "/" + std::to_string(main->stat.mana));
       gold->setString(std::to_string(main->currentgold));
+      std::string timeString = (game_time->gettime().x < 10? "0" : "") + std::to_string(game_time->gettime().x) + ":" +
+                               (game_time->gettime().y < 10? "0" : "") + std::to_string(game_time->gettime().y);
+      time->setString(timeString);
       target.draw(*expWhite);
       target.draw(*expBlue);
       target.draw(*guiTop, states);
@@ -46,6 +51,7 @@ class AllTimeGUI: public sf::Drawable {
       target.draw(*hp, states);
       target.draw(*mana, states);
       target.draw(*gold, states);
+      target.draw(*time, states);
       if (main->getLvl() < 2)
         hppotion->setTexture(lock);
       if (main->getLvl() < 4)
@@ -64,7 +70,7 @@ class AllTimeGUI: public sf::Drawable {
     }
 
   public:
-    AllTimeGUI (character*& hero): main(hero) {
+    AllTimeGUI (character*& hero, GameTime* time): main(hero), game_time(time) {
       if (!font.openFromFile("src\\fonts\\pixel-8x8.ttf")) {
         std::cerr << "Failed to load font from file: " << "src\\fonts\\pixel-8x8.ttf" << std::endl;
         throw std::runtime_error("Failed to load font from file: src\\fonts\\pixel-8x8.ttf");
@@ -113,10 +119,11 @@ class AllTimeGUI: public sf::Drawable {
       hp = std::make_unique<sf::Text>(font, main->currenthp + "/" + main->stat.basehp, int(scale * 16));
       mana = std::make_unique<sf::Text>(font, main->currentmana + "/" + main->stat.mana, int(scale * 16));
       gold = std::make_unique<sf::Text>(font, "" + main->currentgold, int(scale * 16));
-      time = std::make_unique<sf::Text>(font, main->currenthp + "/" + main->stat.basehp, int(scale * 16));
+      this->time = std::make_unique<sf::Text>(font, main->currenthp + "/" + main->stat.basehp, int(scale * 16));
       hp->setPosition({scale * 323.f, scale * 324.f});
       mana->setPosition({scale * 323.f, scale * 338.f});
       gold->setPosition({scale * 63.f, scale * 3.f});
+      this->time->setPosition({530 * scale, scale * 3.f});
 
       hppotion = std::make_unique<Button>(481.f, 332.f, "src\\textures\\GUI\\AllTimeGui\\potions\\hp_potion20x20.png");
       manapotion = std::make_unique<Button>(515.f, 332.f,
@@ -152,7 +159,7 @@ class AllTimeGUI: public sf::Drawable {
       gold->setFillColor(sf::Color::Black);
       mana->setFillColor(sf::Color::Black);
       hp->setFillColor(sf::Color::Black);
-      time->setFillColor(sf::Color::Black);
+      this->time->setFillColor(sf::Color::Black);
     }
 
     bool hpIsClicked (const sf::Vector2i& mousePos);
