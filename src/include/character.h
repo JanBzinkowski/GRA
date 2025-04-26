@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <math.h>
 #include <string>
@@ -8,14 +9,16 @@
 #include <fstream>
 #include <optional>
 #include "Inventory.h"
-
-#pragma once
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
 #include "stats.h"
 
 class AllTimeGUI;
 
 class character {
     private:
+        sf::Clock gameplay_time;
+        sf::Time playtime = sf::Time::Zero;
         std::map<DamageType, float> resistance;
         std::string name;
         stats stat;
@@ -65,9 +68,7 @@ class character {
         void setSave (const std::string fileName);
         const std::string getSave ();
 
-        character (const std::string& name, const stats& stat, const statsincrese& incstats,
-                   int extra = 0) : name(name), stat(stat), incstats(incstats), currenthp(stat.basehp),
-                                    currentmana(stat.mana), extraSlot(extra) {
+        character (const std::string& name, const stats& stat, const statsincrese& incstats, int extra = 0) : name(name), stat(stat), incstats(incstats), currenthp(stat.basehp), currentmana(stat.mana), extraSlot(extra) {
             resistance[DamageType::MagicEnergy] = 1.0f;
             resistance[DamageType::MagicFire] = 1.0f;
             resistance[DamageType::MagicIce] = 1.0f;
@@ -81,6 +82,12 @@ class character {
                 heroInv.addSlot();
             }
         }
+
+        void startClock ();
+        void restartClock ();
+        sf::Time getPlaytime ();
+        void setPlaytime (sf::Time time);
+
 
         void updateStats (itemStats stats, bool equip);
         int getInvSize () const;

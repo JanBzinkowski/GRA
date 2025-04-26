@@ -98,18 +98,17 @@ class game {
         void heroaction (character*& enemy, character*& hero);
         void enemyaction (character*& enemy, character*& hero);
 
-        int fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3,
-                    sf::RenderWindow* window);
+        int fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window);
         void fightEnd (character*& hero, character*& enemy);
 
         void itemRandomize (character*& hero, std::mt19937& gen);
 
         void loss (character*& hero);
         bool retcity ();
-        //bool enemyenc(int indexmin, int indexmax, int exp, int gold, int maxlvl, postac*& hero);
-        //bool enemyenc3(int indexmin, int indexmax, int exp, int gold, int maxlvl, postac*& hero);
+        bool enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow*& window, sf::Sprite background);
+        bool enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow* window, sf::Sprite background);
         void lvl0 (character*& hero, sf::RenderWindow* window);
-        //void forest(postac*& hero);
+        void forest (character*& hero, sf::RenderWindow* window);
 
         ~game () = default;
 };

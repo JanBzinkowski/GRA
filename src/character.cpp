@@ -9,6 +9,24 @@
 
 extern std::unordered_map<int, itemStats> itemData;
 
+void character::startClock () {
+    gameplay_time.start();
+}
+
+void character::restartClock () {
+    gameplay_time.reset();
+}
+
+sf::Time character::getPlaytime () {
+    playtime += gameplay_time.getElapsedTime();
+    restartClock();
+    return playtime;
+}
+
+void character::setPlaytime (sf::Time time) {
+    playtime = time;
+}
+
 void character::setSave (const std::string fileName) {
     save = fileName;
 }
@@ -865,11 +883,12 @@ void character::setExtraSlot (int extra) {
 void character::save_to_file (character*& hero) {
     std::string filename = hero->getSave();
     std::ofstream file(filename);
+    int play = hero->getPlaytime().asSeconds();
     if (file.is_open()) {
-        file << hero->getClass() << "\n" << hero->getName() << "\n" << hero->getLvl() << "\n" << hero->getMaxHP() <<
-                "\n" << hero->getAd() << "\n" << hero->getDef() << "\n" << hero->getMaxMana() << "\n" << hero->
-                getSpeed() << "\n" << hero->getMaxHPinc() << "\n" << hero->getAdInc() << "\n" << hero->getDefInc() <<
-                "\n" << hero->getMaxManaInc() << "\n" << hero->getSpeedInc() << "\n" << hero->currentgold << "\n" <<
+        file << hero->getClass() << "\n" << hero->getName() << "\n" << play << "\n" << hero->getLvl() << "\n" << hero->
+                getMaxHP() << "\n" << hero->getAd() << "\n" << hero->getDef() << "\n" << hero->getMaxMana() << "\n" <<
+                hero->getSpeed() << "\n" << hero->getMaxHPinc() << "\n" << hero->getAdInc() << "\n" << hero->getDefInc()
+                << "\n" << hero->getMaxManaInc() << "\n" << hero->getSpeedInc() << "\n" << hero->currentgold << "\n" <<
                 hero->currenthp << "\n" << hero->currentmana << "\n" << hero->exp << "\n" << hero->prologueState() <<
                 "\n" << hero->getHPpot() << "\n" << hero->getHPRegpot() << "\n" << hero->getManapot() << "\n" << hero->
                 getActionpot() << "\n" << hero->getResistance(DamageType::MagicEnergy) << "\n" << hero->
@@ -969,10 +988,11 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         std::string name;
         stats charStats;
         statsincrese incStats;
+        int playtime;
 
-        file >> className >> name >> charStats.lvl >> charStats.basehp >> charStats.ad >> charStats.def >> charStats.
-                mana >> charStats.speed >> incStats.basehpinc >> incStats.adinc >> incStats.definc >> incStats.manainc
-                >> incStats.speedinc;
+        file >> className >> name >> playtime >> charStats.lvl >> charStats.basehp >> charStats.ad >> charStats.def >>
+                charStats.mana >> charStats.speed >> incStats.basehpinc >> incStats.adinc >> incStats.definc >> incStats
+                .manainc >> incStats.speedinc;
 
         if (className == "Warrior") {
             hero = new Warrior(name, charStats);
@@ -996,6 +1016,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         hero->setManapot(z);
         hero->setActionpot(a);
         hero->prologueSet(isPrologue);
+        hero->setPlaytime(sf::seconds(playtime));
         float energy, fire, ice, earth, water, poison, air, phys, env;
         file >> energy >> fire >> ice >> earth >> water >> poison >> air >> phys >> env;
         hero->setResist(DamageType::MagicEnergy, energy);
@@ -1101,6 +1122,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
             hero->weaponslot = std::make_optional<Item>(weapon);
         }
         hero->setSave(filename);
+        hero->startClock();
         file.close();
         return true;
     }

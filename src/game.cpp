@@ -38,102 +38,138 @@ bool game::areShopsOpen () const {
 
 void game::loss (character*& hero) {
     std::cout << "You have fainted." << std::endl;
-    std::cout << "Luckily someone found you and brought you to the church, but he wanted half of your gold in exchange."
-            << std::endl;
+    std::cout << "Luckily someone found you and brought you to the church, but he wanted half of your gold in exchange." << std::endl;
     setLocation(Location::Church);
     hero->currentgold -= hero->currentgold / 2;
     hero->pray();
 }
 
-bool game::retcity () {
-    int ret;
-    while (true) {
-        std::cout << "Do you want to return to the city, or search for next foe?" << "\n1. Stay\n2. Return to the city"
-                << std::endl;
-        std::cin >> ret;
-        if (ret == 1 || ret == 2)
-            break;
+bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow*& window, sf::Sprite background) {
+    std::uniform_int_distribution<> dist(indexmin, indexmax);
+    int index = dist(gen);
+    character* enemy = createEnemy(enemies.at(index));
+    enemy->setExpworth(exp);
+    enemy->setGoldworth(gold);
+    while (enemy->getLvl() < hero->getLvl() || enemy->getLvl() >= maxlvl) {
+        enemy->enemyLvlUp();
     }
-    if (ret == 1)
+    int res = fight(hero, enemy, window);
+    if (res == 0) {
+        loss(hero);
+        delete enemy;
         return false;
-    else {
-        setLocation(Location::City);
-        return true;
     }
+
+    AllTimeGUI gui(hero, &time);
+
+    Button arrow_l(52.f, 145.f, "src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, "src\\textures\\GUI\\arrow_key_right.png");
+
+    while (window->isOpen()) {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (arrow_l.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::City);
+                delete enemy;
+                return false;
+            }
+            else if (arrow_r.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                delete enemy;
+                return true;
+            }
+        }
+        window->clear();
+        window->draw(background);
+        window->draw(arrow_l);
+        window->draw(arrow_r);
+        window->draw(gui);
+        window->display();
+    }
+    delete enemy;
+    return true;
 }
 
-// bool game::enemyenc(int indexmin, int indexmax, int exp, int gold, int maxlvl, postac*& hero)
-// {
-//     std::uniform_int_distribution<> dist(indexmin, indexmax);
-//     int index = dist(gen);
-//     postac* enemy=createEnemy(enemies.at(index));
-//     enemy->setExpworth(exp);
-//     enemy->setGoldworth(gold);
-//     while(enemy->getLvl()<hero->getLvl()||enemy->getLvl()>=maxlvl)
-//     {
-//         enemy->enemyLvlUp();
-//     }
-//     int res = fight(hero, enemy);
-//     if(res==0)
-//     {
-//         loss(hero);
-//         delete enemy;
-//         return false;
-//     }
-//     delete enemy;
-//     if (retcity())
-//         return false;
-//     return true;
-// }
+bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow* window, sf::Sprite background) {
+    std::uniform_int_distribution<> dist(indexmin, indexmax);
+    int index = dist(gen);
+    character* enemy1 = createEnemy(enemies.at(index));
+    enemy1->setExpworth(exp);
+    enemy1->setGoldworth(gold);
+    while (enemy1->getLvl() < hero->getLvl() || enemy1->getLvl() >= maxlvl) {
+        enemy1->enemyLvlUp();
+    }
+    index = dist(gen);
+    character* enemy2 = createEnemy(enemies.at(index));
+    enemy2->setExpworth(exp);
+    enemy2->setGoldworth(gold);
+    while (enemy2->getLvl() < hero->getLvl() || enemy2->getLvl() >= maxlvl) {
+        enemy2->enemyLvlUp();
+    }
+    index = dist(gen);
+    character* enemy3 = createEnemy(enemies.at(index));
+    enemy3->setExpworth(exp);
+    enemy3->setGoldworth(gold);
+    while (enemy3->getLvl() < hero->getLvl() || enemy3->getLvl() >= maxlvl) {
+        enemy3->enemyLvlUp();
+    }
+    std::cout << "Watch out! You have been attacked by " << enemy1->getName() << " (Lvl " << enemy1->getLvl() << ")" << enemy2->getName() << " (Lvl " << enemy2->getLvl() << ")" << enemy3->getName() << " (Lvl " << enemy3->getLvl() << ")!" << std::endl;
 
-// bool game::enemyenc3(int indexmin, int indexmax, int exp, int gold, int maxlvl, postac*& hero)
-// {
-//     std::uniform_int_distribution<> dist(indexmin, indexmax);
-//     int index = dist(gen);
-//     postac* enemy1=createEnemy(enemies.at(index));
-//     enemy1->setExpworth(exp);
-//     enemy1->setGoldworth(gold);
-//     while(enemy1->getLvl()<hero->getLvl()||enemy1->getLvl()>=maxlvl)
-//     {
-//         enemy1->enemyLvlUp();
-//     }
-//     index = dist(gen);
-//     postac* enemy2=createEnemy(enemies.at(index));
-//     enemy2->setExpworth(exp);
-//     enemy2->setGoldworth(gold);
-//     while(enemy2->getLvl()<hero->getLvl()||enemy2->getLvl()>=maxlvl)
-//     {
-//         enemy2->enemyLvlUp();
-//     }
-//     index = dist(gen);
-//     postac* enemy3=createEnemy(enemies.at(index));
-//     enemy3->setExpworth(exp);
-//     enemy3->setGoldworth(gold);
-//     while(enemy3->getLvl()<hero->getLvl()||enemy3->getLvl()>=maxlvl)
-//     {
-//         enemy3->enemyLvlUp();
-//     }
-//     std::cout<<"Watch out! You have been attacked by "<<enemy1->getName()<<" (Lvl "<< enemy1->getLvl()<<")"
-//     <<enemy2->getName()<<" (Lvl "<< enemy2->getLvl()<<")"
-//     <<enemy3->getName()<<" (Lvl "<< enemy3->getLvl()<<")!"<<std::endl;
-//
-//
-//     int res = fight3(hero, enemy1, enemy2, enemy3);
-//     if(res==0)
-//     {
-//         loss(hero);
-//         delete enemy1;
-//         delete enemy2;
-//         delete enemy3;
-//         return false;
-//     }
-//     delete enemy1;
-//     delete enemy2;
-//     delete enemy3;
-//     if (retcity())
-//         return false;
-//     return true;
-// }
+
+    int res = fight3(hero, enemy1, enemy2, enemy3, window);
+    if (res == 0) {
+        loss(hero);
+        delete enemy1;
+        delete enemy2;
+        delete enemy3;
+        return false;
+    }
+
+    AllTimeGUI gui(hero, &time);
+
+    Button arrow_l(52.f, 145.f, "src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, "src\\textures\\GUI\\arrow_key_right.png");
+
+    while (window->isOpen()) {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (arrow_l.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::City);
+                delete enemy1;
+                delete enemy2;
+                delete enemy3;
+                return false;
+            }
+            else if (arrow_r.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                delete enemy1;
+                delete enemy2;
+                delete enemy3;
+                return true;
+            }
+        }
+        window->clear();
+        window->draw(background);
+        window->draw(arrow_l);
+        window->draw(arrow_r);
+        window->draw(gui);
+        window->display();
+    }
+    delete enemy1;
+    delete enemy2;
+    delete enemy3;
+    return true;
+}
 
 void game::lvl0 (character*& hero, sf::RenderWindow* window) {
     time.pause();
@@ -143,18 +179,13 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
     enemy1->setGoldworth(10);
 
 
-    std::cout <<
-            "One day when you have been laying under an old oak tree in the middle of plains nearby the city you heard loud crack and scream..."
-            << std::endl;
+    std::cout << "One day when you have been laying under an old oak tree in the middle of plains nearby the city you heard loud crack and scream..." << std::endl;
 
     std::cout << "\nYou rushed to the source of all that noise to see what is going on." << std::endl;
 
-    std::cout << "\nYou found the King, whose carriage just broke down. The king seemed distressed so you came closer."
-            << std::endl;
+    std::cout << "\nYou found the King, whose carriage just broke down. The king seemed distressed so you came closer." << std::endl;
 
-    std::cout <<
-            "\nThe King got attacked by a bunny. But there was something wrong with that bunny... You came to help and then the Killer Bunny attacked you."
-            << std::endl;
+    std::cout << "\nThe King got attacked by a bunny. But there was something wrong with that bunny... You came to help and then the Killer Bunny attacked you." << std::endl;
 
     if (fight(hero, enemy1, window) == 0) {
         std::cout << "Sadly you have been badly injured by your enemy." << std::endl;
@@ -164,8 +195,7 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
         hero->lvlup();
         std::cout << "You have been brought to the church." << std::endl;
         std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
-        std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." <<
-                std::endl;
+        std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
         std::cout << "\nBut remember that it won't happen again." << std::endl;
         hero->currentgold += 20;
         hero->pray();
@@ -187,8 +217,7 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
             std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
             std::cout << "You have been brought to the church." << std::endl;
             std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
-            std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery."
-                    << std::endl;
+            std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
             std::cout << "\nBut remember that it won't happen again." << std::endl;
             hero->currentgold += 20;
             hero->pray();
@@ -219,36 +248,40 @@ void game::lvl0 (character*& hero, sf::RenderWindow* window) {
     time.resume();
 }
 
-// void game::forest(postac*& hero)
-// {
-//     if(!enemyenc(4, 6, 6, 10, 10, hero))
-//         return;
-//     if(!enemyenc(4, 6, 6, 10, 10, hero))
-//         return;
-//     if(!enemyenc(4, 8, 10, 15, 10, hero))
-//         return;
-//     if(!enemyenc(4, 8, 10, 15, 10, hero))
-//         return;
-//     std::cout<<"Huge wave of enemies ahead!"<<std::endl;
-//     if(!enemyenc3(9, 12, 14, 20, 10, hero))
-//         return;
-//     if(!enemyenc(7, 12, 14, 20, 10, hero))
-//         return;
-//     if(!enemyenc(7, 12, 14, 20, 10, hero))
-//         return;
-//     if(!enemyenc(7, 12, 14, 20, 10, hero))
-//         return;
-//     if(!enemyenc(7, 12, 14, 20, 10, hero))
-//         return;
-//     if(!enemyenc(13, 13, 22, 30, 10, hero))
-//         return;
-//     if(!isUnlocked(Location::Swamp))
-//     {
-//         unlockLocations(Location::Swamp);
-//         std::cout<<"You have unlocked swamp. Are you scared to get yourself dirty?"<<std::endl;
-//     }
-//     std::cout<<"You have come to the edge of the forest, slaying all enemies that stood on you way.\n\nReturning to the city now." <<std::endl;
-// }
+void game::forest (character*& hero, sf::RenderWindow* window) {
+    sf::Texture background;
+    if (!background.loadFromFile("src\\textures\\GUI\\20x20frame.png")) {
+        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\20x20frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\20x20frame.png");
+    }
+    sf::Sprite bg(background);
+    if (!enemyenc(4, 6, 6, 10, 10, hero, window, bg))
+        return;
+    if (!enemyenc(4, 6, 6, 10, 10, hero, window, bg))
+        return;
+    if (!enemyenc(4, 8, 10, 15, 10, hero, window, bg))
+        return;
+    if (!enemyenc(4, 8, 10, 15, 10, hero, window, bg))
+        return;
+    //std::cout<<"Huge wave of enemies ahead!"<<std::endl;
+    // if(!enemyenc3(9, 12, 14, 20, 10, hero))
+    //     return;
+    if (!enemyenc(7, 12, 14, 20, 10, hero, window, bg))
+        return;
+    if (!enemyenc(7, 12, 14, 20, 10, hero, window, bg))
+        return;
+    if (!enemyenc(7, 12, 14, 20, 10, hero, window, bg))
+        return;
+    if (!enemyenc(7, 12, 14, 20, 10, hero, window, bg))
+        return;
+    if (!enemyenc(13, 13, 22, 30, 10, hero, window, bg))
+        return;
+    if (!isUnlocked(Location::Swamp)) {
+        unlockLocations(Location::Swamp);
+        std::cout << "You have unlocked swamp. Are you scared to get yourself dirty?" << std::endl;
+    }
+    std::cout << "You have come to the edge of the forest, slaying all enemies that stood on you way.\n\nReturning to the city now." << std::endl;
+}
 
 void game::heroaction (character*& enemy, character*& hero) {
     if (hero->getClass() == "Mage") {
@@ -394,8 +427,7 @@ int game::fight (character*& hero, character*& enemy, sf::RenderWindow* window) 
     return 0;
 }
 
-int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3,
-                  sf::RenderWindow* window) {
+int game::fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window) {
     std::vector<character*> turn = {enemy1, enemy2, enemy3, hero};
     std::sort(turn.begin(), turn.end(), [] (character* a, character* b) {
         if (a == nullptr)
@@ -600,15 +632,12 @@ void game::unlockLocations (Location locationToUnlock) {
 
 void game::updateBlacksmith () {
     if (time.getNewDayBlacksmith()) {
-        std::cout << "x" << std::endl;
         BlacksmithNewItems = true;
         time.setNewDayBlacksmith(false);
     }
     else {
-        std::cout << "x" << std::endl;
         BlacksmithNewItems = false;
     }
-    std::cout << "x" << std::endl;
 }
 
 void game::church (character*& hero, sf::RenderWindow* window) {
@@ -845,16 +874,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
 
     std::vector<std::pair<bool, Button>> eqp;
     std::vector<std::string> texts_eqp;
-    std::vector<itemType> types = {
-        itemType::Helmet,
-        itemType::Chestplate,
-        itemType::Leggings,
-        itemType::Necklace,
-        itemType::Gloves,
-        itemType::Boots,
-        itemType::Weapon,
-        itemType::Ring
-    };
+    std::vector<itemType> types = {itemType::Helmet, itemType::Chestplate, itemType::Leggings, itemType::Necklace, itemType::Gloves, itemType::Boots, itemType::Weapon, itemType::Ring};
 
     std::vector<float> xs = {59.f, 59.f, 59.f, 206.f, 206.f, 206.f, 108.f, 157.f};
     std::vector<float> ys = {91.f, 140.f, 189.f, 91.f, 140.f, 189.f, 238.f, 238.f};
@@ -872,6 +892,23 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
     bool hovering = false;
     bool hoverAvaiable = true;
 
+    bool money = false;
+    sf::Text notEnoughMoney(font);
+    sf::Clock noMoneyTime;
+    noMoneyTime.start();
+    std::string noMoney;
+    if (option.getLanguage() == Language::PL) {
+        noMoney = "Nie masz wystarczająco złotych monet";
+    }
+    else if (option.getLanguage() == Language::ENG) {
+        noMoney = "Not enough gold coins";
+    }
+    noMoneyTime.restart();
+    sf::String utf32noMoney = sf::String::fromUtf8(noMoney.begin(), noMoney.end());
+    notEnoughMoney.setString(utf32noMoney);
+    notEnoughMoney.setCharacterSize(24 * scale);
+    notEnoughMoney.setFillColor(sf::Color::Red);
+
     int isDragged = -1;
     int isDraggedInv = -1;
     int isDraggedEqp = -1;
@@ -888,8 +925,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 break;
             }
-            if (!blacksmithAvaiable.empty() && !isDraggedFlag && shop_rect.
-                contains(static_cast<sf::Vector2f>(mousePos))) {
+            if (!blacksmithAvaiable.empty() && !isDraggedFlag && shop_rect.contains(static_cast<sf::Vector2f>(mousePos))) {
                 for (int i = 0; i < blacksmithAvaiable.size(); i++) {
                     int x = blacksmithAvaiable[i];
                     if (items[x].isPressed(mousePos)) {
@@ -929,7 +965,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                 }
             }
         }
-        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0) {
+        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->currentgold >= blacksmithInv[isDragged].getStats().price) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             bool checkEqp = true;
             for (int i = 0; i < backpack.size(); i++) {
@@ -952,8 +988,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (blacksmithInv[isDragged].getType() == types[i]) {
                             if (hero->checkIfEqp(types[i])) {
-                                backpack[hero->get1stAvaiableIndex()].
-                                        setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                backpack[hero->get1stAvaiableIndex()].setTextureFile(hero->getItemFromEqp(types[i]).getPath());
                                 texts_inv[hero->get1stAvaiableIndex()] = hero->getItemFromEqp(types[i]).getData();
                             }
                             hero->equipItem(blacksmithInv[isDragged]);
@@ -971,6 +1006,16 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                     }
                 }
             }
+            isDraggedFlag = false;
+            items[isDragged].setPosition({startX / scale, startY / scale});
+            isDragged = -1;
+            hoverAvaiable = true;
+        }
+        else if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->currentgold < blacksmithInv[isDragged].getStats().price) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            money = true;
+            notEnoughMoney.setPosition({mousePos.x - 145 * scale, mousePos.y - 12 * scale});
+            noMoneyTime.restart();
             isDraggedFlag = false;
             items[isDragged].setPosition({startX / scale, startY / scale});
             isDragged = -1;
@@ -1065,31 +1110,18 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
                     int x = blacksmithAvaiable[i];
                     if (items[x].isPressed(sf::Mouse::getPosition(*window))) {
                         hover.setString(texts[x]);
-                        hover.setPosition({
-                                              items[x].getPosition().x - 85 * scale,
-                                              items[x].getPosition().y + 34 * scale
-                                          });
-                        hover_frame.setPosition({
-                                                    items[x].getPosition().x - 95 * scale,
-                                                    items[x].getPosition().y + 27 * scale
-                                                });
+                        hover.setPosition({items[x].getPosition().x - 85 * scale, items[x].getPosition().y + 34 * scale});
+                        hover_frame.setPosition({items[x].getPosition().x - 95 * scale, items[x].getPosition().y + 27 * scale});
                         hovering = true;
                         break;
                     }
                 }
             }
             for (int i = 0; i < backpack.size(); i++) {
-                if (backpack[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() >
-                    0) {
+                if (backpack[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() > 0) {
                     hover.setString(texts_inv[i]);
-                    hover.setPosition({
-                                          backpack[i].getPosition().x - 85 * scale,
-                                          backpack[i].getPosition().y + 34 * scale
-                                      });
-                    hover_frame.setPosition({
-                                                backpack[i].getPosition().x - 95 * scale,
-                                                backpack[i].getPosition().y + 27 * scale
-                                            });
+                    hover.setPosition({backpack[i].getPosition().x - 85 * scale, backpack[i].getPosition().y + 34 * scale});
+                    hover_frame.setPosition({backpack[i].getPosition().x - 95 * scale, backpack[i].getPosition().y + 27 * scale});
                     hovering = true;
                     break;
                 }
@@ -1097,10 +1129,7 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
             for (int i = 0; i < eqp.size(); i++) {
                 if (eqp[i].second.isPressed(sf::Mouse::getPosition(*window)) && hero->checkIfEqp(types[i])) {
                     hover.setString(texts_eqp[i]);
-                    sf::Vector2f pos = {
-                        eqp[i].second.getPosition().x - 85 * scale,
-                        eqp[i].second.getPosition().y + 34 * scale
-                    };
+                    sf::Vector2f pos = {eqp[i].second.getPosition().x - 85 * scale, eqp[i].second.getPosition().y + 34 * scale};
                     if (pos.x - 10 < 0)
                         pos.x += -(pos.x - 20 * scale);
                     hover.setPosition({pos.x, pos.y});
@@ -1143,6 +1172,13 @@ void game::blacksmith (character*& hero, sf::RenderWindow* window) {
             window->draw(hover_frame);
             window->draw(hover);
         }
+        if (money) {
+            if (noMoneyTime.getElapsedTime().asSeconds() >= 2.0f) {
+                money = false;
+            }
+            else
+                window->draw(notEnoughMoney);
+        }
         window->display();
     }
     time.timeFlow();
@@ -1169,8 +1205,7 @@ void game::saveBlacksmithInv (character*& hero) {
     if (file.is_open()) {
         for (int i = 0; i < 6; i++) {
             itemStats item = blacksmithInv[i].getStats();
-            file << blacksmithInv[i].getId() << "\n" << item.hp << "\n" << item.ad << "\n" << item.def << "\n" << item.
-                    mana << "\n" << item.speed << "\n";
+            file << blacksmithInv[i].getId() << "\n" << item.hp << "\n" << item.ad << "\n" << item.def << "\n" << item.mana << "\n" << item.speed << "\n";
         }
         file.close();
     }
@@ -1249,16 +1284,7 @@ void game::inventory (character*& hero, sf::RenderWindow* window) {
 
     std::vector<std::pair<bool, Button>> eqp;
     std::vector<std::string> texts_eqp;
-    std::vector<itemType> types = {
-        itemType::Helmet,
-        itemType::Chestplate,
-        itemType::Leggings,
-        itemType::Necklace,
-        itemType::Gloves,
-        itemType::Boots,
-        itemType::Weapon,
-        itemType::Ring
-    };
+    std::vector<itemType> types = {itemType::Helmet, itemType::Chestplate, itemType::Leggings, itemType::Necklace, itemType::Gloves, itemType::Boots, itemType::Weapon, itemType::Ring};
 
     std::vector<float> xs = {59.f, 59.f, 59.f, 206.f, 206.f, 206.f, 108.f, 157.f};
     std::vector<float> ys = {91.f, 140.f, 189.f, 91.f, 140.f, 189.f, 238.f, 238.f};
@@ -1386,17 +1412,10 @@ void game::inventory (character*& hero, sf::RenderWindow* window) {
 
         if (hoverAvaiable) {
             for (int i = 0; i < inventory.size(); i++) {
-                if (inventory[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() >
-                    0) {
+                if (inventory[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() > 0) {
                     hover.setString(texts_inv[i]);
-                    hover.setPosition({
-                                          inventory[i].getPosition().x - 85 * scale,
-                                          inventory[i].getPosition().y + 34 * scale
-                                      });
-                    hover_frame.setPosition({
-                                                inventory[i].getPosition().x - 95 * scale,
-                                                inventory[i].getPosition().y + 27 * scale
-                                            });
+                    hover.setPosition({inventory[i].getPosition().x - 85 * scale, inventory[i].getPosition().y + 34 * scale});
+                    hover_frame.setPosition({inventory[i].getPosition().x - 95 * scale, inventory[i].getPosition().y + 27 * scale});
                     hovering = true;
                     break;
                 }
@@ -1404,10 +1423,7 @@ void game::inventory (character*& hero, sf::RenderWindow* window) {
             for (int i = 0; i < eqp.size(); i++) {
                 if (eqp[i].second.isPressed(sf::Mouse::getPosition(*window)) && hero->checkIfEqp(types[i])) {
                     hover.setString(texts_eqp[i]);
-                    sf::Vector2f pos = {
-                        eqp[i].second.getPosition().x - 85 * scale,
-                        eqp[i].second.getPosition().y + 34 * scale
-                    };
+                    sf::Vector2f pos = {eqp[i].second.getPosition().x - 85 * scale, eqp[i].second.getPosition().y + 34 * scale};
                     if (pos.x - 10 < 0)
                         pos.x += -(pos.x - 20 * scale);
                     hover.setPosition({pos.x, pos.y});
@@ -1536,19 +1552,13 @@ std::string getName (sf::RenderWindow* window, sf::Font& font) {
 
 void game::createhero (character*& hero, sf::RenderWindow* window) {
     sf::Texture choose;
-    if (option.getLanguage() == Language::ENG && !choose.
-        loadFromFile("src\\textures\\background\\Saves\\choose class.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\choose class.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\choose class.png");
+    if (option.getLanguage() == Language::ENG && !choose.loadFromFile("src\\textures\\background\\Saves\\choose class.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\choose class.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\choose class.png");
     }
-    else if (option.getLanguage() == Language::PL && !choose.
-             loadFromFile("src\\textures\\background\\Saves\\wybierz klase.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\wybierz klase.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\wybierz klase.png");
+    else if (option.getLanguage() == Language::PL && !choose.loadFromFile("src\\textures\\background\\Saves\\wybierz klase.png")) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\wybierz klase.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\wybierz klase.png");
     }
     std::string name = "BlankName";
     sf::Sprite ch(choose);
@@ -1631,6 +1641,7 @@ std::string game::getTextSave (std::string filename) {
     if (!isFileEmpty(filename)) {
         std::ifstream file(filename);
         std::string temp;
+        int tempint;
         if (option.getLanguage() == Language::ENG)
             t = "Class:\n  ";
         else if (option.getLanguage() == Language::PL)
@@ -1652,6 +1663,15 @@ std::string game::getTextSave (std::string filename) {
         else if (option.getLanguage() == Language::PL)
             t += "\nImię:\n  ";
         t += temp;
+        file >> tempint;
+        int hour = tempint / 60 / 60;
+        int minute = tempint / 60 % 60;
+        if (option.getLanguage() == Language::ENG)
+            t += "\nPlaytime:\n  ";
+        else if (option.getLanguage() == Language::PL)
+            t += "\nCzas gry:\n  ";
+        t += (hour < 10? "0" : "") + std::to_string(hour) + ":" + (minute < 10? "0" : "") + std::to_string(minute);
+        file.close();
     }
     else if (option.getLanguage() == Language::ENG) {
         t = "   Empty...\n   Click to\n     start \n     a new\n   jurney!";
@@ -1680,19 +1700,13 @@ void game::saves (character*& hero, sf::RenderWindow* window) {
     Button yes(364.f, 195.f, "src\\textures\\GUI\\checkbox_yes.png");
     Button no(274.f, 195.f, "src\\textures\\GUI\\checkbox_no.png");
     sf::Texture sure;
-    if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\ENG\\you_sure.png") && option.getLanguage() ==
-        Language::ENG) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\you_sure.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\you_sure.png");
+    if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\ENG\\you_sure.png") && option.getLanguage() == Language::ENG) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\you_sure.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\you_sure.png");
     }
-    else if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\PL\\jestes_pewien.png") && option.getLanguage() ==
-             Language::PL) {
-        std::cerr << "Failed to load texture from file: " <<
-                "src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png" << std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png");
+    else if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\PL\\jestes_pewien.png") && option.getLanguage() == Language::PL) {
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png");
     }
     sf::Sprite yousure(sure);
     yousure.scale({scale, scale});
@@ -1707,9 +1721,9 @@ void game::saves (character*& hero, sf::RenderWindow* window) {
     sf::Text save1t(font, utf32Str1, 16 * scale);
     sf::Text save2t(font, utf32Str2, 16 * scale);
     sf::Text save3t(font, utf32Str3, 16 * scale);
-    save1t.setPosition({121.f * scale, 114.f * scale});
-    save2t.setPosition({281.f * scale, 114.f * scale});
-    save3t.setPosition({441.f * scale, 114.f * scale});
+    save1t.setPosition({121.f * scale, 108.f * scale});
+    save2t.setPosition({281.f * scale, 108.f * scale});
+    save3t.setPosition({441.f * scale, 108.f * scale});
     save1t.setFillColor(sf::Color::Black);
     save2t.setFillColor(sf::Color::Black);
     save3t.setFillColor(sf::Color::Black);
@@ -1853,10 +1867,8 @@ void game::optionsG (sf::RenderWindow* window) {
     bool checkbox = option.getTutorials();
     sf::Texture background;
     if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite bg(background);
     bg.setPosition({0.f, scale * 45.f});
@@ -2039,10 +2051,8 @@ void game::optionsGraph (sf::RenderWindow* window) {
 
     sf::Texture background;
     if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite bg(background);
     bg.setPosition({0.f, scale * 45.f});
@@ -2322,10 +2332,8 @@ void game::optionsS (sf::RenderWindow* window) {
         throw std::runtime_error("Failed to load texture from file: " + mainPath);
     }
     if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" <<
-                std::endl;
-        throw
-                std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite env(enviroment);
     sf::Sprite eff(effect);
