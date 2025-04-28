@@ -60,153 +60,16 @@ int character::get1stAvaiableIndex () const {
     return heroInv.get1stAvailableSlot();
 }
 
+int character::getAvaiableAmount () const {
+    return heroInv.getAvaiableAmount();
+}
+
 bool character::isAvailable (const int slot) const {
     return heroInv.isAvaiable(slot);
 }
 
 void character::swapItems (size_t i, size_t x) {
     heroInv.swapItems(i, x);
-}
-
-
-void character::displayEqp () const {
-    std::cout << "Equipment:\n" << std::endl;
-    if (helmetslot) {
-        itemStats stats = helmetslot->getStats();
-        std::cout << "1. Helmet: " << stats.name << ",Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "1. Helmet: NONE" << std::endl;
-    if (chestplateslot) {
-        itemStats stats = chestplateslot->getStats();
-        std::cout << "2. Chestplate: " << stats.name << ",Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "2. Chestplate: NONE" << std::endl;
-    if (necklaceslot) {
-        itemStats stats = necklaceslot->getStats();
-        std::cout << "3. Necklace: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "3. Necklace: NONE" << std::endl;
-    if (glovesslot) {
-        itemStats stats = glovesslot->getStats();
-        std::cout << "4. Gloves: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "4. Gloves: NONE" << std::endl;
-    if (ringslot) {
-        itemStats stats = ringslot->getStats();
-        std::cout << "5. Ring: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "5. Ring: NONE" << std::endl;
-    if (leggingsslot) {
-        itemStats stats = leggingsslot->getStats();
-        std::cout << "6. Leeggings: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "6. Leggings: NONE" << std::endl;
-    if (bootsslot) {
-        itemStats stats = bootsslot->getStats();
-        std::cout << "7. Boots: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "7. Boots: NONE" << std::endl;
-    if (weaponslot) {
-        itemStats stats = weaponslot->getStats();
-        std::cout << "8. Weapon: " << stats.name << ", (Item LVL: " << stats.itemLvl;
-        if (stats.hp > 0)
-            std::cout << ", HP: " << stats.hp;
-        if (stats.def > 0)
-            std::cout << ", DEF: " << stats.def;
-        if (stats.ad > 0)
-            std::cout << ", AD: " << stats.ad;
-        if (stats.mana > 0)
-            std::cout << ", Mana: " << stats.mana;
-        if (stats.speed > 0)
-            std::cout << ", Speed: " << stats.speed;
-        std::cout << ")" << std::endl;
-    }
-    else
-        std::cout << "8. Weapon: NONE" << std::endl;
 }
 
 Item character::getItemFromInventory (int slot) const {

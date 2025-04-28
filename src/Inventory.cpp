@@ -1,4 +1,5 @@
 #include "Inventory.h"
+#include <algorithm>
 
 Inventory::Inventory () {
     for (int i = 0; i < 6; i++) {
@@ -9,8 +10,10 @@ Inventory::Inventory () {
 
 
 void Inventory::addItem (const Item& item, const int slot) {
-    inventory[slot] = item;
-    removeAvaiableSlot(slot);
+    if (slot >= 0 && inventory.size()) {
+        inventory[slot] = item;
+        removeAvaiableSlot(slot);
+    }
 }
 
 void Inventory::removeAvaiableSlot (int index) {
@@ -27,7 +30,7 @@ int Inventory::getInvSize () const {
 }
 
 int Inventory::get1stAvailableSlot () const {
-    return avaiableSlot.front();
+    return *std::min_element(avaiableSlot.begin(), avaiableSlot.end());
 }
 
 int Inventory::getAvaiableAmount () const {

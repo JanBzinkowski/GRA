@@ -937,6 +937,7 @@ void game::blacksmith (sf::RenderWindow* window) {
     sf::Sprite hover_frame_compare(hoverFrame);
     blacksmith_background.scale({scale, scale});
     hover_frame.scale({scale, scale});
+    hover_frame_compare.scale({scale, scale});
 
     AllTimeGUI gui(hero, &time);
 
@@ -1004,6 +1005,7 @@ void game::blacksmith (sf::RenderWindow* window) {
     hover_compare.setFillColor(sf::Color::Black);
     hover_compare.setCharacterSize(8 * scale);
     bool hovering = false;
+    bool hovering_compare = false;
     bool hoverAvaiable = true;
 
     bool money = false;
@@ -1097,7 +1099,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                     break;
                 }
             }
-            if (checkEqp) {
+            if (checkEqp && hero->getAvaiableAmount() > 0) {
                 for (int i = 0; i < eqp.size(); ++i) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (blacksmithInv[isDragged].getType() == types[i]) {
@@ -1153,7 +1155,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                         }
                     }
                 }
-            if (checkEqp && !checkShop) {
+            if (checkEqp && !checkShop && hero->getAvaiableAmount() > 0) {
                 for (int i = 0; i < eqp.size(); ++i) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (hero->getItemFromInventory(isDraggedInv).getType() == types[i]) {
@@ -1183,7 +1185,7 @@ void game::blacksmith (sf::RenderWindow* window) {
         }
         else if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDraggedEqp >= 0) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            bool checkShop = checkShop = shop_rect.contains(static_cast<sf::Vector2f>(mousePos));
+            bool checkShop = shop_rect.contains(static_cast<sf::Vector2f>(mousePos));
             if (!checkShop) {
                 for (int i = 0; i < backpack.size(); i++) {
                     if (backpack[i].isPressed(mousePos) && hero->isAvailable(i)) {
@@ -1219,13 +1221,36 @@ void game::blacksmith (sf::RenderWindow* window) {
             eqp[isDraggedEqp].second.setPosition({mousePos.x / scale - 14, mousePos.y / scale - 14});
         }
         if (hoverAvaiable) {
+            int hovered_blacksmith = -1;
+            int hovered_inventory = -1;
+            int hovered_equipment = -1;
             if (!blacksmithAvaiable.empty() && shop_rect.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)))) {
-                hoverFrameSetBlacksmith(hover, hover_frame, hover_compare, hover_frame_compare, items, texts, hovering, window);
+                hovered_blacksmith = hoverFrameSetBlacksmith(hover, hover_frame, items, texts, hovering, window);
             }
-            hoverFrameSetInventory(hover, hover_frame, hover_compare, hover_frame_compare, backpack, texts_inv, hovering, window);
-            hoverFrameSetEquipment(hover, hover_frame, eqp, types, texts_eqp, hovering, window);
+            if (hovered_blacksmith < 0)
+                hovered_inventory = hoverFrameSetInventory(hover, hover_frame, backpack, texts_inv, hovering, window);
+            if (hovered_blacksmith < 0 && hovered_inventory < 0)
+                hovered_equipment = hoverFrameSetEquipmentLoop(hover, hover_frame, eqp, texts_eqp, hovering, window);
+            if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::RShift)) && (hovered_blacksmith >= 0 || hovered_inventory >= 0)) {
+                if (hovered_blacksmith >= 0 && hero->checkIfEqp(blacksmithInv[hovered_blacksmith].getType())) {
+                    int i;
+                    for (i = 0; i < types.size(); i++)
+                        if (types[i] == blacksmithInv[hovered_blacksmith].getType())
+                            break;
+                    hoverFrameSetEquipmentSlot(hover_compare, hover_frame_compare, eqp[i], texts_eqp, hovering_compare, i);
+                }
+                else if (hovered_inventory >= 0 && hero->checkIfEqp(blacksmithInv[hovered_inventory].getType())) {
+                    int i;
+                    for (i = 0; i < types.size(); i++)
+                        if (types[i] == hero->getItemFromInventory(hovered_inventory).getType())
+                            break;
+                    hoverFrameSetEquipmentSlot(hover_compare, hover_frame_compare, eqp[i], texts_eqp, hovering_compare, i);
+                }
+            }
+            else {
+                hovering_compare = false;
+            }
         }
-
         window->clear();
         window->draw(blacksmith_background);
         window->draw(gui);
@@ -1258,6 +1283,10 @@ void game::blacksmith (sf::RenderWindow* window) {
             window->draw(hover_frame);
             window->draw(hover);
         }
+        if (hovering_compare) {
+            window->draw(hover_frame_compare);
+            window->draw(hover_compare);
+        }
         if (money) {
             if (noMoneyTime.getElapsedTime().asSeconds() >= 2.0f) {
                 money = false;
@@ -1271,7 +1300,7 @@ void game::blacksmith (sf::RenderWindow* window) {
     time.resume();
 }
 
-void game::hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
+int game::hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
     for (int i = 0; i < slots.size(); i++) {
         int x = blacksmithAvaiable[i];
         if (slots[x].isPressed(sf::Mouse::getPosition(*window))) {
@@ -1279,38 +1308,51 @@ void game::hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, sf::Text
             hover.setPosition({slots[x].getPosition().x - 85 * scale, slots[x].getPosition().y + 34 * scale});
             frame.setPosition({slots[x].getPosition().x - 95 * scale, slots[x].getPosition().y + 27 * scale});
             flag = true;
-            break;
+            return x;
         }
     }
+    return -1;
 }
 
-void game::hoverFrameSetInventory (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
+int game::hoverFrameSetInventory (sf::Text& hover, sf::Sprite& frame, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
     for (int i = 0; i < slots.size(); i++) {
         if (slots[i].isPressed(sf::Mouse::getPosition(*window)) && hero->getItemFromInventory(i).getId() > 0) {
             hover.setString(texts[i]);
             hover.setPosition({slots[i].getPosition().x - 85 * scale, slots[i].getPosition().y + 34 * scale});
             frame.setPosition({slots[i].getPosition().x - 95 * scale, slots[i].getPosition().y + 27 * scale});
             flag = true;
-            break;
+            return i;
         }
     }
+    return -1;
 }
 
-void game::hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::vector<std::pair<bool, Button>>& eqp, std::vector<itemType> types, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
+int game::hoverFrameSetEquipmentLoop (sf::Text& hover, sf::Sprite& frame, std::vector<std::pair<bool, Button>>& eqp, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window) {
     for (int i = 0; i < eqp.size(); i++) {
-        if (eqp[i].second.isPressed(sf::Mouse::getPosition(*window)) && eqp[i].first) {
-            hover.setString(texts[i]);
-            sf::Vector2f pos = {eqp[i].second.getPosition().x - 85 * scale, eqp[i].second.getPosition().y + 34 * scale};
-            if (pos.x - 10 < 0)
-                pos.x += -(pos.x - 20 * scale);
-            hover.setPosition(pos);
-            frame.setPosition({pos.x - 10 * scale, pos.y - 7 * scale});
-            flag = true;
-            break;
+        if (hoverFrameSetEquipment(hover, frame, eqp[i], texts, flag, window, i)) {
+            return i;
         }
     }
+    return -1;
 }
 
+bool game::hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window, int& index) {
+    if (eqp.second.isPressed(sf::Mouse::getPosition(*window)) && eqp.first) {
+        hoverFrameSetEquipmentSlot(hover, frame, eqp, texts, flag, index);
+        return true;
+    }
+    return false;
+}
+
+void game::hoverFrameSetEquipmentSlot (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, int index) {
+    hover.setString(texts[index]);
+    sf::Vector2f pos = {eqp.second.getPosition().x - 85 * scale, eqp.second.getPosition().y + 34 * scale};
+    if (pos.x - 10 < 0)
+        pos.x += -(pos.x - 20 * scale);
+    hover.setPosition(pos);
+    frame.setPosition({pos.x - 10 * scale, pos.y - 7 * scale});
+    flag = true;
+}
 
 std::string game::getBlacksmithInvPath (character*& hero) {
     std::string filename;

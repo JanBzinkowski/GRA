@@ -93,9 +93,11 @@ class game {
         void loadBlacksmithInv (character*& hero);
         void inventory (sf::RenderWindow* window);
 
-        void hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
-        void hoverFrameSetInventory (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
-        void hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::vector<std::pair<bool, Button>>& eqp, std::vector<itemType> types, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        int hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        int hoverFrameSetInventory (sf::Text& hover, sf::Sprite& frame, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        int hoverFrameSetEquipmentLoop (sf::Text& hover, sf::Sprite& frame, std::vector<std::pair<bool, Button>>& eqp, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        bool hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window, int& index);
+        void hoverFrameSetEquipmentSlot (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, int index);
 
         int fight (character*& enemy, sf::RenderWindow* window);
 

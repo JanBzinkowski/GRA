@@ -92,9 +92,9 @@ class character {
         void updateStats (itemStats stats, bool equip);
         int getInvSize () const;
         int get1stAvaiableIndex () const;
+        int getAvaiableAmount () const;
         bool isAvailable (const int slot) const;
         void swapItems (size_t i, size_t x);
-        void displayEqp () const;
         bool checkIfEqp (itemType type) const;
         Item getItemFromEqp (itemType type) const;
         void addToInv (const Item& item, const int slot);
