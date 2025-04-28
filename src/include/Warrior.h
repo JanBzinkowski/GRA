@@ -1,15 +1,12 @@
-#include "postac.h"
+#include "character.h"
 #pragma once
 
-class Warrior: public postac
-{
-private:
-    std::map <DamageType, float> resistance;
+class Warrior: public character {
+    private:
+        std::map<DamageType, float> resistance;
 
-public:
-    Warrior(const std::string& name, const stats& stat)
-        : postac(name, stat, {5, 2, 4, 3, 1})
-        {
+    public:
+        Warrior (const std::string& name, const stats& stat) : character(name, stat, {5, 2, 4, 3, 1}) {
             setResist(DamageType::Physical, 0.85f);
             setResist(DamageType::MagicAir, 0.75f);
             setResist(DamageType::MagicEarth, 1.2f);
@@ -20,8 +17,12 @@ public:
             setResist(DamageType::MagicIce, 1.2f);
             setResist(DamageType::Enviroment, 1.2f);
         }
-    std::string getClass() const
-    {
-        return "Warrior";
-    }
+
+        std::string getClass () const {
+            return "Warrior";
+        }
+
+        Warrior* clone () const override {
+            return new Warrior(*this);
+        }
 };

@@ -1,14 +1,12 @@
-#include "POSTAC.h"
+#include "character.h"
 #pragma once
 
-class dmgcalc
-{
-private:
+class dmgcalc {
+    private:
 
-public:
+    public:
+        float reduction (character& def, character*& atk);
 
-    float reduction (postac& def, postac*& atk);
-
-    int damage(postac*& atk, postac& def, const DamageType& type);
+        int damage (character*& atk, character& def, const DamageType& type);
 };
 
