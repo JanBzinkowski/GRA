@@ -17,6 +17,7 @@ class Inventory {
         Inventory ();
         void addSlot ();
         void removeSlot ();
+        void removeAvaiableSlot (int index);
         void addItem (const Item& item, const int slot);
         void removeItem (int index);
         int getInvSize () const;

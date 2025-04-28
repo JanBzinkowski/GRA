@@ -72,43 +72,47 @@ class game {
         bool isUnlocked (Location location) const;
         std::string isUnlockedPrint (Location location) const;
 
-        void mainMenu (character*& hero, sf::RenderWindow* window);
-        void saves (character*& hero, sf::RenderWindow* window);
+        void mainMenu (sf::RenderWindow* window);
+        void saves (sf::RenderWindow* window);
         void optionsG (sf::RenderWindow* window);
         void optionsGraph (sf::RenderWindow* window);
         void optionsS (sf::RenderWindow* window);
-        void createhero (character*& hero, sf::RenderWindow* window);
+        void createhero (sf::RenderWindow* window);
 
         std::string getTextSave (std::string filename);
-        void saveRead (character*& hero, sf::RenderWindow* window, std::string filename);
-        void worldMap (character*& hero, sf::RenderWindow* window);
-        void city (character*& hero, sf::RenderWindow* window);
+        void saveRead (sf::RenderWindow* window, std::string filename);
+        void worldMap (sf::RenderWindow* window);
+        void city (sf::RenderWindow* window);
 
-        void church (character*& hero, sf::RenderWindow* window);
-        void tavern (character*& hero, sf::RenderWindow* window);
-        void blacksmith (character*& hero, sf::RenderWindow* window);
+        void church (sf::RenderWindow* window);
+        void tavern (sf::RenderWindow* window);
+
+        void blacksmith (sf::RenderWindow* window);
         std::string getBlacksmithInvPath (character*& hero);
         void saveBlacksmithInv (character*& hero);
         void loadBlacksmithInv (character*& hero);
+        void inventory (sf::RenderWindow* window);
 
-        void inventory (character*& hero, sf::RenderWindow* window);
+        void hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        void hoverFrameSetInventory (sf::Text& hover, sf::Sprite& frame, sf::Text& hover_compare, sf::Sprite& frame_compare, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
+        void hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::vector<std::pair<bool, Button>>& eqp, std::vector<itemType> types, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
 
-        int fight (character*& hero, character*& enemy, sf::RenderWindow* window);
+        int fight (character*& enemy, sf::RenderWindow* window);
 
-        void heroaction (character*& enemy, character*& hero);
-        void enemyaction (character*& enemy, character*& hero);
+        int heroaction (character*& enemy, character*& hero);
+        int enemyaction (character*& enemy, character*& hero);
 
-        int fight3 (character*& hero, character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window);
-        void fightEnd (character*& hero, character*& enemy);
+        int fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window);
+        void fightEnd (character*& enemy);
 
-        void itemRandomize (character*& hero, std::mt19937& gen);
+        void itemRandomize (std::mt19937& gen);
 
         void loss (character*& hero);
         bool retcity ();
-        bool enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow*& window, sf::Sprite background);
-        bool enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, character*& hero, sf::RenderWindow* window, sf::Sprite background);
-        void lvl0 (character*& hero, sf::RenderWindow* window);
-        void forest (character*& hero, sf::RenderWindow* window);
+        bool enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow*& window, sf::Sprite background);
+        bool enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow* window, sf::Sprite background);
+        void lvl0 (sf::RenderWindow* window);
+        void forest (sf::RenderWindow* window);
 
         ~game () = default;
 };

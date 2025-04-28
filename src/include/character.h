@@ -150,7 +150,7 @@ class character {
         float getAtkChance (character*& atk, character& def) const;
         float getMultDmg () const;
 
-        void getDamaged (character*& atk, const DamageType& type);
+        int getDamaged (character*& atk, const DamageType& type);
         void regen ();
         void potionregen ();
         void instaHP ();
@@ -187,7 +187,7 @@ class character {
 
         void pray ();
 
-        void save_to_file (character*& hero);
+        void save_to_file ();
         bool load_from_file (const std::string filename, character*& hero);
         int getExtraSlot () const;
         void setExtraSlot (int extra);

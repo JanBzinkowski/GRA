@@ -46,10 +46,10 @@ int main () {
         }
         if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             if (game.getLocation() == Location::MainMenu) {
-                game.mainMenu(hero, window);
+                game.mainMenu(window);
             }
             else if (game.getLocation() == Location::Saves) {
-                game.saves(hero, window);
+                game.saves(window);
             }
             else if (game.getLocation() == Location::OptionsG) {
                 game.optionsG(window);
@@ -61,13 +61,13 @@ int main () {
                 game.optionsS(window);
             }
             else if (game.getLocation() == Location::Map) {
-                game.worldMap(hero, window);
+                game.worldMap(window);
             }
             else if (game.getLocation() == Location::City) {
-                game.city(hero, window);
+                game.city(window);
             }
             else if (game.getLocation() == Location::Church) {
-                game.church(hero, window);
+                game.church(window);
             }
             else if (game.getLocation() == Location::Quit) {
                 window->close();

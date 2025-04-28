@@ -10,8 +10,12 @@ Inventory::Inventory () {
 
 void Inventory::addItem (const Item& item, const int slot) {
     inventory[slot] = item;
+    removeAvaiableSlot(slot);
+}
+
+void Inventory::removeAvaiableSlot (int index) {
     for (int i = 0; i < avaiableSlot.size(); i++) {
-        if (avaiableSlot[i] == slot) {
+        if (avaiableSlot[i] == index) {
             avaiableSlot.erase(avaiableSlot.begin() + i);
             break;
         }

@@ -40,8 +40,7 @@ const std::string character::getSave () {
 void character::printstatcurrent () {
     if (currenthp <= 0)
         currenthp = 0;
-    std::cout << getName() << "'s stats:" << "\nCurrent HP: " << currenthp << /*"\nObecna mana: "<<currentmana<<*/"\n"
-            << std::endl;
+    std::cout << getName() << "'s stats:" << "\nCurrent HP: " << currenthp << /*"\nObecna mana: "<<currentmana<<*/"\n" << std::endl;
 }
 
 void character::updateStats (itemStats stats, bool equip) {
@@ -419,6 +418,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = helmetslot->getStats();
                 heroInv.inventory[slot] = *helmetslot;
                 helmetslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -427,6 +427,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = chestplateslot->getStats();
                 heroInv.inventory[slot] = *chestplateslot;
                 chestplateslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -435,6 +436,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = necklaceslot->getStats();
                 heroInv.inventory[slot] = *necklaceslot;
                 necklaceslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -443,6 +445,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = glovesslot->getStats();
                 heroInv.inventory[slot] = *glovesslot;
                 glovesslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -451,6 +454,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = ringslot->getStats();
                 heroInv.inventory[slot] = *ringslot;
                 ringslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -459,6 +463,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = leggingsslot->getStats();
                 heroInv.inventory[slot] = *leggingsslot;
                 leggingsslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -467,6 +472,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = bootsslot->getStats();
                 heroInv.inventory[slot] = *bootsslot;
                 bootsslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -475,6 +481,7 @@ void character::unequip (const itemType type, int slot) {
                 stats = weaponslot->getStats();
                 heroInv.inventory[slot] = *weaponslot;
                 weaponslot.reset();
+                heroInv.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -554,21 +561,15 @@ void character::lvlup () {
         currenthp = stat.basehp;
         currentmana = stat.mana;
         if (stat.lvl == 2) {
-            std::cout <<
-                    "\n-------------------------------------------------------------------------------------------------------------------------------"
-                    << std::endl;
+            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
             std::cout << "\n\nYou have unlocked:\n  - Potions\n  - Items" << std::endl;
         }
         if (stat.lvl == 5) {
-            std::cout <<
-                    "\n-------------------------------------------------------------------------------------------------------------------------------"
-                    << std::endl;
+            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
             std::cout << "\n\nYou have unlocked:\n  - Potion of Mana Regeneration" << std::endl;
         }
         if (stat.lvl == 8) {
-            std::cout <<
-                    "\n-------------------------------------------------------------------------------------------------------------------------------"
-                    << std::endl;
+            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
             std::cout << "\n\nYou have unlocked:\n  - Potion of Fast Action\n  - Uncommon Items" << std::endl;
         }
     }
@@ -585,9 +586,7 @@ void character::hpcheck () {
     if (currenthp <= 0) {
         currenthp = 0;
         printstatcurrent();
-        std::cout <<
-                "\nYou fainted. Someone has got you back to the city, but he took 50% of your resources as a thank you."
-                << std::endl;
+        std::cout << "\nYou fainted. Someone has got you back to the city, but he took 50% of your resources as a thank you." << std::endl;
         currentgold /= 2;
         currenthp = stat.basehp;
         currentmana += stat.mana;
@@ -695,14 +694,14 @@ int character::getSpeedInc () const {
     return incstats.speedinc;
 }
 
-void character::getDamaged (character*& atk, const DamageType& type) {
+int character::getDamaged (character*& atk, const DamageType& type) {
     int thenhp = currenthp;
     dmgcalc calc;
     int dmg = calc.damage(atk, *this, type);
     currenthp -= dmg;
     if (currenthp < 0)
         currenthp = 0;
-    std::cout << name << " got damaged by " << atk->getName() << " for " << thenhp - currenthp << "HP." << std::endl;
+    return thenhp - currenthp;
 }
 
 void character::regen () {
@@ -880,95 +879,71 @@ void character::setExtraSlot (int extra) {
     extraSlot = extra;
 }
 
-void character::save_to_file (character*& hero) {
-    std::string filename = hero->getSave();
+void character::save_to_file () {
+    std::string filename = this->getSave();
     std::ofstream file(filename);
-    int play = hero->getPlaytime().asSeconds();
+    int play = this->getPlaytime().asSeconds();
     if (file.is_open()) {
-        file << hero->getClass() << "\n" << hero->getName() << "\n" << play << "\n" << hero->getLvl() << "\n" << hero->
-                getMaxHP() << "\n" << hero->getAd() << "\n" << hero->getDef() << "\n" << hero->getMaxMana() << "\n" <<
-                hero->getSpeed() << "\n" << hero->getMaxHPinc() << "\n" << hero->getAdInc() << "\n" << hero->getDefInc()
-                << "\n" << hero->getMaxManaInc() << "\n" << hero->getSpeedInc() << "\n" << hero->currentgold << "\n" <<
-                hero->currenthp << "\n" << hero->currentmana << "\n" << hero->exp << "\n" << hero->prologueState() <<
-                "\n" << hero->getHPpot() << "\n" << hero->getHPRegpot() << "\n" << hero->getManapot() << "\n" << hero->
-                getActionpot() << "\n" << hero->getResistance(DamageType::MagicEnergy) << "\n" << hero->
-                getResistance(DamageType::MagicFire) << "\n" << hero->getResistance(DamageType::MagicIce) << "\n" <<
-                hero->getResistance(DamageType::MagicEarth) << "\n" << hero->getResistance(DamageType::MagicWater) <<
-                "\n" << hero->getResistance(DamageType::MagicPoison) << "\n" << hero->
-                getResistance(DamageType::MagicAir) << "\n" << hero->getResistance(DamageType::Physical) << "\n" << hero
-                ->getResistance(DamageType::Enviroment) << "\n" << hero->getExtraSlot() << "\n";
+        file << this->getClass() << "\n" << this->getName() << "\n" << play << "\n" << this->getLvl() << "\n" << this->getMaxHP() << "\n" << this->getAd() << "\n" << this->getDef() << "\n" << this->getMaxMana() << "\n" << this->getSpeed() << "\n" << this->getMaxHPinc() << "\n" << this->getAdInc() << "\n" << this->getDefInc() << "\n" << this->getMaxManaInc() << "\n" << this->getSpeedInc() << "\n" << this->currentgold << "\n" << this->currenthp << "\n" << this->currentmana << "\n" << this->exp <<
+                "\n" << this->prologueState() << "\n" << this->getHPpot() << "\n" << this->getHPRegpot() << "\n" << this->getManapot() << "\n" << this->getActionpot() << "\n" << this->getResistance(DamageType::MagicEnergy) << "\n" << this->getResistance(DamageType::MagicFire) << "\n" << this->getResistance(DamageType::MagicIce) << "\n" << this->getResistance(DamageType::MagicEarth) << "\n" << this->getResistance(DamageType::MagicWater) << "\n" << this->getResistance(DamageType::MagicPoison) <<
+                "\n" << this->getResistance(DamageType::MagicAir) << "\n" << this->getResistance(DamageType::Physical) << "\n" << this->getResistance(DamageType::Enviroment) << "\n" << this->getExtraSlot() << "\n";
 
-        int invSize = hero->heroInv.getInvSize() - hero->heroInv.getAvaiableAmount();
+        int invSize = this->heroInv.getInvSize() - this->heroInv.getAvaiableAmount();
         file << invSize << "\n";
 
-        const auto& inv = hero->heroInv.inventory;
+        const auto& inv = this->heroInv.inventory;
 
         for (size_t i = 0; i < inv.size(); ++i) {
             const Item& item = inv[i];
             if (item.getId() > 0) {
-                file << i << "\n" << item.getId() << "\n" << item.stats.hp << "\n" << item.stats.ad << "\n" << item.
-                        stats.def << "\n" << item.stats.mana << "\n" << item.stats.speed << "\n";
+                file << i << "\n" << item.getId() << "\n" << item.stats.hp << "\n" << item.stats.ad << "\n" << item.stats.def << "\n" << item.stats.mana << "\n" << item.stats.speed << "\n";
             }
         }
 
         if (helmetslot) {
-            file << "x\n" << helmetslot->getId() << "\n" << helmetslot->stats.hp << "\n" << helmetslot->stats.ad << "\n"
-                    << helmetslot->stats.def << "\n" << helmetslot->stats.mana << "\n" << helmetslot->stats.speed <<
-                    "\n";
+            file << "x\n" << helmetslot->getId() << "\n" << helmetslot->stats.hp << "\n" << helmetslot->stats.ad << "\n" << helmetslot->stats.def << "\n" << helmetslot->stats.mana << "\n" << helmetslot->stats.speed << "\n";
         }
         else
             file << "NOHELMET\n";
 
         if (necklaceslot) {
-            file << "x\n" << necklaceslot->getId() << "\n" << necklaceslot->stats.hp << "\n" << necklaceslot->stats.ad
-                    << "\n" << necklaceslot->stats.def << "\n" << necklaceslot->stats.mana << "\n" << necklaceslot->
-                    stats.speed << "\n";
+            file << "x\n" << necklaceslot->getId() << "\n" << necklaceslot->stats.hp << "\n" << necklaceslot->stats.ad << "\n" << necklaceslot->stats.def << "\n" << necklaceslot->stats.mana << "\n" << necklaceslot->stats.speed << "\n";
         }
         else
             file << "NONECKLACE\n";
 
         if (chestplateslot) {
-            file << "x\n" << chestplateslot->getId() << "\n" << chestplateslot->stats.hp << "\n" << chestplateslot->
-                    stats.ad << "\n" << chestplateslot->stats.def << "\n" << chestplateslot->stats.mana << "\n" <<
-                    chestplateslot->stats.speed << "\n";
+            file << "x\n" << chestplateslot->getId() << "\n" << chestplateslot->stats.hp << "\n" << chestplateslot->stats.ad << "\n" << chestplateslot->stats.def << "\n" << chestplateslot->stats.mana << "\n" << chestplateslot->stats.speed << "\n";
         }
         else
             file << "NOCHEST\n";
 
         if (glovesslot) {
-            file << "x\n" << glovesslot->getId() << "\n" << glovesslot->stats.hp << "\n" << glovesslot->stats.ad << "\n"
-                    << glovesslot->stats.def << "\n" << glovesslot->stats.mana << "\n" << glovesslot->stats.speed <<
-                    "\n";
+            file << "x\n" << glovesslot->getId() << "\n" << glovesslot->stats.hp << "\n" << glovesslot->stats.ad << "\n" << glovesslot->stats.def << "\n" << glovesslot->stats.mana << "\n" << glovesslot->stats.speed << "\n";
         }
         else
             file << "NOGLOVES\n";
 
         if (ringslot) {
-            file << "x\n" << ringslot->getId() << "\n" << ringslot->stats.hp << "\n" << ringslot->stats.ad << "\n" <<
-                    ringslot->stats.def << "\n" << ringslot->stats.mana << "\n" << ringslot->stats.speed << "\n";
+            file << "x\n" << ringslot->getId() << "\n" << ringslot->stats.hp << "\n" << ringslot->stats.ad << "\n" << ringslot->stats.def << "\n" << ringslot->stats.mana << "\n" << ringslot->stats.speed << "\n";
         }
         else
             file << "NORING\n";
 
         if (leggingsslot) {
-            file << "x\n" << leggingsslot->getId() << "\n" << leggingsslot->stats.hp << "\n" << leggingsslot->stats.ad
-                    << "\n" << leggingsslot->stats.def << "\n" << leggingsslot->stats.mana << "\n" << leggingsslot->
-                    stats.speed << "\n";
+            file << "x\n" << leggingsslot->getId() << "\n" << leggingsslot->stats.hp << "\n" << leggingsslot->stats.ad << "\n" << leggingsslot->stats.def << "\n" << leggingsslot->stats.mana << "\n" << leggingsslot->stats.speed << "\n";
         }
         else
             file << "NOLEGS\n";
 
         if (bootsslot) {
-            file << "x\n" << bootsslot->getId() << "\n" << bootsslot->stats.hp << "\n" << bootsslot->stats.ad << "\n" <<
-                    bootsslot->stats.def << "\n" << bootsslot->stats.mana << "\n" << bootsslot->stats.speed << "\n";
+            file << "x\n" << bootsslot->getId() << "\n" << bootsslot->stats.hp << "\n" << bootsslot->stats.ad << "\n" << bootsslot->stats.def << "\n" << bootsslot->stats.mana << "\n" << bootsslot->stats.speed << "\n";
         }
         else
             file << "NOBOOTS\n";
 
         if (weaponslot) {
-            file << "x\n" << weaponslot->getId() << "\n" << weaponslot->stats.hp << "\n" << weaponslot->stats.ad << "\n"
-                    << weaponslot->stats.def << "\n" << weaponslot->stats.mana << "\n" << weaponslot->stats.speed <<
-                    "\n";
+            file << "x\n" << weaponslot->getId() << "\n" << weaponslot->stats.hp << "\n" << weaponslot->stats.ad << "\n" << weaponslot->stats.def << "\n" << weaponslot->stats.mana << "\n" << weaponslot->stats.speed << "\n";
         }
         else
             file << "NOWEAPON\n";
@@ -980,7 +955,6 @@ void character::save_to_file (character*& hero) {
     }
 }
 
-
 bool character::load_from_file (const std::string filename, character*& hero) {
     std::ifstream file(filename);
     if (file.is_open()) {
@@ -990,9 +964,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         statsincrese incStats;
         int playtime;
 
-        file >> className >> name >> playtime >> charStats.lvl >> charStats.basehp >> charStats.ad >> charStats.def >>
-                charStats.mana >> charStats.speed >> incStats.basehpinc >> incStats.adinc >> incStats.definc >> incStats
-                .manainc >> incStats.speedinc;
+        file >> className >> name >> playtime >> charStats.lvl >> charStats.basehp >> charStats.ad >> charStats.def >> charStats.mana >> charStats.speed >> incStats.basehpinc >> incStats.adinc >> incStats.definc >> incStats.manainc >> incStats.speedinc;
 
         if (className == "Warrior") {
             hero = new Warrior(name, charStats);
@@ -1009,8 +981,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
         }
         bool isPrologue;
         int x, y, z, a;
-        file >> hero->currentgold >> hero->currenthp >> hero->currentmana >> hero->exp >> isPrologue >> x >> y >> z >>
-                a;
+        file >> hero->currentgold >> hero->currenthp >> hero->currentmana >> hero->exp >> isPrologue >> x >> y >> z >> a;
         hero->setHPpot(x);
         hero->setHPRegpot(y);
         hero->setManapot(z);
@@ -1063,8 +1034,7 @@ bool character::load_from_file (const std::string filename, character*& hero) {
             int id;
             file >> id;
             Item necklace(id);
-            file >> necklace.stats.hp >> necklace.stats.ad >> necklace.stats.def >> necklace.stats.mana >> necklace.
-                    stats.speed;
+            file >> necklace.stats.hp >> necklace.stats.ad >> necklace.stats.def >> necklace.stats.mana >> necklace.stats.speed;
             hero->necklaceslot = std::make_optional<Item>(necklace);
         }
         file >> isSlot;
