@@ -11,7 +11,7 @@
 #include "location.h"
 #include <unordered_map>
 #include "gametime.h"
-#include "enemy.h"
+#include "EnemyMap.h"
 #include <random>
 #include <SFML/Graphics.hpp>
 #include "AllTimeGUI.h"
@@ -19,7 +19,7 @@
 
 class game {
     private:
-        character* hero;
+        Hero* hero;
         Options option;
         std::mt19937 gen;
         GameTime time;
@@ -54,14 +54,14 @@ class game {
         sf::Font font;
 
     public:
-        game (character*& hero, std::mt19937& gen, Options& opt) : hero(hero), gen(gen), option(opt) {
+        game (Hero*& hero, std::mt19937& gen, Options& opt) : hero(hero), gen(gen), option(opt) {
             if (!font.openFromFile("src\\fonts\\pixel-8x8.ttf")) {
                 std::cerr << "Failed to load font from file: " << "src\\fonts\\pixel-8x8.ttf" << std::endl;
                 throw std::runtime_error("Failed to load font from file: src\\fonts\\pixel-8x8.ttf");
             }
         }
 
-        character* createEnemy (const enemyStats& stats);
+        Enemy* createEnemy (const enemyStats& stats);
 
         bool areShopsOpen () const;
 
@@ -75,9 +75,10 @@ class game {
         void mainMenu (sf::RenderWindow* window);
         void saves (sf::RenderWindow* window);
         void optionsG (sf::RenderWindow* window);
-        void optionsGraph (sf::RenderWindow* window);
-        void optionsS (sf::RenderWindow* window);
+        bool optionsGraph (sf::RenderWindow* window);
+        bool optionsS (sf::RenderWindow* window);
         void createhero (sf::RenderWindow* window);
+        bool pauseMenu (sf::RenderWindow* window);
 
         std::string getTextSave (std::string filename);
         void saveRead (sf::RenderWindow* window, std::string filename);
@@ -88,9 +89,9 @@ class game {
         void tavern (sf::RenderWindow* window);
 
         void blacksmith (sf::RenderWindow* window);
-        std::string getBlacksmithInvPath (character*& hero);
-        void saveBlacksmithInv (character*& hero);
-        void loadBlacksmithInv (character*& hero);
+        std::string getBlacksmithInvPath ();
+        void saveBlacksmithInv ();
+        void loadBlacksmithInv ();
         void inventory (sf::RenderWindow* window);
 
         int hoverFrameSetBlacksmith (sf::Text& hover, sf::Sprite& frame, std::vector<Button>& slots, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window);
@@ -99,17 +100,17 @@ class game {
         bool hoverFrameSetEquipment (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, sf::RenderWindow* window, int& index);
         void hoverFrameSetEquipmentSlot (sf::Text& hover, sf::Sprite& frame, std::pair<bool, Button>& eqp, std::vector<std::string>& texts, bool& flag, int index);
 
-        int fight (character*& enemy, sf::RenderWindow* window);
+        int fight (Enemy*& enemy, sf::RenderWindow* window);
 
-        int heroaction (character*& enemy, character*& hero);
-        int enemyaction (character*& enemy, character*& hero);
+        int heroaction (Enemy*& enemy, Hero*& hero);
+        int enemyaction (Enemy*& enemy, Hero*& hero);
 
-        int fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window);
-        void fightEnd (character*& enemy);
+        int fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWindow* window);
+        void fightEnd (Enemy*& enemy);
 
         void itemRandomize (std::mt19937& gen);
 
-        void loss (character*& hero);
+        void loss ();
         bool retcity ();
         bool enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow*& window, sf::Sprite background);
         bool enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow* window, sf::Sprite background);

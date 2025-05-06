@@ -5,35 +5,58 @@
 #include <conio.h>
 #include <string>
 
-float dmgcalc::reduction (character& def, character*& atk) {
-    int lvldif = (def . getLvl()) - (atk -> getLvl());
+float dmgcalc::reduction (Enemy*& enemy, Hero*& hero, bool isHero) {
+    int lvldif;
+    if (isHero) {
+        lvldif = (hero->getLvl()) - (enemy->getLvl());
+    }
+    else
+        lvldif = (enemy->getLvl()) - (hero->getLvl());
     if (lvldif >= 10)
         lvldif = 9;
-    float reduct = atan(def . getDef()) / def . getLvl() * (1 + 0.1 * lvldif);
-    std::string classhero = def . getClass();
-    if (((classhero == "Warrior") || (classhero == "enemyWarrior")) && reduct > 0.75f)
+    if (isHero) {
+        float reduct = atan(hero->getDef()) / hero->getLvl() * (1 + 0.1 * lvldif);
+        std::string classhero = hero->getClass();
+        if (((classhero == "Warrior")) && reduct > 0.75f)
+            reduct = 0.75f;
+        else if (((classhero == "Archer")) && reduct > 0.55f)
+            reduct = 0.55f;
+        else if (((classhero == "Mage")) && reduct > 0.40f)
+            reduct = 0.40f;
+        return reduct;
+    }
+    float reduct = atan(enemy->getDef()) / enemy->getLvl() * (1 + 0.1 * lvldif);
+    std::string classhero = hero->getClass();
+    if (((classhero == "enemyWarrior")) && reduct > 0.75f)
         reduct = 0.75f;
-    if (((classhero == "Archer") || (classhero == "enemyArcher")) && reduct > 0.55f)
+    else if (((classhero == "enemyArcher")) && reduct > 0.55f)
         reduct = 0.55f;
-    if (((classhero == "Mage") || (classhero == "enemyMage")) && reduct > 0.40f)
+    else if (((classhero == "enemyMage")) && reduct > 0.40f)
         reduct = 0.40f;
     return reduct;
 }
 
-int dmgcalc::damage (character*& atk, character& def, const DamageType& type) {
+int dmgcalc::damage (Enemy*& enemy, Hero*& hero, const DamageType& type, const bool toHero) {
     float randChance = static_cast<float>(std::rand()) / RAND_MAX;
-    if (randChance < atk -> getAtkChance(atk, def)) {
-        int lvldif = (atk -> getLvl()) - (def . getLvl());
-        if (lvldif >= 10)
-            lvldif = 9;
-        float reduct = reduction(def, atk);
+    if (!toHero && randChance < hero->getAtkChance(enemy, hero, toHero)) {
+        int lvl_diff = (hero->getLvl()) - (enemy->getLvl());
+        if (lvl_diff >= 10)
+            lvl_diff = 9;
+        float reduct = reduction(enemy, hero, toHero);
 
-        float resistancemult = def . getResistance(type);
-        int dmg = static_cast<int>(1.5 * atk -> getAd() * atk -> getLvl() * atk -> getMultDmg() * (1 - reduct) *
-                                   resistancemult) * (1 + 0.1 * lvldif);
+        float resistancemult = enemy->getResistance(type);
+        int dmg = static_cast<int>(1.5 * hero->getAd() * hero->getLvl() * hero->getMultDmg() * (1 - reduct) * resistancemult) * (1 + 0.1 * lvl_diff);
         return dmg;
     }
-    else
-        std::cout << atk -> getName() << "'s attack missed!" << std::endl;
+    else if (randChance < enemy->getAtkChance(enemy, hero, toHero)) {
+        int lvl_diff = (enemy->getLvl()) - (hero->getLvl());
+        if (lvl_diff >= 10)
+            lvl_diff = 9;
+        float reduct = reduction(enemy, hero, toHero);
+
+        float resistancemult = hero->getResistance(type);
+        int dmg = static_cast<int>(1.5 * enemy->getAd() * enemy->getLvl() * enemy->getMultDmg() * (1 - reduct) * resistancemult) * (1 + 0.1 * lvl_diff);
+        return dmg;
+    }
     return 0;
 }

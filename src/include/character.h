@@ -1,113 +1,52 @@
 #pragma once
-#include <iostream>
-#include <math.h>
+
 #include <string>
-#include <time.h>
-#include <cstdlib>
 #include "dmgtype.h"
 #include <map>
-#include <fstream>
-#include <optional>
-#include "Inventory.h"
-#include <SFML/System/Clock.hpp>
-#include <SFML/System/Time.hpp>
 #include "stats.h"
 
-class AllTimeGUI;
+class Enemy;
+
+class Hero;
 
 class character {
-    private:
-        sf::Clock gameplay_time;
-        sf::Time playtime = sf::Time::Zero;
-        std::map<DamageType, float> resistance;
-        std::string name;
-        stats stat;
-        statsincrese incstats;
-        int extraSlot = 0;
-        Inventory heroInv;
+    std::map<DamageType, float> m_resistance;
+    std::string m_name;
+    Stats m_stats;
+    StatsIncrese m_stats_inc;
 
-        std::string save;
+    int m_current_HP;
 
-        int expworth = 0;
-        int goldworth = 0;
-        int currentLocation;
-        bool prologue = false;
-        bool firstcity = false;
-        bool firstchurch = false;
-        bool firstblacksmith = false;
-        bool firsttavern = false;
-        bool firstmap = false;
-
-        int healthpotion = 0;
-        int manapotion = 0;
-        int manapotionT = 0;
-        int regenpotion = 0;
-        int regenpotionT = 0;
-        int actionPot = 0;
-        bool fastaction = false;
-
-        int potionCD = 0;
-
-        std::optional<Item> helmetslot = std::nullopt;
-        std::optional<Item> chestplateslot = std::nullopt;
-        std::optional<Item> glovesslot = std::nullopt;
-        std::optional<Item> leggingsslot = std::nullopt;
-        std::optional<Item> bootsslot = std::nullopt;
-        std::optional<Item> ringslot = std::nullopt;
-        std::optional<Item> necklaceslot = std::nullopt;
-        std::optional<Item> weaponslot = std::nullopt;
+    int m_atk_type_nb = 0;
 
     public:
-        virtual character* clone () const = 0;
-        int currenthp;
-        int currentgold = 10;
-        int currentmana;
-        int exp = 0;
-        int atktypenb = '0';
-
-        void setSave (const std::string fileName);
-        const std::string getSave ();
-
-        character (const std::string& name, const stats& stat, const statsincrese& incstats, int extra = 0) : name(name), stat(stat), incstats(incstats), currenthp(stat.basehp), currentmana(stat.mana), extraSlot(extra) {
-            resistance[DamageType::MagicEnergy] = 1.0f;
-            resistance[DamageType::MagicFire] = 1.0f;
-            resistance[DamageType::MagicIce] = 1.0f;
-            resistance[DamageType::MagicEarth] = 1.0f;
-            resistance[DamageType::MagicWater] = 1.0f;
-            resistance[DamageType::MagicPoison] = 1.0f;
-            resistance[DamageType::MagicAir] = 1.0f;
-            resistance[DamageType::Physical] = 1.0f;
-            resistance[DamageType::Enviroment] = 1.0f;
-            for (int i = 0; i < extra; i++) {
-                heroInv.addSlot();
-            }
+        character (const std::string& name, const Stats& stats, const StatsIncrese& inc_stats) : m_name(name), m_stats(stats), m_stats_inc(inc_stats), m_current_HP(stats.base_hp) {
+            m_resistance[DamageType::MagicEnergy] = 1.0f;
+            m_resistance[DamageType::MagicFire] = 1.0f;
+            m_resistance[DamageType::MagicIce] = 1.0f;
+            m_resistance[DamageType::MagicEarth] = 1.0f;
+            m_resistance[DamageType::MagicWater] = 1.0f;
+            m_resistance[DamageType::MagicPoison] = 1.0f;
+            m_resistance[DamageType::MagicAir] = 1.0f;
+            m_resistance[DamageType::Physical] = 1.0f;
+            m_resistance[DamageType::Enviroment] = 1.0f;
         }
 
-        void startClock ();
-        void restartClock ();
-        sf::Time getPlaytime ();
-        void setPlaytime (sf::Time time);
+        virtual float getAtkChance (Enemy*& enemy, Hero*& hero, bool toHero) const;
+        virtual float getMultDmg () const;
+        virtual int getDamaged (Enemy*& enemy, Hero*& hero, const DamageType& type) = 0;
 
-
-        void updateStats (itemStats stats, bool equip);
-        int getInvSize () const;
-        int get1stAvaiableIndex () const;
-        int getAvaiableAmount () const;
-        bool isAvailable (const int slot) const;
-        void swapItems (size_t i, size_t x);
-        bool checkIfEqp (itemType type) const;
-        Item getItemFromEqp (itemType type) const;
-        void addToInv (const Item& item, const int slot);
-        void removeFromInv (const int slot);
-        void equipItem (const Item& item);
-        void equipFromInv (const int& slot);
-        void unequip (const itemType type, int slot = -1);
-        void removeFromEqp (const itemType type);
-        Item getItemFromInventory (int slot) const;
+        int getCurrentHP () const;
+        void setCurrentHP (const int current_HP);
+        void incCurrentHP (const int current_HP_inc);
 
         virtual std::string getClass () const = 0;
+
         void setResist (const DamageType& type, float resist);
         float getResistance (const DamageType& type) const;
+
+        Stats getStats () const;
+        StatsIncrese getStatsInc () const;
 
         int getMaxHP () const;
         int getLvl () const;
@@ -118,82 +57,15 @@ class character {
         std::string getName () const;
         std::string getPath () const;
 
-        void setHPpot (int x);
-        int getHPpot () const;
-
-        void setManapot (int x);
-        int getManapot () const;
-
-        void setHPRegpot (int x);
-        int getHPRegpot () const;
-
-        void setManapotT (int x);
-        int getManapotT () const;
-
-        void setHPRegpotT (int x);
-        int getHPRegpotT () const;
-
-        void setActionpot (int x);
-        int getActionpot () const;
-        void setFastAction (bool isFastAction);
-        bool getFastAction () const;
-
-        void setPotionCD ();
-        int getPotionCD () const;
-
-        int getMaxHPinc () const;
+        int getMaxHPInc () const;
         int getAdInc () const;
         int getDefInc () const;
         int getMaxManaInc () const;
         int getSpeedInc () const;
 
-        float getAtkChance (character*& atk, character& def) const;
-        float getMultDmg () const;
+        void setAtkTypeNB (int nb);
+        int getAtkTypeNB () const;
 
-        int getDamaged (character*& atk, const DamageType& type);
-        void regen ();
-        void potionregen ();
-        void instaHP ();
-        void manaregen ();
-        void potionmanaregen ();
-
-        void goldInc (int gold);
-        void expInc (int experience);
-
-        void printstatcurrent ();
-
-        void lvlup ();
-        void enemyLvlUp ();
-
-        void hpcheck ();
-
-        void setExpworth (int worth);
-        void setGoldworth (int worth);
-        int getExpworth () const;
-        int getGoldworth () const;
-
-        void prologueSet (bool isPrologue);
-        bool prologueState () const;
-        void citySet (bool isPrologue);
-        bool cityState () const;
-        void blacksmithSet (bool isPrologue);
-        bool blacksmithState () const;
-        void churchSet (bool isPrologue);
-        bool churchState () const;
-        void tavernSet (bool isPrologue);
-        bool tavernState () const;
-        void mapSet (bool isPrologue);
-        bool mapState () const;
-
-        void pray ();
-
-        void save_to_file ();
-        bool load_from_file (const std::string filename, character*& hero);
-        int getExtraSlot () const;
-        void setExtraSlot (int extra);
-
-
-        friend class AllTimeGUI;
         virtual ~character () = default;
 };
 

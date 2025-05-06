@@ -1,12 +1,12 @@
-#include "character.h"
+#include "Hero.h"
 #pragma once
 
-class Mage: public character {
+class Mage: public Hero {
     private:
         std::map<DamageType, float> resistance;
 
     public:
-        Mage (const std::string& name, const stats& stat) : character(name, stat, {3, 6, 2, 4, 1}) {
+        Mage (const std::string& name, const Stats& stat) : Hero(name, stat, {3, 6, 2, 4, 1}) {
             setResist(DamageType::Physical, 1.30f);
             setResist(DamageType::MagicAir, 0.65f);
             setResist(DamageType::MagicEarth, 0.65f);
@@ -19,10 +19,6 @@ class Mage: public character {
 
         std::string getClass () const {
             return "Mage";
-        }
-
-        Mage* clone () const override {
-            return new Mage(*this);
         }
 };
 

@@ -3,53 +3,53 @@
 
 Inventory::Inventory () {
     for (int i = 0; i < 6; i++) {
-        inventory.emplace_back(Item(0));
-        avaiableSlot.emplace_back(i);
+        m_inventory.emplace_back(Item(0));
+        m_avaiable_slot.emplace_back(i);
     }
 }
 
 
 void Inventory::addItem (const Item& item, const int slot) {
-    if (slot >= 0 && inventory.size()) {
-        inventory[slot] = item;
+    if (slot >= 0 && m_inventory.size()) {
+        m_inventory[slot] = item;
         removeAvaiableSlot(slot);
     }
 }
 
 void Inventory::removeAvaiableSlot (int index) {
-    for (int i = 0; i < avaiableSlot.size(); i++) {
-        if (avaiableSlot[i] == index) {
-            avaiableSlot.erase(avaiableSlot.begin() + i);
+    for (int i = 0; i < m_avaiable_slot.size(); i++) {
+        if (m_avaiable_slot[i] == index) {
+            m_avaiable_slot.erase(m_avaiable_slot.begin() + i);
             break;
         }
     }
 }
 
 int Inventory::getInvSize () const {
-    return inventory.size();
+    return m_inventory.size();
 }
 
 int Inventory::get1stAvailableSlot () const {
-    return *std::min_element(avaiableSlot.begin(), avaiableSlot.end());
+    return *std::min_element(m_avaiable_slot.begin(), m_avaiable_slot.end());
 }
 
 int Inventory::getAvaiableAmount () const {
-    return avaiableSlot.size();
+    return m_avaiable_slot.size();
 }
 
 void Inventory::removeItem (int index) {
-    inventory[index] = Item(0);
-    avaiableSlot.push_back(index);
+    m_inventory[index] = Item(0);
+    m_avaiable_slot.push_back(index);
 }
 
 Item Inventory::getItemByIndex (size_t index) const {
-    return inventory[index];
+    return m_inventory[index];
 }
 
 void Inventory::addSlot () {
     extraSlot++;
-    inventory.emplace_back(Item(0));
-    avaiableSlot.emplace_back(extraSlot + 5);
+    m_inventory.emplace_back(Item(0));
+    m_avaiable_slot.emplace_back(extraSlot + 5);
 }
 
 void Inventory::removeSlot () {
@@ -57,13 +57,13 @@ void Inventory::removeSlot () {
 }
 
 void Inventory::swapItems (size_t index1, size_t index2) {
-    Item temp = inventory[index1];
-    inventory[index1] = inventory[index2];
-    inventory[index2] = temp;
+    Item temp = m_inventory[index1];
+    m_inventory[index1] = m_inventory[index2];
+    m_inventory[index2] = temp;
 }
 
 bool Inventory::isAvaiable (const int index) const {
-    if (inventory[index].getId() != 0)
+    if (m_inventory[index].getId() != 0)
         return false;
     return true;
 }

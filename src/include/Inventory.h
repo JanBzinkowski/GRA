@@ -3,15 +3,13 @@
 
 #include <vector>
 #include "Item.h"
-#include <optional>
 
 class Inventory {
-    friend class character;
+    friend class Hero;
 
-    private:
-        std::vector<Item> inventory;
-        std::vector<int> avaiableSlot;
-        int extraSlot = 0;
+    std::vector<Item> m_inventory;
+    std::vector<int> m_avaiable_slot;
+    int extraSlot = 0;
 
     public:
         Inventory ();

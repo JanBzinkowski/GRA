@@ -1,5 +1,4 @@
-enum class Location
-{
+enum class Location {
     Quit,
     MainMenu,
     OptionsG,
@@ -18,6 +17,7 @@ enum class Location
     Caves,
     IcePeaks,
     Volcano,
+    Desert,
     Graveyard,
     Ocean
 };

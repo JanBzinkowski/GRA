@@ -5,7 +5,7 @@
 #include <string>
 #include <random>
 
-class character;
+class Hero;
 
 enum class itemType {
     Boots,

@@ -1,12 +1,11 @@
-#include "character.h"
+#include "Hero.h"
+#include "Enemy.h"
 #pragma once
 
 class dmgcalc {
-    private:
-
     public:
-        float reduction (character& def, character*& atk);
+        static float reduction (Enemy*& enemy, Hero*& hero, bool isHero);
 
-        int damage (character*& atk, character& def, const DamageType& type);
+        static int damage (Enemy*& enemy, Hero*& hero, const DamageType& type, const bool toHero);
 };
 

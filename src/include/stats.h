@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-struct stats {
+struct Stats {
     int lvl;
-    int basehp;
+    int base_hp;
     int ad;
     int def;
     int mana;
@@ -12,10 +12,10 @@ struct stats {
     std::string path = "src\\textures\\GUI\\32x32border.png";
 };
 
-struct statsincrese {
-    int basehpinc;
-    int adinc;
-    int definc;
-    int manainc = 3;
-    int speedinc;
+struct StatsIncrese {
+    int base_HP_inc;
+    int ad_inc;
+    int def_inc;
+    int mana_inc = 3;
+    int speed_inc;
 };

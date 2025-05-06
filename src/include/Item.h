@@ -26,7 +26,7 @@ class Item {
         }
 
         itemStats getStats () const;
-        void generateStats (std::mt19937& gen, character*& hero);
+        void generateStats (std::mt19937& gen, Hero*& hero);
         int getId () const;
         itemType getType () const;
         std::string getTypeString () const;

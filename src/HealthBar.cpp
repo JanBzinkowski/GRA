@@ -23,7 +23,7 @@ HealthBar::HealthBar (float x, float y, character* hero): person(hero) {
 }
 
 void HealthBar::updateRed () {
-    float hpRatio = static_cast<float>(person->currenthp) / person->getMaxHP();
+    float hpRatio = static_cast<float>(person->getCurrentHP()) / person->getMaxHP();
     red.setSize({53.f * scale * hpRatio, 8.f * scale});
 }
 

@@ -17,7 +17,7 @@
 extern std::unordered_map<int, enemyStats> enemies;
 
 
-character* game::createEnemy (const enemyStats& stats) {
+Enemy* game::createEnemy (const enemyStats& stats) {
     switch (stats.Class) {
         case enemyClasses::enemyWarrior:
             return new enemyWarrior(stats.name, stats.stats);
@@ -36,27 +36,26 @@ bool game::areShopsOpen () const {
     return false;
 }
 
-void game::loss (character*& hero) {
+void game::loss () {
     std::cout << "You have fainted." << std::endl;
     std::cout << "Luckily someone found you and brought you to the church, but he wanted half of your gold in exchange." << std::endl;
-    setLocation(Location::Church);
-    hero->currentgold -= hero->currentgold / 2;
+    hero->setCurrentGold(hero->getCurrentGold() / 2);
     hero->pray();
 }
 
 bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow*& window, sf::Sprite background) {
     std::uniform_int_distribution<> dist(indexmin, indexmax);
     int index = dist(gen);
-    character* enemy = createEnemy(enemies.at(index));
+    Enemy* enemy = createEnemy(enemies.at(index));
     enemy->setExpworth(exp);
     enemy->setGoldworth(gold);
     while (enemy->getLvl() < hero->getLvl() || enemy->getLvl() >= maxlvl) {
         enemy->enemyLvlUp();
-        enemy->currenthp = enemy->getMaxHP();
+        enemy->setCurrentHP(enemy->getMaxHP());
     }
     int res = fight(enemy, window);
     if (res == 0) {
-        loss(hero);
+        loss();
         return false;
     }
 
@@ -95,35 +94,35 @@ bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, 
 bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow* window, sf::Sprite background) {
     std::uniform_int_distribution<> dist(indexmin, indexmax);
     int index = dist(gen);
-    character* enemy1 = createEnemy(enemies.at(index));
+    Enemy* enemy1 = createEnemy(enemies.at(index));
     enemy1->setExpworth(exp);
     enemy1->setGoldworth(gold);
     while (enemy1->getLvl() < hero->getLvl() || enemy1->getLvl() >= maxlvl) {
         enemy1->enemyLvlUp();
-        enemy1->currenthp = enemy1->getMaxHP();
+        enemy1->setCurrentHP(enemy1->getMaxHP());
     }
     index = dist(gen);
-    character* enemy2 = createEnemy(enemies.at(index));
+    Enemy* enemy2 = createEnemy(enemies.at(index));
     enemy2->setExpworth(exp);
     enemy2->setGoldworth(gold);
     while (enemy2->getLvl() < hero->getLvl() || enemy2->getLvl() >= maxlvl) {
         enemy2->enemyLvlUp();
-        enemy2->currenthp = enemy2->getMaxHP();
+        enemy2->setCurrentHP(enemy2->getMaxHP());
     }
     index = dist(gen);
-    character* enemy3 = createEnemy(enemies.at(index));
+    Enemy* enemy3 = createEnemy(enemies.at(index));
     enemy3->setExpworth(exp);
     enemy3->setGoldworth(gold);
     while (enemy3->getLvl() < hero->getLvl() || enemy3->getLvl() >= maxlvl) {
         enemy3->enemyLvlUp();
-        enemy3->currenthp = enemy3->getMaxHP();
+        enemy3->setCurrentHP(enemy3->getMaxHP());
     }
     std::cout << "Watch out! You have been attacked by " << enemy1->getName() << " (Lvl " << enemy1->getLvl() << ")" << enemy2->getName() << " (Lvl " << enemy2->getLvl() << ")" << enemy3->getName() << " (Lvl " << enemy3->getLvl() << ")!" << std::endl;
 
 
     int res = fight3(enemy1, enemy2, enemy3, window);
     if (res == 0) {
-        loss(hero);
+        loss();
         enemy1 = nullptr;
         enemy2 = nullptr;
         enemy3 = nullptr;
@@ -174,7 +173,7 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
 void game::lvl0 (sf::RenderWindow* window) {
     time.pause();
     std::cout << "Currently playing: Tutorial" << std::endl;
-    character* enemy1 = createEnemy(enemies.at(0));
+    Enemy* enemy1 = createEnemy(enemies.at(0));
     enemy1->setExpworth(30);
     enemy1->setGoldworth(10);
 
@@ -188,54 +187,59 @@ void game::lvl0 (sf::RenderWindow* window) {
     std::cout << "\nThe King got attacked by a bunny. But there was something wrong with that bunny... You came to help and then the Killer Bunny attacked you." << std::endl;
 
     if (fight(enemy1, window) == 0) {
-        std::cout << "Sadly you have been badly injured by your enemy." << std::endl;
-        std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
-        std::cout << "\nBut won or lost, this fight taught you various things. You gain 6XP." << std::endl;
-        hero->exp += 30;
-        hero->lvlup();
-        std::cout << "You have been brought to the church." << std::endl;
-        std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
-        std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
-        std::cout << "\nBut remember that it won't happen again." << std::endl;
-        hero->currentgold += 20;
-        hero->pray();
-    }
-    else {
-        std::cout << "Watch out! New wave of enemies incoming!" << std::endl;
-        character* enemy2 = createEnemy(enemies.at(1));
-        enemy2->setExpworth(20);
-        enemy2->setGoldworth(10);
-        character* enemy3 = createEnemy(enemies.at(2));
-        enemy3->setExpworth(20);
-        enemy3->setGoldworth(10);
-        character* enemy4 = createEnemy(enemies.at(3));
-        enemy4->setExpworth(20);
-        enemy4->setGoldworth(10);
-
-        if (fight3(enemy2, enemy3, enemy4, window) == 0) {
-            std::cout << "Sadly you have been badly injured by your enemies." << std::endl;
+        if (getLocation() != Location::MainMenu && getLocation() != Location::Quit) {
+            std::cout << "Sadly you have been badly injured by your enemy." << std::endl;
             std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
+            std::cout << "\nBut won or lost, this fight taught you various things. You gain 6XP." << std::endl;
+            hero->expInc(30);
+            hero->lvlup();
             std::cout << "You have been brought to the church." << std::endl;
             std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
             std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
             std::cout << "\nBut remember that it won't happen again." << std::endl;
-            hero->currentgold += 20;
+            hero->goldInc(20);
             hero->pray();
+        }
+        else
+            return;
+    }
+    else {
+        std::cout << "Watch out! New wave of enemies incoming!" << std::endl;
+        Enemy* enemy2 = createEnemy(enemies.at(1));
+        enemy2->setExpworth(20);
+        enemy2->setGoldworth(10);
+        Enemy* enemy3 = createEnemy(enemies.at(2));
+        enemy3->setExpworth(20);
+        enemy3->setGoldworth(10);
+        Enemy* enemy4 = createEnemy(enemies.at(3));
+        enemy4->setExpworth(20);
+        enemy4->setGoldworth(10);
+
+        if (fight3(enemy2, enemy3, enemy4, window) == 0) {
+            if (getLocation() != Location::MainMenu && getLocation() != Location::Quit) {
+                std::cout << "Sadly you have been badly injured by your enemies." << std::endl;
+                std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
+                std::cout << "You have been brought to the church." << std::endl;
+                std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
+                std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
+                std::cout << "\nBut remember that it won't happen again." << std::endl;
+                hero->goldInc(20);
+                hero->pray();
+            }
+            else
+                return;
         }
         else {
             std::cout << "\nKing's guards came to save both you and the King." << std::endl;
             std::cout << "\nThey escorted you to the city." << std::endl;
             std::cout << "\nKing thanked you and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
             std::cout << "\nThe King departed with his guards towards the castle." << std::endl;
-            hero->currentgold += 20;
+            hero->goldInc(20);
         }
         hero->prologueSet(true);
         enemy2 = nullptr;
         enemy3 = nullptr;
         enemy4 = nullptr;
-        // delete enemy2;
-        // delete enemy3;
-        // delete enemy4;
     }
     setLocation(Location::City);
     hero->citySet(true);
@@ -278,35 +282,33 @@ void game::forest (sf::RenderWindow* window) {
         return;
     if (!isUnlocked(Location::Swamp)) {
         unlockLocations(Location::Swamp);
-        std::cout << "You have unlocked swamp. Are you scared to get yourself dirty?" << std::endl;
     }
-    std::cout << "You have come to the edge of the forest, slaying all enemies that stood on you way.\n\nReturning to the city now." << std::endl;
 }
 
-int game::heroaction (character*& enemy, character*& hero) {
+int game::heroaction (Enemy*& enemy, Hero*& hero) {
     int damage;
     if (hero->getClass() == "Mage") {
-        damage = enemy->getDamaged(hero, DamageType::MagicEnergy);
+        damage = enemy->getDamaged(enemy, hero, DamageType::MagicEnergy);
     }
     else {
-        damage = enemy->getDamaged(hero, DamageType::Physical);
+        damage = enemy->getDamaged(enemy, hero, DamageType::Physical);
     }
     hero->setFastAction(false);
     return damage;
 }
 
-int game::enemyaction (character*& enemy, character*& hero) {
+int game::enemyaction (Enemy*& enemy, Hero*& hero) {
     int damage;
     if (enemy == nullptr)
         return 0;
     if (enemy->getClass() == "enemyMage")
-        damage = hero->getDamaged(enemy, DamageType::MagicEnergy);
+        damage = hero->getDamaged(enemy, hero, DamageType::MagicEnergy);
     else
-        damage = hero->getDamaged(enemy, DamageType::Physical);
+        damage = hero->getDamaged(enemy, hero, DamageType::Physical);
     return damage;
 }
 
-int game::fight (character*& enemy, sf::RenderWindow* window) {
+int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
     AllTimeGUI gui(hero, &time);
     sf::Clock clockHero;
     sf::Clock clockEnemy;
@@ -353,15 +355,15 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 1;
+                hero->setAtkTypeNB(1);
                 heroChosen = true;
             }
             else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 2;
+                hero->setAtkTypeNB(2);
                 heroChosen = true;
             }
             else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 3;
+                hero->setAtkTypeNB(3);
                 heroChosen = true;
             }
             else if (gui.actionIsClicked(mousePos) && !heroChosen && heroAction && hero->getActionpot() > 0) {
@@ -385,6 +387,16 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
                 potionCD = 4;
             }
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape));
+            if (!pauseMenu(window)) {
+                if (getLocation() != Location::Quit) {
+                    setLocation(Location::MainMenu);
+                }
+                return 0;
+            }
+        }
+
         if (turnHero && turnEnemy) {
             regenHandled = false;
             turnHero = false;
@@ -393,7 +405,7 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
         if (!regenHandled) {
             hero->regen();
             if (hero->getHPRegpotT() > 0) {
-                hero->potionregen();
+                hero->regen();
                 hero->setHPRegpotT(-1);
             }
             if (hero->getManapotT() > 0) {
@@ -413,7 +425,7 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
             DealtToEnemy.setString("-" + std::to_string(damage_enemy));
             potionCD--;
             heroChosen = false;
-            if (enemy->currenthp <= 0) {
+            if (enemy->getCurrentHP() <= 0) {
                 fightEnd(enemy);
                 win = true;
                 fight_end = true;
@@ -422,14 +434,14 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
         }
 
         if (!fight_end && !heroAction && clockHero.getElapsedTime().asSeconds() >= 2) {
-            enemy->atktypenb = rand() % 3;
+            enemy->setAtkTypeNB(rand() % 3);
             damage_hero = enemyaction(enemy, hero);
             dealt_to_hero.restart();
             DealtToHero.setString("-" + std::to_string(damage_hero));
             potionCD--;
             heroAction = true;
             turnEnemy = true;
-            if (hero->currenthp <= 0) {
+            if (hero->getCurrentHP() <= 0) {
                 fight_end = true;
                 end_fight.restart();
             }
@@ -466,9 +478,10 @@ int game::fight (character*& enemy, sf::RenderWindow* window) {
     return 0;
 }
 
-int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf::RenderWindow* window) {
-    std::vector<character*> enemies = {enemy1, enemy2, enemy3};
-    std::vector<character*> turn = {enemy1, enemy2, enemy3, hero};
+int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWindow* window) {
+    Enemy* heroTurn = new enemyWarrior("x", hero->getStats());
+    std::vector<Enemy*> enemies = {enemy1, enemy2, enemy3};
+    std::vector<Enemy*> turn = {enemy1, enemy2, enemy3, heroTurn};
     std::sort(turn.begin(), turn.end(), [] (character* a, character* b) {
         if (a == nullptr)
             return false;
@@ -491,7 +504,7 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
     bool turnHero = false;
     bool chooseEnemy = true;
 
-    character* enemy = nullptr;
+    Enemy* enemy = nullptr;
 
     HealthBar enemyBar1(395.f, 130.f, enemy1);
     HealthBar enemyBar2(495.f, 130.f, enemy2);
@@ -533,17 +546,17 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 1;
+                hero->setAtkTypeNB(1);
                 heroChosen = true;
                 chooseEnemy = true;
             }
             else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 2;
+                hero->setAtkTypeNB(2);
                 heroChosen = true;
                 chooseEnemy = true;
             }
             else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
-                hero->atktypenb = 3;
+                hero->setAtkTypeNB(3);
                 heroChosen = true;
                 chooseEnemy = true;
             }
@@ -583,12 +596,21 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
                 chosen_enemy = 2;
             }
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape));
+            if (!pauseMenu(window)) {
+                if (getLocation() != Location::Quit) {
+                    setLocation(Location::MainMenu);
+                }
+                return 0;
+            }
+        }
 
         if (turnOrder >= turn.size()) {
             turnOrder = 0;
         }
 
-        if (turn[turnOrder] == hero) {
+        if (turn[turnOrder] == heroTurn) {
             heroAction = true;
         }
 
@@ -600,7 +622,7 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
         if (!regenHandled) {
             hero->regen();
             if (hero->getHPRegpotT() > 0) {
-                hero->potionregen();
+                hero->regen();
                 hero->setHPRegpotT(-1);
             }
             if (hero->getManapotT() > 0) {
@@ -632,7 +654,7 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
             turnOrder++;
             heroChosen = false;
             chooseEnemy = true;
-            if (enemy->currenthp <= 0) {
+            if (enemy->getCurrentHP() <= 0) {
                 fightEnd(enemy);
                 enemies[chosen_enemy] = nullptr;
                 turn.erase(std::remove(turn.begin(), turn.end(), enemy), turn.end());
@@ -645,11 +667,11 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
         }
         if (!fight_end && !heroAction && clockHero.getElapsedTime().asSeconds() > 2 && clockEnemy.getElapsedTime().asSeconds() > 2) {
             enemy = turn[turnOrder];
-            enemy->atktypenb = rand() % 3;
+            enemy->setAtkTypeNB(rand() % 3);
             damage_hero = enemyaction(enemy, hero);
             dealt_to_hero.restart();
             DealtToHero.setString("-" + std::to_string(damage_hero));
-            if (hero->currenthp <= 0) {
+            if (hero->getCurrentHP() <= 0) {
                 fight_end = true;
                 end_fight.restart();
             }
@@ -707,9 +729,9 @@ int game::fight3 (character*& enemy1, character*& enemy2, character*& enemy3, sf
     return 0;
 }
 
-void game::fightEnd (character*& enemy) {
-    if (enemy->currenthp <= 0) {
-        hero->exp += enemy->getExpworth();
+void game::fightEnd (Enemy*& enemy) {
+    if (enemy->getCurrentHP() <= 0) {
+        hero->expInc(enemy->getExpworth());
         hero->goldInc(enemy->getGoldworth());
         hero->lvlup();
     }
@@ -783,36 +805,36 @@ void game::church (sf::RenderWindow* window) {
                 setLocation(Location::City);
                 break;
             }
-            else if (pray.isPressed(mousePos) && hero->currentgold >= 5) {
+            else if (pray.isPressed(mousePos) && hero->getCurrentGold() >= 5) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 hero->pray();
-                hero->currentgold -= 5;
+                hero->goldInc(-5);
             }
             else if (hppot.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->getLvl() >= 2 && hero->currentgold >= 15) {
-                    hero->currentgold -= 15;
+                if (hero->getLvl() >= 2 && hero->getCurrentGold() >= 15) {
+                    hero->goldInc(-15);
                     hero->setHPpot(1);
                 }
             }
             else if (regenpot.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->getLvl() >= 3 && hero->currentgold >= 10) {
-                    hero->currentgold -= 10;
+                if (hero->getLvl() >= 3 && hero->getCurrentGold() >= 10) {
+                    hero->goldInc(-10);
                     hero->setHPRegpot(1);
                 }
             }
             else if (manapot.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->getLvl() >= 5 && hero->currentgold >= 15) {
-                    hero->currentgold -= 15;
+                if (hero->getLvl() >= 5 && hero->getCurrentGold() >= 15) {
+                    hero->goldInc(-15);
                     hero->setManapot(1);
                 }
             }
             else if (actionpot.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->getLvl() >= 8 && hero->currentgold >= 30) {
-                    hero->currentgold -= 30;
+                if (hero->getLvl() >= 8 && hero->getCurrentGold() >= 30) {
+                    hero->goldInc(-30);
                     hero->setActionpot(1);
                 }
             }
@@ -858,18 +880,18 @@ void game::tavern (sf::RenderWindow* window) {
             }
             else if (sleep.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->currentgold >= 5) {
-                    hero->currentgold -= 5;
+                if (hero->getCurrentGold() >= 5) {
+                    hero->goldInc(-5);
                     hero->save_to_file();
-                    saveBlacksmithInv(hero);
+                    saveBlacksmithInv();
                     time.resetTimeMorning();
                     break;
                 }
             }
             else if (drink.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                if (hero->currentgold >= 1) {
-                    hero->currentgold -= 1;
+                if (hero->getCurrentGold() >= 1) {
+                    hero->goldInc(-1);
                 }
             }
         }
@@ -1081,7 +1103,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                 }
             }
         }
-        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->currentgold >= blacksmithInv[isDragged].getStats().price) {
+        if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->getCurrentGold() >= blacksmithInv[isDragged].getStats().price) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             bool checkEqp = true;
             for (int i = 0; i < backpack.size(); i++) {
@@ -1127,7 +1149,7 @@ void game::blacksmith (sf::RenderWindow* window) {
             isDragged = -1;
             hoverAvaiable = true;
         }
-        else if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->currentgold < blacksmithInv[isDragged].getStats().price) {
+        else if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isDraggedFlag && isDragged >= 0 && hero->getCurrentGold() < blacksmithInv[isDragged].getStats().price) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             money = true;
             notEnoughMoney.setPosition({mousePos.x - 145 * scale, mousePos.y - 12 * scale});
@@ -1354,7 +1376,7 @@ void game::hoverFrameSetEquipmentSlot (sf::Text& hover, sf::Sprite& frame, std::
     flag = true;
 }
 
-std::string game::getBlacksmithInvPath (character*& hero) {
+std::string game::getBlacksmithInvPath () {
     std::string filename;
     if (hero->getSave() == "saves\\saveFile1\\saveFile1.txt")
         filename = "saves\\saveFile1\\saveBlack1.txt";
@@ -1365,8 +1387,8 @@ std::string game::getBlacksmithInvPath (character*& hero) {
     return filename;
 }
 
-void game::saveBlacksmithInv (character*& hero) {
-    std::string filename = getBlacksmithInvPath(hero);
+void game::saveBlacksmithInv () {
+    std::string filename = getBlacksmithInvPath();
     std::ofstream file(filename, std::ios::out | std::ios::trunc);
     BlacksmithNewItems = true;
     itemRandomize(gen);
@@ -1382,8 +1404,8 @@ void game::saveBlacksmithInv (character*& hero) {
         std::cerr << "Error: Unable to open file " << filename << std::endl;
 }
 
-void game::loadBlacksmithInv (character*& hero) {
-    std::string filename = getBlacksmithInvPath(hero);
+void game::loadBlacksmithInv () {
+    std::string filename = getBlacksmithInvPath();
     std::ifstream file(filename, std::ios::in);
     if (file.is_open()) {
         blacksmithAvaiable.clear();
@@ -1660,7 +1682,7 @@ void game::mainMenu (sf::RenderWindow* window) {
                 break;
             }
             else if (options.isPressed(mousePos)) {
-                setLocation(Location::OptionsG);
+                optionsG(window);
                 break;
             }
             else if (quit.isPressed(mousePos)) {
@@ -1797,7 +1819,7 @@ void game::saveRead (sf::RenderWindow* window, std::string filename) {
         if (hero->load_from_file(filename, hero)) {
             if (hero->prologueState()) {
                 setLocation(Location::City);
-                loadBlacksmithInv(hero);
+                loadBlacksmithInv();
                 time.resetTimeMorning();
             }
             else
@@ -2049,6 +2071,8 @@ void game::optionsG (sf::RenderWindow* window) {
     bg.setPosition({0.f, scale * 45.f});
     bg.scale({scale, scale});
 
+    Location previousLocation = getLocation();
+
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
             if (event->is<sf::Event::Closed>())
@@ -2058,7 +2082,6 @@ void game::optionsG (sf::RenderWindow* window) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             if (back.isPressed(mousePos) && !choosingLanguage) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                setLocation(Location::MainMenu);
                 option.saveToFile();
                 break;
             }
@@ -2098,15 +2121,23 @@ void game::optionsG (sf::RenderWindow* window) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsGraph);
                 option.saveToFile();
-                break;
             }
             else if (sound.isPressed(mousePos) && !choosingLanguage) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsS);
                 option.saveToFile();
-                break;
             }
         }
+
+        if (getLocation() == Location::OptionsS) {
+            if (!optionsS(window))
+                break;
+        }
+        else if (getLocation() == Location::OptionsGraph) {
+            if (!optionsGraph(window))
+                break;
+        }
+
 
         window->clear();
         window->draw(bg);
@@ -2126,9 +2157,10 @@ void game::optionsG (sf::RenderWindow* window) {
         }
         window->display();
     }
+    setLocation(previousLocation);
 }
 
-void game::optionsGraph (sf::RenderWindow* window) {
+bool game::optionsGraph (sf::RenderWindow* window) {
     Button general(66.f, 10.f, "src\\textures\\background\\Options\\PL\\ogolne.png");
     Button sound(247.f, 10.f, "src\\textures\\background\\Options\\PL\\dzwiek.png");
     Button graphics(435.f, 10.f, "src\\textures\\background\\Options\\PL\\grafika.png");
@@ -2242,7 +2274,7 @@ void game::optionsGraph (sf::RenderWindow* window) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             if (back.isPressed(mousePos) && !choosingFPS && !choosingMode && !choosingResolution) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                setLocation(Location::MainMenu);
+                setLocation(Location::OptionsG);
                 option.saveToFile();
                 sf::Vector2u windowsize;
                 if (option.getResolution() == Resolution::p1080) {
@@ -2269,19 +2301,19 @@ void game::optionsGraph (sf::RenderWindow* window) {
                     window->create(sf::VideoMode(windowsize), "Gra 1.0", sf::Style::Default, sf::State::Windowed);
                 else
                     window->create(sf::VideoMode(windowsize), "Gra 1.0", sf::Style::None, sf::State::Windowed);
-                break;
+                return false;
             }
             else if (general.isPressed(mousePos) && !choosingFPS && !choosingMode && !choosingResolution) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsG);
                 option.saveToFile();
-                break;
+                return true;
             }
             else if (sound.isPressed(mousePos) && !choosingFPS && !choosingMode && !choosingResolution) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsS);
                 option.saveToFile();
-                break;
+                return true;
             }
             else if (currentFPS.isPressed(mousePos) && !choosingFPS && !choosingMode && !choosingResolution) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
@@ -2464,9 +2496,10 @@ void game::optionsGraph (sf::RenderWindow* window) {
         }
         window->display();
     }
+    return false;
 }
 
-void game::optionsS (sf::RenderWindow* window) {
+bool game::optionsS (sf::RenderWindow* window) {
     Button general(66.f, 10.f, "src\\textures\\background\\Options\\PL\\ogolne.png");
     Button sound(247.f, 10.f, "src\\textures\\background\\Options\\PL\\dzwiek.png");
     Button graphics(435.f, 10.f, "src\\textures\\background\\Options\\PL\\grafika.png");
@@ -2545,21 +2578,21 @@ void game::optionsS (sf::RenderWindow* window) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             if (back.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                setLocation(Location::MainMenu);
+                setLocation(Location::OptionsG);
                 option.saveToFile();
-                break;
+                return false;
             }
             else if (general.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsG);
                 option.saveToFile();
-                break;
+                return true;
             }
             else if (graphics.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::OptionsGraph);
                 option.saveToFile();
-                break;
+                return true;
             }
             else if (master_slider.isPressed(mousePos)) {
                 mousePos = sf::Mouse::getPosition(*window);
@@ -2603,6 +2636,52 @@ void game::optionsS (sf::RenderWindow* window) {
         window->draw(music_slider);
         window->display();
     }
+    return false;
+}
+
+bool game::pauseMenu (sf::RenderWindow* window) {
+    Button options(170.f, 200.f, "src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
+    Button quit(270.f, 280.f, "src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
+    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
+    if (option.getLanguage() == Language::ENG) {
+        options.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+        quit.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+    }
+    while (window->isOpen()) {
+        while (const std::optional event = window->pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                window->close();
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            if (back.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::City);
+                return true;
+            }
+            else if (options.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                optionsG(window);
+            }
+            else if (quit.isPressed(mousePos)) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                setLocation(Location::Quit);
+                return false;
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape));
+            setLocation(Location::City);
+            return true;
+        }
+
+        window->clear();
+        window->draw(options);
+        window->draw(quit);
+        window->draw(back);
+        window->display();
+    }
+    return false;
 }
 
 void game::worldMap (sf::RenderWindow* window) {
@@ -2632,13 +2711,15 @@ void game::worldMap (sf::RenderWindow* window) {
             else if (forestButton.isPressed(mousePos) && isUnlocked(Location::Forest)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 forest(window);
-                setLocation(Location::City);
+                if (getLocation() != Location::MainMenu && getLocation() != Location::Quit)
+                    setLocation(Location::City);
                 break;
             }
-            else if (cavesButton.isPressed(mousePos)) {
+            else if (cavesButton.isPressed(mousePos) && isUnlocked(Location::Caves)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 //caves(hero);
-                setLocation(Location::City);
+                if (getLocation() != Location::MainMenu && getLocation() != Location::Quit)
+                    setLocation(Location::City);
                 break;
             }
         }
@@ -2703,6 +2784,15 @@ void game::city (sf::RenderWindow* window) {
             else if (tavern_building.isPressed(mousePos)) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 tavern(window);
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape));
+            if (!pauseMenu(window)) {
+                if (getLocation() != Location::Quit) {
+                    setLocation(Location::MainMenu);
+                }
+                break;
             }
         }
         time.timeFlow();

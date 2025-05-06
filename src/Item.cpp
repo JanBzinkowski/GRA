@@ -1,5 +1,5 @@
 #include "include/Item.h"
-#include "character.h"
+#include "Hero.h"
 
 itemStats Item::getStats () const {
     return stats;
@@ -40,7 +40,7 @@ std::string Item::getPath () const {
     return stats.item_path;
 }
 
-void Item::generateStats (std::mt19937& gen, character*& hero) {
+void Item::generateStats (std::mt19937& gen, Hero*& hero) {
     auto randomize = [&gen] (int min, int max) ->int {
         std::uniform_int_distribution<> dist(min, max);
         return dist(gen);

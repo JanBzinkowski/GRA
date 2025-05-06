@@ -3,8 +3,8 @@
 #include "stats.h"
 
 extern float scale;
-extern stats mageStats;
-extern stats warriorStats;
-extern stats archerStats;
+extern Stats mageStats;
+extern Stats warriorStats;
+extern Stats archerStats;
 
 #endif // GLOBAL_H

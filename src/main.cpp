@@ -37,7 +37,7 @@ int main () {
     std::mt19937 gen(rd());
     gen.seed(static_cast<unsigned int>(std::time(NULL)));
     srand(time(NULL));
-    character* hero = nullptr;
+    Hero* hero = nullptr;
     game game(hero, gen, option);
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -50,15 +50,6 @@ int main () {
             }
             else if (game.getLocation() == Location::Saves) {
                 game.saves(window);
-            }
-            else if (game.getLocation() == Location::OptionsG) {
-                game.optionsG(window);
-            }
-            else if (game.getLocation() == Location::OptionsGraph) {
-                game.optionsGraph(window);
-            }
-            else if (game.getLocation() == Location::OptionsS) {
-                game.optionsS(window);
             }
             else if (game.getLocation() == Location::Map) {
                 game.worldMap(window);
