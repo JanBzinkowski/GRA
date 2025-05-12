@@ -1,9 +1,14 @@
-#include "include/Item.h"
+#include "Item.h"
 #include "Hero.h"
 
 itemStats Item::getStats () const {
     return stats;
 }
+
+void Item::setStats (itemStats stat) {
+    stats = stat;
+}
+
 
 int Item::getId () const {
     return id;

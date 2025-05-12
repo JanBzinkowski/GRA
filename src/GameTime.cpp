@@ -1,4 +1,4 @@
-#include "include/gametime.h"
+#include "gametime.h"
 
 #include <SFML/System/Time.hpp>
 

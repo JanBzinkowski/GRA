@@ -1,5 +1,5 @@
 #include "character.h"
-#include <bits/algorithmfwd.h>
+#include <algorithm>
 #include "damage.h"
 #include "itemType.h"
 #include "button.h"
@@ -17,32 +17,6 @@ void character::setCurrentHP (const int current_HP) {
 
 void character::incCurrentHP (const int current_HP_inc) {
     m_current_HP += current_HP_inc;
-}
-
-float character::getAtkChance (Enemy*& enemy, Hero*& hero, bool toHero) const {
-    int lvldif;
-    if (toHero) {
-        lvldif = (this->getLvl()) - (hero->getLvl());
-    }
-    else
-        lvldif = (this->getLvl()) - (enemy->getLvl());
-
-    float base = 0;
-    switch (m_atk_type_nb) {
-        case 1:
-            base = 0.95f;
-            break;
-        case 2:
-            base = 0.75f;
-            break;
-        case 3:
-            base = 0.50f;
-            break;
-        default:
-            return 0.0f;
-    }
-    float chance = std::clamp(base + 0.1f * lvldif, 0.0f, 1.0f);
-    return chance;
 }
 
 float character::getMultDmg () const {

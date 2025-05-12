@@ -59,10 +59,10 @@ bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, 
         return false;
     }
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
 
-    Button arrow_l(52.f, 145.f, "src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 145.f, "src\\textures\\GUI\\arrow_key_right.png");
+    Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -129,10 +129,10 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         return false;
     }
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
 
-    Button arrow_l(52.f, 145.f, "src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 145.f, "src\\textures\\GUI\\arrow_key_right.png");
+    Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -254,9 +254,9 @@ void game::lvl0 (sf::RenderWindow* window) {
 
 void game::forest (sf::RenderWindow* window) {
     sf::Texture background;
-    if (!background.loadFromFile("src\\textures\\GUI\\20x20frame.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\20x20frame.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\20x20frame.png");
+    if (!background.loadFromFile("..\\src\\textures\\GUI\\20x20frame.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\20x20frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\20x20frame.png");
     }
     sf::Sprite bg(background);
     if (!enemyenc(4, 6, 6, 10, 10, window, bg))
@@ -288,10 +288,10 @@ void game::forest (sf::RenderWindow* window) {
 int game::heroaction (Enemy*& enemy, Hero*& hero) {
     int damage;
     if (hero->getClass() == "Mage") {
-        damage = enemy->getDamaged(enemy, hero, DamageType::MagicEnergy);
+        damage = enemy->getDamaged(hero, DamageType::MagicEnergy);
     }
     else {
-        damage = enemy->getDamaged(enemy, hero, DamageType::Physical);
+        damage = enemy->getDamaged(hero, DamageType::Physical);
     }
     hero->setFastAction(false);
     return damage;
@@ -302,14 +302,14 @@ int game::enemyaction (Enemy*& enemy, Hero*& hero) {
     if (enemy == nullptr)
         return 0;
     if (enemy->getClass() == "enemyMage")
-        damage = hero->getDamaged(enemy, hero, DamageType::MagicEnergy);
+        damage = hero->getDamaged(enemy, DamageType::MagicEnergy);
     else
-        damage = hero->getDamaged(enemy, hero, DamageType::Physical);
+        damage = hero->getDamaged(enemy, DamageType::Physical);
     return damage;
 }
 
 int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
     sf::Clock clockHero;
     sf::Clock clockEnemy;
     int whofirst;
@@ -354,34 +354,34 @@ int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            if (gui.isLightAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(1);
                 heroChosen = true;
             }
-            else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.isMediumAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(2);
                 heroChosen = true;
             }
-            else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.isHeavyAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(3);
                 heroChosen = true;
             }
-            else if (gui.actionIsClicked(mousePos) && !heroChosen && heroAction && hero->getActionpot() > 0) {
+            else if (gui.isFastActionPotionClicked(mousePos) && !heroChosen && heroAction && hero->getActionpot() > 0) {
                 hero->setFastAction(true);
                 hero->setActionpot(-1);
                 potionCD = 4;
             }
-            else if (gui.regenIsClicked(mousePos) && !heroChosen && heroAction && hero->getHPRegpot() > 0) {
+            else if (gui.isRegenPotionClicked(mousePos) && !heroChosen && heroAction && hero->getHPRegpot() > 0) {
                 hero->setHPRegpot(-1);
                 hero->setHPRegpotT(PotionTime);
                 potionCD = 4;
             }
-            else if (gui.manaIsClicked(mousePos) && !heroChosen && heroAction && hero->getManapot() > 0) {
+            else if (gui.isManaPotionClicked(mousePos) && !heroChosen && heroAction && hero->getManapot() > 0) {
                 hero->setManapot(-1);
                 hero->setManapotT(PotionTime);
                 potionCD = 4;
             }
-            else if (gui.hpIsClicked(mousePos) && !heroChosen && heroAction && hero->getHPpot() > 0) {
+            else if (gui.isHpPotionClicked(mousePos) && !heroChosen && heroAction && hero->getHPpot() > 0) {
                 hero->setHPpot(-1);
                 hero->instaHP();
                 potionCD = 4;
@@ -490,7 +490,7 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
         return a->getSpeed() > b->getSpeed();
     });
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
     sf::Clock clockHero;
     clockHero.start();
     sf::Clock clockEnemy;
@@ -545,37 +545,37 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (gui.atk1IsClicked(mousePos) && !heroChosen && heroAction) {
+            if (gui.isLightAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(1);
                 heroChosen = true;
                 chooseEnemy = true;
             }
-            else if (gui.atk2IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.isMediumAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(2);
                 heroChosen = true;
                 chooseEnemy = true;
             }
-            else if (gui.atk3IsClicked(mousePos) && !heroChosen && heroAction) {
+            else if (gui.isHeavyAtkClicked(mousePos) && !heroChosen && heroAction) {
                 hero->setAtkTypeNB(3);
                 heroChosen = true;
                 chooseEnemy = true;
             }
-            else if (gui.actionIsClicked(mousePos) && !heroChosen && heroAction && hero->getActionpot() > 0) {
+            else if (gui.isFastActionPotionClicked(mousePos) && !heroChosen && heroAction && hero->getActionpot() > 0) {
                 hero->setFastAction(true);
                 hero->setActionpot(-1);
                 potionCD = 4;
             }
-            else if (gui.regenIsClicked(mousePos) && !heroChosen && heroAction && hero->getHPRegpot() > 0) {
+            else if (gui.isRegenPotionClicked(mousePos) && !heroChosen && heroAction && hero->getHPRegpot() > 0) {
                 hero->setHPRegpot(-1);
                 hero->setHPRegpotT(PotionTime);
                 potionCD = 4;
             }
-            else if (gui.manaIsClicked(mousePos) && !heroChosen && heroAction && hero->getManapot() > 0) {
+            else if (gui.isManaPotionClicked(mousePos) && !heroChosen && heroAction && hero->getManapot() > 0) {
                 hero->setManapot(-1);
                 hero->setManapotT(PotionTime);
                 potionCD = 4;
             }
-            else if (gui.hpIsClicked(mousePos) && !heroChosen && heroAction && hero->getHPpot() > 0) {
+            else if (gui.isHpPotionClicked(mousePos) && !heroChosen && heroAction && hero->getHPpot() > 0) {
                 hero->setHPpot(-1);
                 hero->instaHP();
                 potionCD = 4;
@@ -771,28 +771,28 @@ void game::updateBlacksmith () {
 
 void game::church (sf::RenderWindow* window) {
     time.pause();
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
-    Button hppot(122.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
-    Button regenpot(244.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
-    Button manapot(366.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
-    Button actionpot(488.f, 200.f, "src\\textures\\GUI\\20x20frame.png");
-    Button pray(320.f, 70.f, "src\\textures\\GUI\\20x20frame.png");
-    Button h(128.f, 206.f, "src\\textures\\GUI\\AllTimeGui\\potions\\hp_potion20x20.png");\
-    Button r(250.f, 206.f, "src\\textures\\GUI\\AllTimeGui\\potions\\regen_potion20x20.png");
-    Button m(372.f, 206.f, "src\\textures\\GUI\\AllTimeGui\\potions\\mana_potion20x20.png");
-    Button a(494.f, 206.f, "src\\textures\\GUI\\AllTimeGui\\potions\\action_potion20x20.png");
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button hppot(122.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button regenpot(244.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button manapot(366.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button actionpot(488.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button pray(320.f, 70.f, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button h(128.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\hp_potion20x20.png");\
+    Button r(250.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\regen_potion20x20.png");
+    Button m(372.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\mana_potion20x20.png");
+    Button a(494.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\action_potion20x20.png");
 
     if (hero->getLvl() < 2)
-        h.setTextureFile("src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        h.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 3)
-        r.setTextureFile("src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        r.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 5)
-        m.setTextureFile("src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        m.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 8)
-        a.setTextureFile("src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        a.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
 
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
             if (event->is<sf::Event::Closed>())
@@ -862,10 +862,10 @@ void game::church (sf::RenderWindow* window) {
 
 void game::tavern (sf::RenderWindow* window) {
     time.pause();
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
-    Button sleep(100.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    Button drink(400.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    AllTimeGUI gui(hero, &time);
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button sleep(100.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    Button drink(400.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    HUD gui(hero, &time);
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -937,6 +937,7 @@ void game::itemRandomize (std::mt19937& gen) {
 }
 
 void game::blacksmith (sf::RenderWindow* window) {
+    int g=0;
     time.pause();
     updateBlacksmith();
     itemRandomize(gen);
@@ -944,14 +945,14 @@ void game::blacksmith (sf::RenderWindow* window) {
     sf::FloatRect shop_rect({377.f * scale, 199.f * scale}, {130.f * scale, 81.f * scale});
 
     sf::Texture blacksmith_bg;
-    if (!blacksmith_bg.loadFromFile("src\\textures\\GUI\\gui_blacksmith.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\gui_blacksmith.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\gui_blacksmith.png");
+    if (!blacksmith_bg.loadFromFile("..\\src\\textures\\GUI\\gui_blacksmith.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\gui_blacksmith.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\gui_blacksmith.png");
     }
     sf::Texture hoverFrame;
-    if (!hoverFrame.loadFromFile("src\\textures\\GUI\\192x80border.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\192x80border.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\192x80border.png");
+    if (!hoverFrame.loadFromFile("..\\src\\textures\\GUI\\192x80border.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\192x80border.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\192x80border.png");
     }
 
     sf::Sprite blacksmith_background(blacksmith_bg);
@@ -961,11 +962,11 @@ void game::blacksmith (sf::RenderWindow* window) {
     blacksmith_background.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
 
-    Button arrow_l(281.f, 95.f, "src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 95.f, "src\\textures\\GUI\\arrow_key_right.png");
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
+    Button arrow_l(281.f, 95.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 95.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
 
     std::vector<Button> items;
     float startX = 377;
@@ -984,12 +985,13 @@ void game::blacksmith (sf::RenderWindow* window) {
     int spacingXinv = 49;
     for (int i = 0; i < hero->getInvSize(); ++i) {
         int x = startXinv + spacingXinv * i;
-        if (hero->getItemFromInventory(i).getId() > 0)
+        if (hero->getItemFromInventory(i).getId() > 0) {
             backpack.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
-        else
-            backpack.emplace_back(x, startYinv, "src\\textures\\items\\Buty.png");
+        }
+        else {
+            backpack.emplace_back(x, startYinv, "..\\src\\textures\\items\\Buty.png");
+        }
     }
-
 
     std::vector<std::string> texts;
     for (int i = 0; i < 6; ++i) {
@@ -1378,12 +1380,12 @@ void game::hoverFrameSetEquipmentSlot (sf::Text& hover, sf::Sprite& frame, std::
 
 std::string game::getBlacksmithInvPath () {
     std::string filename;
-    if (hero->getSave() == "saves\\saveFile1\\saveFile1.txt")
-        filename = "saves\\saveFile1\\saveBlack1.txt";
-    else if (hero->getSave() == "saves\\saveFile2\\saveFile2.txt")
-        filename = "saves\\saveFile2\\saveBlack2.txt";
-    else if (hero->getSave() == "saves\\saveFile3\\saveFile3.txt")
-        filename = "saves\\saveFile3\\saveBlack3.txt";
+    if (hero->getSave() == "..\\saves\\saveFile1\\saveFile1.txt")
+        filename = "..\\saves\\saveFile1\\saveBlack1.txt";
+    else if (hero->getSave() == "..\\saves\\saveFile2\\saveFile2.txt")
+        filename = "..\\saves\\saveFile2\\saveBlack2.txt";
+    else if (hero->getSave() == "..\\saves\\saveFile3\\saveFile3.txt")
+        filename = "..\\saves\\saveFile3\\saveBlack3.txt";
     return filename;
 }
 
@@ -1412,7 +1414,7 @@ void game::loadBlacksmithInv () {
         for (int i = 0; i < 6; i++) {
             int id;
             file >> id;
-            itemStats stats = blacksmithInv[i].getStats();
+            itemStats stats = itemData.at(id);
             file >> stats.hp;
             file >> stats.ad;
             file >> stats.def;
@@ -1433,14 +1435,14 @@ void game::loadBlacksmithInv () {
 void game::inventory (sf::RenderWindow* window) {
     time.pause();
     sf::Texture inv_background;
-    if (!inv_background.loadFromFile("src\\textures\\GUI\\gui_equipment.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\gui_equipment.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\gui_equipment.png");
+    if (!inv_background.loadFromFile("..\\src\\textures\\GUI\\gui_equipment.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\gui_equipment.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\gui_equipment.png");
     }
     sf::Texture hoverFrame;
-    if (!hoverFrame.loadFromFile("src\\textures\\GUI\\192x80border.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\192x80border.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\192x80border.png");
+    if (!hoverFrame.loadFromFile("..\\src\\textures\\GUI\\192x80border.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\192x80border.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\192x80border.png");
     }
     sf::Sprite inv_bg(inv_background);
     sf::Sprite hover_frame(hoverFrame);
@@ -1449,9 +1451,9 @@ void game::inventory (sf::RenderWindow* window) {
     inv_bg.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    AllTimeGUI gui(hero, &time);
+    HUD gui(hero, &time);
 
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
 
     std::vector<Button> inventory;
     int startXinv = 304;
@@ -1462,7 +1464,7 @@ void game::inventory (sf::RenderWindow* window) {
         if (hero->getItemFromInventory(i).getId() > 0)
             inventory.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
         else
-            inventory.emplace_back(x, startYinv, "src\\textures\\items\\Buty.png");
+            inventory.emplace_back(x, startYinv, "..\\src\\textures\\items\\Buty.png");
     }
 
     std::vector<std::string> texts_inv;
@@ -1660,15 +1662,15 @@ void game::inventory (sf::RenderWindow* window) {
 }
 
 void game::mainMenu (sf::RenderWindow* window) {
-    Button play(170.f, 150.f, "src\\textures\\background\\MainMenu\\PL\\graj_button.png");
-    Button options(170.f, 200.f, "src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
-    Button quit(470.f, 280.f, "src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
-    Button credits(30.f, 280.f, "src\\textures\\background\\MainMenu\\PL\\podziekowania_button.png");
+    Button play(170.f, 150.f, "..\\src\\textures\\background\\MainMenu\\PL\\graj_button.png");
+    Button options(170.f, 200.f, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
+    Button quit(470.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
+    Button credits(30.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\podziekowania_button.png");
     if (option.getLanguage() == Language::ENG) {
-        play.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\play_button.png");
-        options.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\options_button.png");
-        quit.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
-        credits.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\credits_button.png");
+        play.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
+        options.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+        quit.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+        credits.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\credits_button.png");
     }
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -1702,9 +1704,9 @@ void game::mainMenu (sf::RenderWindow* window) {
 
 std::string getName (sf::RenderWindow* window, sf::Font& font) {
     sf::Texture frame;
-    if (!frame.loadFromFile("src\\textures\\GUI\\324x44border.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\GUI\\324x44border.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\324x44border.png");
+    if (!frame.loadFromFile("..\\src\\textures\\GUI\\324x44border.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\GUI\\324x44border.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\324x44border.png");
     }
     sf::Sprite frame1(frame);
     frame1.setPosition({scale * 158.f, scale * 158.f});
@@ -1749,19 +1751,19 @@ std::string getName (sf::RenderWindow* window, sf::Font& font) {
 
 void game::createhero (sf::RenderWindow* window) {
     sf::Texture choose;
-    if (option.getLanguage() == Language::ENG && !choose.loadFromFile("src\\textures\\background\\Saves\\choose class.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\choose class.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\choose class.png");
+    if (option.getLanguage() == Language::ENG && !choose.loadFromFile("..\\src\\textures\\background\\Saves\\choose class.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\Saves\\choose class.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\Saves\\choose class.png");
     }
-    else if (option.getLanguage() == Language::PL && !choose.loadFromFile("src\\textures\\background\\Saves\\wybierz klase.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Saves\\wybierz klase.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Saves\\wybierz klase.png");
+    else if (option.getLanguage() == Language::PL && !choose.loadFromFile("..\\src\\textures\\background\\Saves\\wybierz klase.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\Saves\\wybierz klase.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\Saves\\wybierz klase.png");
     }
     std::string name = "BlankName";
     sf::Sprite ch(choose);
-    Button mage(240.f, 100.f, "src\\textures\\background\\Saves\\classes\\mage.png");
-    Button warr(300.f, 100.f, "src\\textures\\background\\Saves\\classes\\warrior.png");
-    Button arch(360.f, 100.f, "src\\textures\\background\\Saves\\classes\\archer.png");
+    Button mage(240.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\mage.png");
+    Button warr(300.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\warrior.png");
+    Button arch(360.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\archer.png");
     ch.setPosition({scale * 170.f, scale * 200});
     ch.scale({scale, scale});
     while (window->isOpen()) {
@@ -1799,7 +1801,7 @@ void game::createhero (sf::RenderWindow* window) {
 bool isFileEmpty (std::string filename) {
     std::ifstream file(filename, std::ios::ate);
     if (!file) {
-        std::cerr << "Nie udało się otworzyć pliku!" << std::endl;
+        std::cerr << "Nie udało się otworzyć pliku: " << filename << std::endl;
         return true;
     }
     file.seekg(0, std::ios::end);
@@ -1880,38 +1882,38 @@ std::string game::getTextSave (std::string filename) {
 }
 
 void game::saves (sf::RenderWindow* window) {
-    Button s1(110.f, 100.f, "src\\textures\\background\\Saves\\save.png");
-    Button s2(270.f, 100.f, "src\\textures\\background\\Saves\\save.png");
-    Button s3(430.f, 100.f, "src\\textures\\background\\Saves\\save.png");
+    Button s1(110.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
+    Button s2(270.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
+    Button s3(430.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
 
-    Button back(170.f, 300.f, "src\\textures\\background\\Saves\\powrot.png");
-    Button del1(110.f, 230.f, "src\\textures\\background\\MainMenu\\PL\\usun.png");
-    Button del2(270.f, 230.f, "src\\textures\\background\\MainMenu\\PL\\usun.png");
-    Button del3(430.f, 230.f, "src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    Button del1(110.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button del2(270.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button del3(430.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
     if (option.getLanguage() == Language::ENG) {
-        back.setTextureFile("src\\textures\\background\\Saves\\go_back.png");
-        del1.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\delete.png");
-        del2.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\delete.png");
-        del3.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        del1.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        del2.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        del3.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
     }
-    Button yes(364.f, 195.f, "src\\textures\\GUI\\checkbox_yes.png");
-    Button no(274.f, 195.f, "src\\textures\\GUI\\checkbox_no.png");
+    Button yes(364.f, 195.f, "..\\src\\textures\\GUI\\checkbox_yes.png");
+    Button no(274.f, 195.f, "..\\src\\textures\\GUI\\checkbox_no.png");
     sf::Texture sure;
-    if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\ENG\\you_sure.png") && option.getLanguage() == Language::ENG) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\you_sure.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\you_sure.png");
+    if (!sure.loadFromFile("..\\src\\textures\\background\\MainMenu\\ENG\\you_sure.png") && option.getLanguage() == Language::ENG) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\MainMenu\\ENG\\you_sure.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\MainMenu\\ENG\\you_sure.png");
     }
-    else if (!sure.loadFromFile("src\\textures\\background\\MainMenu\\PL\\jestes_pewien.png") && option.getLanguage() == Language::PL) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png");
+    else if (!sure.loadFromFile("..\\src\\textures\\background\\MainMenu\\PL\\jestes_pewien.png") && option.getLanguage() == Language::PL) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\MainMenu\\ENG\\jestes_pewien.png");
     }
     sf::Sprite yousure(sure);
     yousure.scale({scale, scale});
     yousure.setPosition({scale * 270, scale * 128});
 
-    std::string t1 = getTextSave("saves\\saveFile1\\saveFile1.txt");
-    std::string t2 = getTextSave("saves\\saveFile2\\saveFile2.txt");
-    std::string t3 = getTextSave("saves\\saveFile3\\saveFile3.txt");
+    std::string t1 = getTextSave("..\\saves\\saveFile1\\saveFile1.txt");
+    std::string t2 = getTextSave("..\\saves\\saveFile2\\saveFile2.txt");
+    std::string t3 = getTextSave("..\\saves\\saveFile3\\saveFile3.txt");
     sf::String utf32Str1 = sf::String::fromUtf8(t1.begin(), t1.end());
     sf::String utf32Str2 = sf::String::fromUtf8(t2.begin(), t2.end());
     sf::String utf32Str3 = sf::String::fromUtf8(t3.begin(), t3.end());
@@ -1939,20 +1941,20 @@ void game::saves (sf::RenderWindow* window) {
             if (yes.isPressed(mousePos) && del == true) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 if (delete1 == true) {
-                    clearFile("saves\\saveFile1\\saveFile1.txt");
-                    clearFile("saves\\saveFile1\\saveBlack1.txt");
+                    clearFile("..\\saves\\saveFile1\\saveFile1.txt");
+                    clearFile("..\\saves\\saveFile1\\saveBlack1.txt");
                     delete1 = false;
                     del = false;
                 }
                 if (delete2 == true) {
-                    clearFile("saves\\saveFile2\\saveFile2.txt");
-                    clearFile("saves\\saveFile2\\saveBlack2.txt");
+                    clearFile("..\\saves\\saveFile2\\saveFile2.txt");
+                    clearFile("..\\saves\\saveFile2\\saveBlack2.txt");
                     delete2 = false;
                     del = false;
                 }
                 if (delete3 == true) {
-                    clearFile("saves\\saveFile3\\saveFile3.txt");
-                    clearFile("saves\\saveFile3\\saveBlack3.txt");
+                    clearFile("..\\saves\\saveFile3\\saveFile3.txt");
+                    clearFile("..\\saves\\saveFile3\\saveBlack3.txt");
                     delete3 = false;
                     del = false;
                 }
@@ -1963,17 +1965,17 @@ void game::saves (sf::RenderWindow* window) {
             }
             else if (s1.isPressed(mousePos) && del == false) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                saveRead(window, "saves\\saveFile1\\saveFile1.txt");
+                saveRead(window, "..\\saves\\saveFile1\\saveFile1.txt");
                 break;
             }
             else if (s2.isPressed(mousePos) && del == false) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                saveRead(window, "saves\\saveFile2\\saveFile2.txt");
+                saveRead(window, "..\\saves\\saveFile2\\saveFile2.txt");
                 break;
             }
             else if (s3.isPressed(mousePos) && del == false) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-                saveRead(window, "saves\\saveFile3\\saveFile3.txt");
+                saveRead(window, "..\\saves\\saveFile3\\saveFile3.txt");
                 break;
             }
             else if (del1.isPressed(mousePos) && del == false) {
@@ -2019,22 +2021,22 @@ void game::saves (sf::RenderWindow* window) {
 
 void game::optionsG (sf::RenderWindow* window) {
     if (!option.loadFromFile()) {
-        std::cerr << "Failed to load texture from file: " << "src\\options\\options.txt" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\options\\options.txt");
+        std::cerr << "Failed to load texture from file: " << "..\\src\\options\\options.txt" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\options\\options.txt");
     }
-    Button general(66.f, 10.f, "src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "src\\textures\\background\\Saves\\powrot.png");
-    std::string languagePath = "src\\textures\\background\\Options\\PL\\jezyk.png";
-    std::string tutorialsPath = "src\\textures\\background\\Options\\PL\\samouczki.png";
+    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    std::string languagePath = "..\\src\\textures\\background\\Options\\PL\\jezyk.png";
+    std::string tutorialsPath = "..\\src\\textures\\background\\Options\\PL\\samouczki.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("src\\textures\\background\\Saves\\go_back.png");
-        languagePath = "src\\textures\\background\\Options\\ENG\\language.png";
-        tutorialsPath = "src\\textures\\background\\Options\\ENG\\tutorials.png";
+        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        languagePath = "..\\src\\textures\\background\\Options\\ENG\\language.png";
+        tutorialsPath = "..\\src\\textures\\background\\Options\\ENG\\tutorials.png";
     }
     sf::Texture language;
     sf::Texture tutorials;
@@ -2052,20 +2054,20 @@ void game::optionsG (sf::RenderWindow* window) {
     tutorial.setPosition({scale * 15.f, scale * 120.f});
     lang.scale({scale, scale});
     tutorial.scale({scale, scale});
-    Button checkboxOff(415.f, 120.f, "src\\textures\\GUI\\checkbox_no.png");
-    Button checkboxOn(415.f, 120.f, "src\\textures\\GUI\\checkbox_yes.png");
-    Button currentLng(370.f, 70.f, "src\\textures\\background\\Options\\ENG\\eng.png");
-    Button nextLng(370.f, 105.f, "src\\textures\\background\\Options\\PL\\pl.png");
+    Button checkboxOff(415.f, 120.f, "..\\src\\textures\\GUI\\checkbox_no.png");
+    Button checkboxOn(415.f, 120.f, "..\\src\\textures\\GUI\\checkbox_yes.png");
+    Button currentLng(370.f, 70.f, "..\\src\\textures\\background\\Options\\ENG\\eng.png");
+    Button nextLng(370.f, 105.f, "..\\src\\textures\\background\\Options\\PL\\pl.png");
     if (option.getLanguage() == Language::PL) {
-        currentLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
-        nextLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
+        currentLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
+        nextLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
     }
     bool choosingLanguage = false;
     bool checkbox = option.getTutorials();
     sf::Texture background;
-    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    if (!background.loadFromFile("..\\src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite bg(background);
     bg.setPosition({0.f, scale * 45.f});
@@ -2108,13 +2110,13 @@ void game::optionsG (sf::RenderWindow* window) {
                 choosingLanguage = false;
                 if (option.getLanguage() == Language::ENG) {
                     option.setLanguage(Language::PL);
-                    currentLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
-                    nextLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
+                    currentLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
+                    nextLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
                 }
                 else {
                     option.setLanguage(Language::ENG);
-                    currentLng.setTextureFile("src\\textures\\background\\Options\\ENG\\eng.png");
-                    nextLng.setTextureFile("src\\textures\\background\\Options\\PL\\pl.png");
+                    currentLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
+                    nextLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
                 }
             }
             else if (graphics.isPressed(mousePos) && !choosingLanguage) {
@@ -2161,21 +2163,21 @@ void game::optionsG (sf::RenderWindow* window) {
 }
 
 bool game::optionsGraph (sf::RenderWindow* window) {
-    Button general(66.f, 10.f, "src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "src\\textures\\background\\Saves\\powrot.png");
-    std::string limPath = "src\\textures\\background\\Options\\PL\\limit_FPS.png";
-    std::string modePath = "src\\textures\\background\\Options\\PL\\tryb_wyswietlania.png";
-    std::string resolutionPath = "src\\textures\\background\\Options\\PL\\rozdzielcosc.png";
+    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    std::string limPath = "..\\src\\textures\\background\\Options\\PL\\limit_FPS.png";
+    std::string modePath = "..\\src\\textures\\background\\Options\\PL\\tryb_wyswietlania.png";
+    std::string resolutionPath = "..\\src\\textures\\background\\Options\\PL\\rozdzielcosc.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("src\\textures\\background\\Saves\\go_back.png");
-        limPath = "src\\textures\\background\\Options\\ENG\\FPS_limit.png";
-        modePath = "src\\textures\\background\\Options\\ENG\\display_mode.png";
-        resolutionPath = "src\\textures\\background\\Options\\ENG\\resolution.png";
+        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        limPath = "..\\src\\textures\\background\\Options\\ENG\\FPS_limit.png";
+        modePath = "..\\src\\textures\\background\\Options\\ENG\\display_mode.png";
+        resolutionPath = "..\\src\\textures\\background\\Options\\ENG\\resolution.png";
     }
     sf::Texture lim;
     sf::Texture mode;
@@ -2204,29 +2206,29 @@ bool game::optionsGraph (sf::RenderWindow* window) {
     display.scale({scale, scale});
     res.scale({scale, scale});
 
-    Button currentFPS(395.f, 70.f, "src\\textures\\background\\Options\\ENG\\60.png");
-    Button secondFPS(395.f, 105.f, "src\\textures\\background\\Options\\ENG\\30.png");
-    Button thirdFPS(395.f, 140.f, "src\\textures\\background\\Options\\ENG\\140.png");
+    Button currentFPS(395.f, 70.f, "..\\src\\textures\\background\\Options\\ENG\\60.png");
+    Button secondFPS(395.f, 105.f, "..\\src\\textures\\background\\Options\\ENG\\30.png");
+    Button thirdFPS(395.f, 140.f, "..\\src\\textures\\background\\Options\\ENG\\140.png");
     if (option.getFPS() == FPS::_30) {
-        currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
-        secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+        currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
+        secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
     }
     else if (option.getFPS() == FPS::_144) {
-        currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
-        thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+        currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+        thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
     }
     std::string f1;
     std::string f2;
     std::string f3;
     if (option.getLanguage() == Language::ENG) {
-        f1 = "src\\textures\\background\\Options\\ENG\\fullscreen.png";
-        f2 = "src\\textures\\background\\Options\\ENG\\borderless.png";
-        f3 = "src\\textures\\background\\Options\\ENG\\window.png";
+        f1 = "..\\src\\textures\\background\\Options\\ENG\\fullscreen.png";
+        f2 = "..\\src\\textures\\background\\Options\\ENG\\borderless.png";
+        f3 = "..\\src\\textures\\background\\Options\\ENG\\window.png";
     }
     else if (option.getLanguage() == Language::PL) {
-        f1 = "src\\textures\\background\\Options\\ENG\\fullscreen.png";
-        f2 = "src\\textures\\background\\Options\\ENG\\borderless.png";
-        f3 = "src\\textures\\background\\Options\\PL\\okno.png";
+        f1 = "..\\src\\textures\\background\\Options\\ENG\\fullscreen.png";
+        f2 = "..\\src\\textures\\background\\Options\\ENG\\borderless.png";
+        f3 = "..\\src\\textures\\background\\Options\\PL\\okno.png";
     }
 
     Button currentMode(370.f, 120.f, f1);
@@ -2241,25 +2243,25 @@ bool game::optionsGraph (sf::RenderWindow* window) {
         secondMode.setTextureFile(f1);
         thirdMode.setTextureFile(f2);
     }
-    Button currentRes(395.f, 170.f, "src\\textures\\background\\Options\\1080p.png");
-    Button secondRes(395.f, 205.f, "src\\textures\\background\\Options\\360p.png");
-    Button thirdRes(395.f, 240.f, "src\\textures\\background\\Options\\1440p.png");
+    Button currentRes(395.f, 170.f, "..\\src\\textures\\background\\Options\\1080p.png");
+    Button secondRes(395.f, 205.f, "..\\src\\textures\\background\\Options\\360p.png");
+    Button thirdRes(395.f, 240.f, "..\\src\\textures\\background\\Options\\1440p.png");
     if (option.getResolution() == Resolution::p360) {
-        currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
-        secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+        currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+        secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
     }
     else if (option.getResolution() == Resolution::p1440) {
-        currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
-        thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+        currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
+        thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
     }
     bool choosingFPS = false;
     bool choosingMode = false;
     bool choosingResolution = false;
 
     sf::Texture background;
-    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    if (!background.loadFromFile("..\\src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite bg(background);
     bg.setPosition({0.f, scale * 45.f});
@@ -2328,22 +2330,22 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingFPS = false;
                 if (option.getFPS() == FPS::_60) {
                     option.setFPS(FPS::_30);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
-                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(30);
                 }
                 else if (option.getFPS() == FPS::_30) {
                     option.setFPS(FPS::_60);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
-                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
                     window->setFramerateLimit(60);
                 }
                 else {
                     option.setFPS(FPS::_30);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
-                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(30);
                 }
             }
@@ -2352,21 +2354,21 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingFPS = false;
                 if (option.getFPS() == FPS::_60) {
                     option.setFPS(FPS::_144);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
-                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
                     window->setFramerateLimit(144);
                 }
                 else if (option.getFPS() == FPS::_30) {
                     option.setFPS(FPS::_144);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
-                    secondFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\30.png");
-                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
                     window->setFramerateLimit(144);
                 }
                 else {
                     option.setFPS(FPS::_60);
-                    currentFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(60);
                 }
             }
@@ -2432,19 +2434,19 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingResolution = false;
                 if (option.getResolution() == Resolution::p360) {
                     option.setResolution(Resolution::p1080);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
-                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
                 }
                 else if (option.getResolution() == Resolution::p1080) {
                     option.setResolution(Resolution::p360);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
-                    secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else {
                     option.setResolution(Resolution::p360);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
-                    secondRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
-                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
                 }
             }
             else if (thirdRes.isPressed(mousePos) && !choosingFPS && !choosingMode && choosingResolution) {
@@ -2452,20 +2454,20 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingResolution = false;
                 if (option.getResolution() == Resolution::p360) {
                     option.setResolution(Resolution::p1440);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
-                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
-                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else if (option.getResolution() == Resolution::p1080) {
                     option.setResolution(Resolution::p1440);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
-                    secondRes.setTextureFile("src\\textures\\background\\Options\\360p.png");
-                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else {
                     option.setResolution(Resolution::p1080);
-                    currentRes.setTextureFile("src\\textures\\background\\Options\\1080p.png");
-                    thirdRes.setTextureFile("src\\textures\\background\\Options\\1440p.png");
+                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
                 }
             }
         }
@@ -2500,23 +2502,23 @@ bool game::optionsGraph (sf::RenderWindow* window) {
 }
 
 bool game::optionsS (sf::RenderWindow* window) {
-    Button general(66.f, 10.f, "src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "src\\textures\\background\\Saves\\powrot.png");
-    std::string enviromentPath = "src\\textures\\background\\Options\\PL\\glosnosc_dzwiekow_otoczenia.png";
-    std::string effectPath = "src\\textures\\background\\Options\\PL\\glosnosc_efektow_dzwiekowych.png";
-    std::string musicPath = "src\\textures\\background\\Options\\PL\\glosnosc_muzyki.png";
-    std::string mainPath = "src\\textures\\background\\Options\\PL\\glosnosc_glowna.png";
+    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    std::string enviromentPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_dzwiekow_otoczenia.png";
+    std::string effectPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_efektow_dzwiekowych.png";
+    std::string musicPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_muzyki.png";
+    std::string mainPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_glowna.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("src\\textures\\background\\Saves\\go_back.png");
-        enviromentPath = "src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png";
-        effectPath = "src\\textures\\background\\Options\\ENG\\sound_effects_volume.png";
-        musicPath = "src\\textures\\background\\Options\\ENG\\music_volume.png";
-        mainPath = "src\\textures\\background\\Options\\ENG\\master_volume.png";
+        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        enviromentPath = "..\\src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png";
+        effectPath = "..\\src\\textures\\background\\Options\\ENG\\sound_effects_volume.png";
+        musicPath = "..\\src\\textures\\background\\Options\\ENG\\music_volume.png";
+        mainPath = "..\\src\\textures\\background\\Options\\ENG\\master_volume.png";
     }
     sf::Texture enviroment;
     sf::Texture effect;
@@ -2539,9 +2541,9 @@ bool game::optionsS (sf::RenderWindow* window) {
         std::cerr << "Failed to load texture from file: " << mainPath << std::endl;
         throw std::runtime_error("Failed to load texture from file: " + mainPath);
     }
-    if (!background.loadFromFile("src\\textures\\background\\Options\\options_frame.png")) {
-        std::cerr << "Failed to load texture from file: " << "src\\textures\\background\\Options\\options_frame.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\background\\Options\\options_frame.png");
+    if (!background.loadFromFile("..\\src\\textures\\background\\Options\\options_frame.png")) {
+        std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\Options\\options_frame.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\background\\Options\\options_frame.png");
     }
     sf::Sprite env(enviroment);
     sf::Sprite eff(effect);
@@ -2640,12 +2642,12 @@ bool game::optionsS (sf::RenderWindow* window) {
 }
 
 bool game::pauseMenu (sf::RenderWindow* window) {
-    Button options(170.f, 200.f, "src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
-    Button quit(270.f, 280.f, "src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
+    Button options(170.f, 200.f, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
+    Button quit(270.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
     if (option.getLanguage() == Language::ENG) {
-        options.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\options_button.png");
-        quit.setTextureFile("src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+        options.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+        quit.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
     }
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -2685,12 +2687,12 @@ bool game::pauseMenu (sf::RenderWindow* window) {
 }
 
 void game::worldMap (sf::RenderWindow* window) {
-    Button back(593.f, 44.f, "src\\textures\\GUI\\x.png");
-    Button forestButton(100.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    Button cavesButton(200.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    Button icePeaksButton(300.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    Button swampButton(400.f, 100.f, "src\\textures\\GUI\\32x32border.png");
-    Button volcanoButton(500.f, 100.f, "src\\textures\\GUI\\32x32border.png");
+    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button forestButton(100.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    Button cavesButton(200.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    Button icePeaksButton(300.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    Button swampButton(400.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
+    Button volcanoButton(500.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
 
     // if (!isUnlocked(Location::Forest)) {
     //
@@ -2749,12 +2751,12 @@ void game::worldMap (sf::RenderWindow* window) {
 }
 
 void game::city (sf::RenderWindow* window) {
-    AllTimeGUI gui(hero, &time);
-    Button forge(60.f, 170.f, "src\\textures\\background\\City\\Buildings\\blacksmith.png");
-    Button tavern_building(420.f, 190.f, "src\\textures\\background\\City\\Buildings\\tavern.png");
-    Button gate(246.f, 100.f, "src\\textures\\background\\City\\Buildings\\city_gate.png");
-    Button church_building(360.f, 143.f, "src\\textures\\background\\City\\Buildings\\church.png");
-    Button inv(15.f, 45.f, "src\\textures\\GUI\\32x32border.png");
+    HUD gui(hero, &time);
+    Button forge(60.f, 170.f, "..\\src\\textures\\background\\City\\Buildings\\blacksmith.png");
+    Button tavern_building(420.f, 190.f, "..\\src\\textures\\background\\City\\Buildings\\tavern.png");
+    Button gate(246.f, 100.f, "..\\src\\textures\\background\\City\\Buildings\\city_gate.png");
+    Button church_building(360.f, 143.f, "..\\src\\textures\\background\\City\\Buildings\\church.png");
+    Button inv(15.f, 45.f, "..\\src\\textures\\GUI\\32x32border.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {

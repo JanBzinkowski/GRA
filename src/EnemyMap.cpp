@@ -1,9 +1,9 @@
-#include "include/enemyWarrior.h"
-#include "include/enemyArcher.h"
-#include "include/enemyMage.h"
+#include "enemyWarrior.h"
+#include "enemyArcher.h"
+#include "enemyMage.h"
 #include <unordered_map>
 #include <string>
-#include "include/enemy.h"
+#include "enemyMap.h"
 
 std::unordered_map<int, enemyStats> enemies{
     //prologue

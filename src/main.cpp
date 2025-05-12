@@ -1,7 +1,7 @@
 #include <conio.h>
 #include <optional>
 #include <SFML/Graphics.hpp>
-#include "include/game.h"
+#include "game.h"
 #include "options.h"
 
 

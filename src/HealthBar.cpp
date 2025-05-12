@@ -4,9 +4,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 HealthBar::HealthBar (float x, float y, character* hero): person(hero) {
-    if (!texture.loadFromFile("src\\textures\\GUI\\Enemy\\health_bar.png")) {
-        std::cerr << "Failed to load texture from file: src\\textures\\GUI\\Enemy\\health_bar.png" << std::endl;
-        throw std::runtime_error("Failed to load texture from file: src\\textures\\GUI\\Enemy\\health_bar.png");
+    if (!texture.loadFromFile("..\\src\\textures\\GUI\\Enemy\\health_bar.png")) {
+        std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\Enemy\\health_bar.png" << std::endl;
+        throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\Enemy\\health_bar.png");
     }
     sprite = std::make_unique<sf::Sprite>(texture);
     sprite->setScale({scale, scale});

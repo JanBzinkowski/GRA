@@ -84,8 +84,3 @@ x
 0
 9
 NOWEAPON
-
-8
-0
-8
-NOWEAPON

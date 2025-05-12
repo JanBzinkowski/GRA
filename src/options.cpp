@@ -75,7 +75,7 @@ int Options::getmasterVolume() {
 }
 
 void Options::saveToFile() {
-  std::string filename = "src\\options\\options.txt";
+  std::string filename = "..\\src\\options\\options.txt";
   std::ofstream file(filename, std::ios::out);
   if (file.is_open())
   {
@@ -97,7 +97,7 @@ void Options::saveToFile() {
 }
 
 bool Options::loadFromFile() {
-  std::string filename = "src\\options\\options.txt";
+  std::string filename = "..\\src\\options\\options.txt";
   std::ifstream file(filename, std::ios::in);
   if (file.is_open()){
     int temp;
