@@ -1,11 +1,11 @@
 #include "character.h"
-#include "damage.h"
 #include <cstdlib>
 #include <typeinfo>
 #include "Warrior.h"
 #include "Mage.h"
 #include "Archer.h"
 #include <conio.h>
+#include "enemyArcher.h"
 #include "enemyWarrior.h"
 #include "enemyMage.h"
 #include "location.h"

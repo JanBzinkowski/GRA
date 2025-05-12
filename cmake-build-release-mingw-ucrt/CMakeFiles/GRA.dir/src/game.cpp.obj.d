@@ -102,7 +102,7 @@ CMakeFiles/GRA.dir/src/game.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator.h \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator_args.h \
  C:/mingw64/include/c++/14.2.0/tuple \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/ext/aligned_buffer.h \
@@ -154,7 +154,7 @@ CMakeFiles/GRA.dir/src/game.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/bits/ostream.tcc \
  C:/mingw64/include/c++/14.2.0/istream \
  C:/mingw64/include/c++/14.2.0/bits/istream.tcc \
- C:/Users/janek/Desktop/gra/GRA/include/damage.h \
+ C:/Users/janek/Desktop/gra/GRA/include/Warrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/Hero.h \
  C:/mingw64/include/c++/14.2.0/optional \
  C:/mingw64/include/c++/14.2.0/bits/enable_special_members.h \
@@ -209,11 +209,11 @@ CMakeFiles/GRA.dir/src/game.cpp.obj: \
  C:/SFML/SFML-3.0.0/include/SFML/System/Time.inl \
  C:/mingw64/include/c++/14.2.0/cassert \
  C:/mingw64/x86_64-w64-mingw32/include/assert.h \
- C:/Users/janek/Desktop/gra/GRA/include/Warrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/Mage.h \
  C:/Users/janek/Desktop/gra/GRA/include/Archer.h \
  C:/mingw64/x86_64-w64-mingw32/include/conio.h \
  C:/mingw64/x86_64-w64-mingw32/include/sec_api/conio_s.h \
+ C:/Users/janek/Desktop/gra/GRA/include/enemyArcher.h \
  C:/Users/janek/Desktop/gra/GRA/include/enemyWarrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/enemyMage.h \
  C:/Users/janek/Desktop/gra/GRA/include/location.h \
@@ -336,7 +336,6 @@ CMakeFiles/GRA.dir/src/game.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/math.h \
  C:/Users/janek/Desktop/gra/GRA/include/Button.h \
  C:/Users/janek/Desktop/gra/GRA/include/options.h \
- C:/Users/janek/Desktop/gra/GRA/include/enemyArcher.h \
  C:/mingw64/include/c++/14.2.0/algorithm \
  C:/mingw64/include/c++/14.2.0/bits/stl_algo.h \
  C:/mingw64/include/c++/14.2.0/bits/algorithmfwd.h \

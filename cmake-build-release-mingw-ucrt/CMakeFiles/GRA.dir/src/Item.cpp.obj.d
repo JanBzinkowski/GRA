@@ -142,7 +142,7 @@ CMakeFiles/GRA.dir/src/Item.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/pstl/execution_defs.h \
  C:/Users/janek/Desktop/gra/GRA/include/Hero.h \
  C:/Users/janek/Desktop/gra/GRA/include/character.h \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/bits/stl_map.h \

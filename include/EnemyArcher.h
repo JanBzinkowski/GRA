@@ -1,9 +1,11 @@
-#include "Hero.h"
 #pragma once
+#include <iostream>
+#include "Enemy.h"
 
-class Archer: public Hero {
+
+class EnemyArcher: public Enemy {
     public:
-        Archer (const std::string& name, const Stats& stat) : Hero(name, stat, {3, 6, 3, 2, 2}) {
+        EnemyArcher (const std::string& name, const Stats& enemystats) : Enemy(name, enemystats, {3, 6, 3, 2, 2}) {
             setWeaknessMult(DamageType::Physical, 1.25f);
             setWeaknessMult(DamageType::MagicAir, 1.05f);
             setWeaknessMult(DamageType::MagicEarth, 1.05f);
@@ -15,9 +17,7 @@ class Archer: public Hero {
             setWeaknessMult(DamageType::Environment, 1.35f);
         }
 
-        std::string getClass () const {
-            return "Archer";
+        std::string getClass () const override {
+            return "EnemyArcher";
         }
 };
-
-

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "dmgtype.h"
+#include "DamageType.h"
 #include <map>
 #include "stats.h"
 
@@ -9,8 +9,8 @@ class Enemy;
 
 class Hero;
 
-class character {
-    std::map<DamageType, float> m_resistance;
+class Character {
+    std::map<DamageType, float> m_weakness_multiplayer;
     std::string m_name;
     Stats m_stats;
     StatsIncrese m_stats_inc;
@@ -20,16 +20,16 @@ class character {
     int m_atk_type_nb = 0;
 
     public:
-        character (const std::string& name, const Stats& stats, const StatsIncrese& inc_stats) : m_name(name), m_stats(stats), m_stats_inc(inc_stats), m_current_HP(stats.base_hp) {
-            m_resistance[DamageType::MagicEnergy] = 1.0f;
-            m_resistance[DamageType::MagicFire] = 1.0f;
-            m_resistance[DamageType::MagicIce] = 1.0f;
-            m_resistance[DamageType::MagicEarth] = 1.0f;
-            m_resistance[DamageType::MagicWater] = 1.0f;
-            m_resistance[DamageType::MagicPoison] = 1.0f;
-            m_resistance[DamageType::MagicAir] = 1.0f;
-            m_resistance[DamageType::Physical] = 1.0f;
-            m_resistance[DamageType::Enviroment] = 1.0f;
+        Character (const std::string& name, const Stats& stats, const StatsIncrese& inc_stats) : m_name(name), m_stats(stats), m_stats_inc(inc_stats), m_current_HP(stats.base_hp) {
+            m_weakness_multiplayer[DamageType::MagicEnergy] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicFire] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicIce] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicEarth] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicWater] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicPoison] = 1.0f;
+            m_weakness_multiplayer[DamageType::MagicAir] = 1.0f;
+            m_weakness_multiplayer[DamageType::Physical] = 1.0f;
+            m_weakness_multiplayer[DamageType::Environment] = 1.0f;
         }
 
         // virtual float getAtkChance (Enemy*& enemy, Hero*& hero) const = 0;
@@ -42,8 +42,8 @@ class character {
 
         virtual std::string getClass () const = 0;
 
-        void setResist (const DamageType& type, float resist);
-        float getResistance (const DamageType& type) const;
+        void setWeaknessMult (const DamageType& type, float weakness_mult);
+        float getWeaknessMult (const DamageType& type) const;
 
         Stats getStats () const;
         StatsIncrese getStatsInc () const;
@@ -63,9 +63,9 @@ class character {
         int getMaxManaInc () const;
         int getSpeedInc () const;
 
-        void setAtkTypeNB (int nb);
+        void setAtkTypeNB (int attack_number);
         int getAtkTypeNB () const;
 
-        virtual ~character () = default;
+        virtual ~Character () = default;
 };
 

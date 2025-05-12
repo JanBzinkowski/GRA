@@ -100,7 +100,7 @@ CMakeFiles/GRA.dir/src/HealthBar.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator.h \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator_args.h \
  C:/mingw64/include/c++/14.2.0/tuple \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/ext/aligned_buffer.h \

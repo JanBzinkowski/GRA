@@ -1,24 +1,24 @@
 #include "button.h"
 
-bool Button::isPressed (const sf::Vector2i& mousePos) {
+bool Button::isPressed (const sf::Vector2i& mouse_position) {
     sf::FloatRect bounds = m_sprite->getGlobalBounds();
-    return bounds.contains(static_cast<sf::Vector2f>(mousePos));
+    return bounds.contains(static_cast<sf::Vector2f>(mouse_position));
 }
 
-void Button::setTexture (const sf::Texture& texture) {
-    m_sprite->setTexture(texture);
+void Button::setNewTexture (const sf::Texture& new_texture) {
+    m_sprite->setTexture(new_texture);
 }
 
-void Button::setTextureFile (const std::string& filePath) {
-    if (!m_texture->loadFromFile(filePath)) {
-        std::cerr << "Failed to load texture from file: " << filePath << std::endl;
-        throw std::runtime_error("Failed to load texture from file: " + filePath);
+void Button::setNewTexturePath (const std::string& new_file_path) {
+    if (!m_texture->loadFromFile(new_file_path)) {
+        std::cerr << "Failed to load texture from file: " << new_file_path << std::endl;
+        throw std::runtime_error("Failed to load texture from file: " + new_file_path);
     }
-    setTexture(*m_texture);
+    setNewTexture(*m_texture);
 }
 
-void Button::setPosition (const sf::Vector2f& pos) {
-    m_sprite->setPosition({scale * pos.x, scale * pos.y});
+void Button::setPosition (const sf::Vector2f& new_position) {
+    m_sprite->setPosition({scale * new_position.x, scale * new_position.y});
 }
 
 sf::Vector2f Button::getPosition () {

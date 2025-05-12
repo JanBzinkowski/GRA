@@ -1,7 +1,9 @@
+#pragma once
+
 enum class enemyClasses {
-    enemyArcher,
-    enemyMage,
-    enemyWarrior,
+    EnemyArcher,
+    EnemyMage,
+    EnemyWarrior,
 };
 
 struct enemyStats {

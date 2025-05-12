@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/janek/Desktop/gra/GRA/src/Button.cpp" "CMakeFiles/GRA.dir/src/Button.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/Button.cpp.obj.d"
+  "C:/Users/janek/Desktop/gra/GRA/src/DamageCalculation.cpp" "CMakeFiles/GRA.dir/src/DamageCalculation.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/DamageCalculation.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/Enemy.cpp" "CMakeFiles/GRA.dir/src/Enemy.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/Enemy.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/EnemyMap.cpp" "CMakeFiles/GRA.dir/src/EnemyMap.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/EnemyMap.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/GameTime.cpp" "CMakeFiles/GRA.dir/src/GameTime.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/GameTime.cpp.obj.d"
@@ -19,7 +20,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/janek/Desktop/gra/GRA/src/Item.cpp" "CMakeFiles/GRA.dir/src/Item.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/Item.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/Slider.cpp" "CMakeFiles/GRA.dir/src/Slider.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/Slider.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/character.cpp" "CMakeFiles/GRA.dir/src/character.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/character.cpp.obj.d"
-  "C:/Users/janek/Desktop/gra/GRA/src/damage.cpp" "CMakeFiles/GRA.dir/src/damage.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/damage.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/dmgtype.cpp" "CMakeFiles/GRA.dir/src/dmgtype.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/dmgtype.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/game.cpp" "CMakeFiles/GRA.dir/src/game.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/game.cpp.obj.d"
   "C:/Users/janek/Desktop/gra/GRA/src/global.cpp" "CMakeFiles/GRA.dir/src/global.cpp.obj" "gcc" "CMakeFiles/GRA.dir/src/global.cpp.obj.d"

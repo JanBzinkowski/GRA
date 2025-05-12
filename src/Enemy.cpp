@@ -1,29 +1,31 @@
 #include "Enemy.h"
-#include "damage.h"
+#include "DamageCalculation.h"
+#include "Hero.h"
+#include <math.h>
 
 void Enemy::enemyLvlUp () {
     Stats stat = getStats();
-    StatsIncrese incstats = getStatsInc();
+    StatsIncrese inc_stats = getStatsInc();
     stat.lvl++;
-    stat.ad += incstats.ad_inc;
-    stat.base_hp += incstats.base_HP_inc * stat.lvl;
-    stat.def += incstats.def_inc;
+    stat.ad += inc_stats.ad_inc;
+    stat.base_hp += inc_stats.base_HP_inc * stat.lvl;
+    stat.def += inc_stats.def_inc;
 }
 
-void Enemy::setGoldworth (int worth) {
-    goldworth = worth;
+void Enemy::setGoldDrop (int gold) {
+    m_gold_drop = gold;
 }
 
-void Enemy::setExpworth (int worth) {
-    expworth = worth;
+void Enemy::setEXPDrop (int exp) {
+    m_EXP_drop = exp;
 }
 
-int Enemy::getGoldworth () const {
-    return goldworth;
+int Enemy::getGoldDrop () const {
+    return m_gold_drop;
 }
 
-int Enemy::getExpworth () const {
-    return expworth;
+int Enemy::getEXPDrop () const {
+    return m_EXP_drop;
 }
 
 int Enemy::getDamaged (Hero*& hero, const DamageType& type) {
@@ -34,9 +36,9 @@ int Enemy::getDamaged (Hero*& hero, const DamageType& type) {
         int lvl_diff = (this->getLvl()) - (hero->getLvl());
         if (lvl_diff >= 10)
             lvl_diff = 9;
-        float reduction = reduct(hero);
-        float resistancemult = hero->getResistance(type);
-        dmg = dmgcalc::damageCalculator(this->getAd(), this->getLvl(), this->getMultDmg(), reduction, resistancemult, lvl_diff);
+        float reduction_percent = reduction(hero);
+        float resistance_mult = hero->getWeaknessMult(type);
+        dmg = DMGCalculation::damageCalculator(this->getAd(), this->getLvl(), this->getMultDmg(), reduction_percent, resistance_mult, lvl_diff);
     }
     this->incCurrentHP(-dmg);
     if (this->getCurrentHP() < 0)
@@ -69,17 +71,17 @@ float Enemy::getAtkChance (Hero*& hero) const {
     return chance;
 }
 
-float Enemy::reduct (Hero*& hero) const {
+float Enemy::reduction (Hero*& hero) const {
     int lvlDiff = (this->getLvl()) - (hero->getLvl());
     if (lvlDiff >= 10)
         lvlDiff = 9;
     float reduction = atan(this->getDef()) / this->getLvl() * (1 + 0.1 * lvlDiff);
     std::string classhero = hero->getClass();
-    if (((classhero == "enemyWarrior")) && reduction > 0.75f)
+    if (((classhero == "EnemyWarrior")) && reduction > 0.75f)
         reduction = 0.75f;
-    else if (((classhero == "enemyArcher")) && reduction > 0.55f)
+    else if (((classhero == "EnemyArcher")) && reduction > 0.55f)
         reduction = 0.55f;
-    else if (((classhero == "enemyMage")) && reduction > 0.40f)
+    else if (((classhero == "EnemyMage")) && reduction > 0.40f)
         reduction = 0.40f;
     return reduction;
 }

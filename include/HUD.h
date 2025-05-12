@@ -52,13 +52,13 @@ class HUD: public sf::Drawable {
       target.draw(*m_gold_text, states);
       target.draw(*m_time_text, states);
       if (m_hero_ptr->getLvl() < 2)
-        m_HP_potion_button->setTexture(m_lock_texture);
+        m_HP_potion_button->setNewTexture(m_lock_texture);
       if (m_hero_ptr->getLvl() < 4)
-        m_regen_potion_button->setTexture(m_lock_texture);
+        m_regen_potion_button->setNewTexture(m_lock_texture);
       if (m_hero_ptr->getLvl() < 5)
-        m_mana_potion_button->setTexture(m_lock_texture);
+        m_mana_potion_button->setNewTexture(m_lock_texture);
       if (m_hero_ptr->getLvl() < 8)
-        m_fast_action_potion_button->setTexture(m_lock_texture);
+        m_fast_action_potion_button->setNewTexture(m_lock_texture);
       target.draw(*m_HP_potion_button, states);
       target.draw(*m_regen_potion_button, states);
       target.draw(*m_mana_potion_button, states);

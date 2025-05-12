@@ -100,7 +100,7 @@ CMakeFiles/GRA.dir/src/Hero.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator.h \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator_args.h \
  C:/mingw64/include/c++/14.2.0/tuple \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/ext/aligned_buffer.h \
@@ -210,9 +210,10 @@ CMakeFiles/GRA.dir/src/Hero.cpp.obj: \
  C:/Users/janek/Desktop/gra/GRA/include/Hero.h \
  C:/Users/janek/Desktop/gra/GRA/include/Archer.h \
  C:/Users/janek/Desktop/gra/GRA/include/Mage.h \
- C:/Users/janek/Desktop/gra/GRA/include/damage.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageCalculation.h \
  C:/mingw64/include/c++/14.2.0/fstream \
  C:/mingw64/include/c++/14.2.0/bits/codecvt.h \
  C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h \
  C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h \
- C:/mingw64/include/c++/14.2.0/bits/fstream.tcc
+ C:/mingw64/include/c++/14.2.0/bits/fstream.tcc \
+ C:/mingw64/include/c++/14.2.0/math.h

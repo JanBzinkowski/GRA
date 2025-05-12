@@ -286,14 +286,14 @@ CMakeFiles/GRA.dir/src/main.cpp.obj: \
  C:/SFML/SFML-3.0.0/include/SFML/System/Sleep.hpp \
  C:/Users/janek/Desktop/gra/GRA/include/game.h \
  C:/Users/janek/Desktop/gra/GRA/include/character.h \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/bits/stl_map.h \
  C:/mingw64/include/c++/14.2.0/bits/stl_multimap.h \
  C:/Users/janek/Desktop/gra/GRA/include/stats.h \
  C:/mingw64/include/c++/14.2.0/iostream \
- C:/Users/janek/Desktop/gra/GRA/include/damage.h \
+ C:/Users/janek/Desktop/gra/GRA/include/Warrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/Hero.h \
  C:/Users/janek/Desktop/gra/GRA/include/Inventory.h \
  C:/Users/janek/Desktop/gra/GRA/include/Item.h \
@@ -321,9 +321,9 @@ CMakeFiles/GRA.dir/src/main.cpp.obj: \
  C:/mingw64/include/c++/14.2.0/bits/stl_numeric.h \
  C:/mingw64/include/c++/14.2.0/pstl/glue_numeric_defs.h \
  C:/Users/janek/Desktop/gra/GRA/include/Enemy.h \
- C:/Users/janek/Desktop/gra/GRA/include/Warrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/Mage.h \
  C:/Users/janek/Desktop/gra/GRA/include/Archer.h \
+ C:/Users/janek/Desktop/gra/GRA/include/enemyArcher.h \
  C:/Users/janek/Desktop/gra/GRA/include/enemyWarrior.h \
  C:/Users/janek/Desktop/gra/GRA/include/enemyMage.h \
  C:/Users/janek/Desktop/gra/GRA/include/location.h \

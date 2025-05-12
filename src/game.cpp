@@ -19,12 +19,12 @@ extern std::unordered_map<int, enemyStats> enemies;
 
 Enemy* game::createEnemy (const enemyStats& stats) {
     switch (stats.Class) {
-        case enemyClasses::enemyWarrior:
-            return new enemyWarrior(stats.name, stats.stats);
-        case enemyClasses::enemyMage:
-            return new enemyMage(stats.name, stats.stats);
-        case enemyClasses::enemyArcher:
-            return new enemyArcher(stats.name, stats.stats);
+        case enemyClasses::EnemyWarrior:
+            return new EnemyWarrior(stats.name, stats.stats);
+        case enemyClasses::EnemyMage:
+            return new EnemyMage(stats.name, stats.stats);
+        case enemyClasses::EnemyArcher:
+            return new EnemyArcher(stats.name, stats.stats);
         default:
             throw std::runtime_error("Unknown enemy class");
     }
@@ -47,8 +47,8 @@ bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, 
     std::uniform_int_distribution<> dist(indexmin, indexmax);
     int index = dist(gen);
     Enemy* enemy = createEnemy(enemies.at(index));
-    enemy->setExpworth(exp);
-    enemy->setGoldworth(gold);
+    enemy->setEXPDrop(exp);
+    enemy->setGoldDrop(gold);
     while (enemy->getLvl() < hero->getLvl() || enemy->getLvl() >= maxlvl) {
         enemy->enemyLvlUp();
         enemy->setCurrentHP(enemy->getMaxHP());
@@ -95,24 +95,24 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
     std::uniform_int_distribution<> dist(indexmin, indexmax);
     int index = dist(gen);
     Enemy* enemy1 = createEnemy(enemies.at(index));
-    enemy1->setExpworth(exp);
-    enemy1->setGoldworth(gold);
+    enemy1->setEXPDrop(exp);
+    enemy1->setGoldDrop(gold);
     while (enemy1->getLvl() < hero->getLvl() || enemy1->getLvl() >= maxlvl) {
         enemy1->enemyLvlUp();
         enemy1->setCurrentHP(enemy1->getMaxHP());
     }
     index = dist(gen);
     Enemy* enemy2 = createEnemy(enemies.at(index));
-    enemy2->setExpworth(exp);
-    enemy2->setGoldworth(gold);
+    enemy2->setEXPDrop(exp);
+    enemy2->setGoldDrop(gold);
     while (enemy2->getLvl() < hero->getLvl() || enemy2->getLvl() >= maxlvl) {
         enemy2->enemyLvlUp();
         enemy2->setCurrentHP(enemy2->getMaxHP());
     }
     index = dist(gen);
     Enemy* enemy3 = createEnemy(enemies.at(index));
-    enemy3->setExpworth(exp);
-    enemy3->setGoldworth(gold);
+    enemy3->setEXPDrop(exp);
+    enemy3->setGoldDrop(gold);
     while (enemy3->getLvl() < hero->getLvl() || enemy3->getLvl() >= maxlvl) {
         enemy3->enemyLvlUp();
         enemy3->setCurrentHP(enemy3->getMaxHP());
@@ -174,8 +174,8 @@ void game::lvl0 (sf::RenderWindow* window) {
     time.pause();
     std::cout << "Currently playing: Tutorial" << std::endl;
     Enemy* enemy1 = createEnemy(enemies.at(0));
-    enemy1->setExpworth(30);
-    enemy1->setGoldworth(10);
+    enemy1->setEXPDrop(30);
+    enemy1->setGoldDrop(10);
 
 
     std::cout << "One day when you have been laying under an old oak tree in the middle of plains nearby the city you heard loud crack and scream..." << std::endl;
@@ -206,14 +206,14 @@ void game::lvl0 (sf::RenderWindow* window) {
     else {
         std::cout << "Watch out! New wave of enemies incoming!" << std::endl;
         Enemy* enemy2 = createEnemy(enemies.at(1));
-        enemy2->setExpworth(20);
-        enemy2->setGoldworth(10);
+        enemy2->setEXPDrop(20);
+        enemy2->setGoldDrop(10);
         Enemy* enemy3 = createEnemy(enemies.at(2));
-        enemy3->setExpworth(20);
-        enemy3->setGoldworth(10);
+        enemy3->setEXPDrop(20);
+        enemy3->setGoldDrop(10);
         Enemy* enemy4 = createEnemy(enemies.at(3));
-        enemy4->setExpworth(20);
-        enemy4->setGoldworth(10);
+        enemy4->setEXPDrop(20);
+        enemy4->setGoldDrop(10);
 
         if (fight3(enemy2, enemy3, enemy4, window) == 0) {
             if (getLocation() != Location::MainMenu && getLocation() != Location::Quit) {
@@ -301,7 +301,7 @@ int game::enemyaction (Enemy*& enemy, Hero*& hero) {
     int damage;
     if (enemy == nullptr)
         return 0;
-    if (enemy->getClass() == "enemyMage")
+    if (enemy->getClass() == "EnemyMage")
         damage = hero->getDamaged(enemy, DamageType::MagicEnergy);
     else
         damage = hero->getDamaged(enemy, DamageType::Physical);
@@ -479,10 +479,10 @@ int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
 }
 
 int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWindow* window) {
-    Enemy* heroTurn = new enemyWarrior("x", hero->getStats());
+    Enemy* heroTurn = new EnemyWarrior("x", hero->getStats());
     std::vector<Enemy*> enemies = {enemy1, enemy2, enemy3};
     std::vector<Enemy*> turn = {enemy1, enemy2, enemy3, heroTurn};
-    std::sort(turn.begin(), turn.end(), [] (character* a, character* b) {
+    std::sort(turn.begin(), turn.end(), [] (Character* a, Character* b) {
         if (a == nullptr)
             return false;
         if (b == nullptr)
@@ -731,8 +731,8 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
 
 void game::fightEnd (Enemy*& enemy) {
     if (enemy->getCurrentHP() <= 0) {
-        hero->expInc(enemy->getExpworth());
-        hero->goldInc(enemy->getGoldworth());
+        hero->expInc(enemy->getEXPDrop());
+        hero->goldInc(enemy->getGoldDrop());
         hero->lvlup();
     }
 }
@@ -783,13 +783,13 @@ void game::church (sf::RenderWindow* window) {
     Button a(494.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\action_potion20x20.png");
 
     if (hero->getLvl() < 2)
-        h.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        h.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 3)
-        r.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        r.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 5)
-        m.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        m.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
     if (hero->getLvl() < 8)
-        a.setTextureFile("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
+        a.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
 
 
     HUD gui(hero, &time);
@@ -1117,7 +1117,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                             blacksmithAvaiable.erase(blacksmithAvaiable.begin() + z);
                         }
                     }
-                    backpack[i].setTextureFile(blacksmithInv[isDragged].getPath());
+                    backpack[i].setNewTexturePath(blacksmithInv[isDragged].getPath());
                     texts_inv[i] = blacksmithInv[isDragged].getData();
                     checkEqp = false;
                     break;
@@ -1128,7 +1128,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (blacksmithInv[isDragged].getType() == types[i]) {
                             if (hero->checkIfEqp(types[i])) {
-                                backpack[hero->get1stAvaiableIndex()].setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                backpack[hero->get1stAvaiableIndex()].setNewTexturePath(hero->getItemFromEqp(types[i]).getPath());
                                 texts_inv[hero->get1stAvaiableIndex()] = hero->getItemFromEqp(types[i]).getData();
                             }
                             hero->equipItem(blacksmithInv[isDragged]);
@@ -1139,7 +1139,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                                 }
                             }
                             eqp[i].first = true;
-                            eqp[i].second.setTextureFile(blacksmithInv[isDragged].getPath());
+                            eqp[i].second.setNewTexturePath(blacksmithInv[isDragged].getPath());
                             texts_eqp[i] = blacksmithInv[isDragged].getData();
                         }
                         break;
@@ -1170,9 +1170,9 @@ void game::blacksmith (sf::RenderWindow* window) {
                     if (backpack[i].isPressed(mousePos)) {
                         if (isDraggedInv != i) {
                             hero->swapItems(isDraggedInv, i);
-                            backpack[i].setTextureFile(hero->getItemFromInventory(i).getPath());
+                            backpack[i].setNewTexturePath(hero->getItemFromInventory(i).getPath());
                             texts_inv[i] = hero->getItemFromInventory(i).getData();
-                            backpack[isDraggedInv].setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                            backpack[isDraggedInv].setNewTexturePath(hero->getItemFromInventory(isDraggedInv).getPath());
                             texts_inv[isDraggedInv] = hero->getItemFromInventory(isDraggedInv).getData();
                             checkEqp = false;
                             break;
@@ -1184,11 +1184,11 @@ void game::blacksmith (sf::RenderWindow* window) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (hero->getItemFromInventory(isDraggedInv).getType() == types[i]) {
                             if (hero->checkIfEqp(types[i])) {
-                                backpack[isDraggedInv].setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                backpack[isDraggedInv].setNewTexturePath(hero->getItemFromEqp(types[i]).getPath());
                                 texts_inv[isDraggedInv] = hero->getItemFromEqp(types[i]).getData();
                             }
                             eqp[i].first = true;
-                            eqp[i].second.setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                            eqp[i].second.setNewTexturePath(hero->getItemFromInventory(isDraggedInv).getPath());
                             texts_eqp[i] = hero->getItemFromInventory(isDraggedInv).getData();
                             hero->equipFromInv(isDraggedInv);
                         }
@@ -1199,7 +1199,7 @@ void game::blacksmith (sf::RenderWindow* window) {
             else if (checkShop) {
                 hero->goldInc(hero->getItemFromInventory(isDraggedInv).getStats().price);
                 hero->removeFromInv(isDraggedInv);
-                backpack[isDraggedInv].setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                backpack[isDraggedInv].setNewTexturePath(hero->getItemFromInventory(isDraggedInv).getPath());
                 texts_inv[isDraggedInv] = hero->getItemFromInventory(isDraggedInv).getData();
             }
             backpack[isDraggedInv].setPosition({startX / scale, startY / scale});
@@ -1214,7 +1214,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                 for (int i = 0; i < backpack.size(); i++) {
                     if (backpack[i].isPressed(mousePos) && hero->isAvailable(i)) {
                         hero->unequip(types[isDraggedEqp], i);
-                        backpack[i].setTextureFile(hero->getItemFromInventory(i).getPath());
+                        backpack[i].setNewTexturePath(hero->getItemFromInventory(i).getPath());
                         texts_inv[i] = hero->getItemFromInventory(i).getData();
                         eqp[isDraggedEqp].first = false;
                         break;
@@ -1552,9 +1552,9 @@ void game::inventory (sf::RenderWindow* window) {
                 if (inventory[i].isPressed(mousePos)) {
                     if (isDraggedInv != i) {
                         hero->swapItems(isDraggedInv, i);
-                        inventory[i].setTextureFile(hero->getItemFromInventory(i).getPath());
+                        inventory[i].setNewTexturePath(hero->getItemFromInventory(i).getPath());
                         texts_inv[i] = hero->getItemFromInventory(i).getData();
-                        inventory[isDraggedInv].setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                        inventory[isDraggedInv].setNewTexturePath(hero->getItemFromInventory(isDraggedInv).getPath());
                         texts_inv[isDraggedInv] = hero->getItemFromInventory(isDraggedInv).getData();
                         checkEqp = false;
                         break;
@@ -1566,11 +1566,11 @@ void game::inventory (sf::RenderWindow* window) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (hero->getItemFromInventory(isDraggedInv).getType() == types[i]) {
                             if (hero->checkIfEqp(types[i])) {
-                                inventory[isDraggedInv].setTextureFile(hero->getItemFromEqp(types[i]).getPath());
+                                inventory[isDraggedInv].setNewTexturePath(hero->getItemFromEqp(types[i]).getPath());
                                 texts_inv[isDraggedInv] = hero->getItemFromEqp(types[i]).getData();
                             }
                             eqp[i].first = true;
-                            eqp[i].second.setTextureFile(hero->getItemFromInventory(isDraggedInv).getPath());
+                            eqp[i].second.setNewTexturePath(hero->getItemFromInventory(isDraggedInv).getPath());
                             texts_eqp[i] = hero->getItemFromInventory(isDraggedInv).getData();
                             hero->equipFromInv(isDraggedInv);
                         }
@@ -1588,7 +1588,7 @@ void game::inventory (sf::RenderWindow* window) {
             for (int i = 0; i < inventory.size(); i++) {
                 if (inventory[i].isPressed(mousePos) && hero->isAvailable(i)) {
                     hero->unequip(types[isDraggedEqp], i);
-                    inventory[i].setTextureFile(hero->getItemFromInventory(i).getPath());
+                    inventory[i].setNewTexturePath(hero->getItemFromInventory(i).getPath());
                     texts_inv[i] = hero->getItemFromInventory(i).getData();
                     eqp[isDraggedEqp].first = false;
                     break;
@@ -1667,10 +1667,10 @@ void game::mainMenu (sf::RenderWindow* window) {
     Button quit(470.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
     Button credits(30.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\podziekowania_button.png");
     if (option.getLanguage() == Language::ENG) {
-        play.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
-        options.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
-        quit.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
-        credits.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\credits_button.png");
+        play.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
+        options.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+        quit.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+        credits.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\credits_button.png");
     }
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -1891,10 +1891,10 @@ void game::saves (sf::RenderWindow* window) {
     Button del2(270.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
     Button del3(430.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
     if (option.getLanguage() == Language::ENG) {
-        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
-        del1.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
-        del2.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
-        del3.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        back.setNewTexturePath("..\\src\\textures\\background\\Saves\\go_back.png");
+        del1.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        del2.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
+        del3.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
     }
     Button yes(364.f, 195.f, "..\\src\\textures\\GUI\\checkbox_yes.png");
     Button no(274.f, 195.f, "..\\src\\textures\\GUI\\checkbox_no.png");
@@ -2031,10 +2031,10 @@ void game::optionsG (sf::RenderWindow* window) {
     std::string languagePath = "..\\src\\textures\\background\\Options\\PL\\jezyk.png";
     std::string tutorialsPath = "..\\src\\textures\\background\\Options\\PL\\samouczki.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        general.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setNewTexturePath("..\\src\\textures\\background\\Saves\\go_back.png");
         languagePath = "..\\src\\textures\\background\\Options\\ENG\\language.png";
         tutorialsPath = "..\\src\\textures\\background\\Options\\ENG\\tutorials.png";
     }
@@ -2059,8 +2059,8 @@ void game::optionsG (sf::RenderWindow* window) {
     Button currentLng(370.f, 70.f, "..\\src\\textures\\background\\Options\\ENG\\eng.png");
     Button nextLng(370.f, 105.f, "..\\src\\textures\\background\\Options\\PL\\pl.png");
     if (option.getLanguage() == Language::PL) {
-        currentLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
-        nextLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
+        currentLng.setNewTexturePath("..\\src\\textures\\background\\Options\\PL\\pl.png");
+        nextLng.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\eng.png");
     }
     bool choosingLanguage = false;
     bool checkbox = option.getTutorials();
@@ -2110,13 +2110,13 @@ void game::optionsG (sf::RenderWindow* window) {
                 choosingLanguage = false;
                 if (option.getLanguage() == Language::ENG) {
                     option.setLanguage(Language::PL);
-                    currentLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
-                    nextLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
+                    currentLng.setNewTexturePath("..\\src\\textures\\background\\Options\\PL\\pl.png");
+                    nextLng.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\eng.png");
                 }
                 else {
                     option.setLanguage(Language::ENG);
-                    currentLng.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\eng.png");
-                    nextLng.setTextureFile("..\\src\\textures\\background\\Options\\PL\\pl.png");
+                    currentLng.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\eng.png");
+                    nextLng.setNewTexturePath("..\\src\\textures\\background\\Options\\PL\\pl.png");
                 }
             }
             else if (graphics.isPressed(mousePos) && !choosingLanguage) {
@@ -2171,10 +2171,10 @@ bool game::optionsGraph (sf::RenderWindow* window) {
     std::string modePath = "..\\src\\textures\\background\\Options\\PL\\tryb_wyswietlania.png";
     std::string resolutionPath = "..\\src\\textures\\background\\Options\\PL\\rozdzielcosc.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        general.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setNewTexturePath("..\\src\\textures\\background\\Saves\\go_back.png");
         limPath = "..\\src\\textures\\background\\Options\\ENG\\FPS_limit.png";
         modePath = "..\\src\\textures\\background\\Options\\ENG\\display_mode.png";
         resolutionPath = "..\\src\\textures\\background\\Options\\ENG\\resolution.png";
@@ -2210,12 +2210,12 @@ bool game::optionsGraph (sf::RenderWindow* window) {
     Button secondFPS(395.f, 105.f, "..\\src\\textures\\background\\Options\\ENG\\30.png");
     Button thirdFPS(395.f, 140.f, "..\\src\\textures\\background\\Options\\ENG\\140.png");
     if (option.getFPS() == FPS::_30) {
-        currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
-        secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+        currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
+        secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
     }
     else if (option.getFPS() == FPS::_144) {
-        currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
-        thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+        currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
+        thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
     }
     std::string f1;
     std::string f2;
@@ -2235,24 +2235,24 @@ bool game::optionsGraph (sf::RenderWindow* window) {
     Button secondMode(370.f, 155.f, f2);
     Button thirdMode(370.f, 190.f, f3);
     if (option.getMode() == Mode::borderless) {
-        currentMode.setTextureFile(f2);
-        secondMode.setTextureFile(f1);
+        currentMode.setNewTexturePath(f2);
+        secondMode.setNewTexturePath(f1);
     }
     else if (option.getMode() == Mode::windowed) {
-        currentMode.setTextureFile(f3);
-        secondMode.setTextureFile(f1);
-        thirdMode.setTextureFile(f2);
+        currentMode.setNewTexturePath(f3);
+        secondMode.setNewTexturePath(f1);
+        thirdMode.setNewTexturePath(f2);
     }
     Button currentRes(395.f, 170.f, "..\\src\\textures\\background\\Options\\1080p.png");
     Button secondRes(395.f, 205.f, "..\\src\\textures\\background\\Options\\360p.png");
     Button thirdRes(395.f, 240.f, "..\\src\\textures\\background\\Options\\1440p.png");
     if (option.getResolution() == Resolution::p360) {
-        currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
-        secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+        currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
+        secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
     }
     else if (option.getResolution() == Resolution::p1440) {
-        currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
-        thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+        currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1440p.png");
+        thirdRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
     }
     bool choosingFPS = false;
     bool choosingMode = false;
@@ -2330,22 +2330,22 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingFPS = false;
                 if (option.getFPS() == FPS::_60) {
                     option.setFPS(FPS::_30);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
-                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(30);
                 }
                 else if (option.getFPS() == FPS::_30) {
                     option.setFPS(FPS::_60);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
-                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
                     window->setFramerateLimit(60);
                 }
                 else {
                     option.setFPS(FPS::_30);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
-                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(30);
                 }
             }
@@ -2354,21 +2354,21 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingFPS = false;
                 if (option.getFPS() == FPS::_60) {
                     option.setFPS(FPS::_144);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
-                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
                     window->setFramerateLimit(144);
                 }
                 else if (option.getFPS() == FPS::_30) {
                     option.setFPS(FPS::_144);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
-                    secondFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\30.png");
-                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
+                    thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
                     window->setFramerateLimit(144);
                 }
                 else {
                     option.setFPS(FPS::_60);
-                    currentFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\60.png");
-                    thirdFPS.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\140.png");
+                    currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
+                    thirdFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\140.png");
                     window->setFramerateLimit(60);
                 }
             }
@@ -2385,19 +2385,19 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingMode = false;
                 if (option.getMode() == Mode::borderless) {
                     option.setMode(Mode::fullscreen);
-                    currentMode.setTextureFile(f1);
-                    secondMode.setTextureFile(f2);
+                    currentMode.setNewTexturePath(f1);
+                    secondMode.setNewTexturePath(f2);
                 }
                 else if (option.getMode() == Mode::fullscreen) {
                     option.setMode(Mode::borderless);
-                    currentMode.setTextureFile(f2);
-                    secondMode.setTextureFile(f1);
+                    currentMode.setNewTexturePath(f2);
+                    secondMode.setNewTexturePath(f1);
                 }
                 else {
                     option.setMode(Mode::fullscreen);
-                    currentMode.setTextureFile(f1);
-                    secondMode.setTextureFile(f2);
-                    thirdMode.setTextureFile(f3);
+                    currentMode.setNewTexturePath(f1);
+                    secondMode.setNewTexturePath(f2);
+                    thirdMode.setNewTexturePath(f3);
                 }
             }
             else if (thirdMode.isPressed(mousePos) && !choosingFPS && choosingMode && !choosingResolution) {
@@ -2405,20 +2405,20 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingMode = false;
                 if (option.getMode() == Mode::borderless) {
                     option.setMode(Mode::windowed);
-                    currentMode.setTextureFile(f3);
-                    secondMode.setTextureFile(f1);
-                    thirdMode.setTextureFile(f2);
+                    currentMode.setNewTexturePath(f3);
+                    secondMode.setNewTexturePath(f1);
+                    thirdMode.setNewTexturePath(f2);
                 }
                 else if (option.getMode() == Mode::fullscreen) {
                     option.setMode(Mode::windowed);
-                    currentMode.setTextureFile(f3);
-                    secondMode.setTextureFile(f1);
-                    thirdMode.setTextureFile(f2);
+                    currentMode.setNewTexturePath(f3);
+                    secondMode.setNewTexturePath(f1);
+                    thirdMode.setNewTexturePath(f2);
                 }
                 else {
                     option.setMode(Mode::borderless);
-                    currentMode.setTextureFile(f2);
-                    thirdMode.setTextureFile(f3);
+                    currentMode.setNewTexturePath(f2);
+                    thirdMode.setNewTexturePath(f3);
                 }
             }
             else if (currentRes.isPressed(mousePos) && !choosingFPS && !choosingMode && !choosingResolution) {
@@ -2434,19 +2434,19 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingResolution = false;
                 if (option.getResolution() == Resolution::p360) {
                     option.setResolution(Resolution::p1080);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
-                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
+                    secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
                 }
                 else if (option.getResolution() == Resolution::p1080) {
                     option.setResolution(Resolution::p360);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
-                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
+                    secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else {
                     option.setResolution(Resolution::p360);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
-                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
-                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
+                    secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1440p.png");
                 }
             }
             else if (thirdRes.isPressed(mousePos) && !choosingFPS && !choosingMode && choosingResolution) {
@@ -2454,20 +2454,20 @@ bool game::optionsGraph (sf::RenderWindow* window) {
                 choosingResolution = false;
                 if (option.getResolution() == Resolution::p360) {
                     option.setResolution(Resolution::p1440);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
-                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
-                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else if (option.getResolution() == Resolution::p1080) {
                     option.setResolution(Resolution::p1440);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
-                    secondRes.setTextureFile("..\\src\\textures\\background\\Options\\360p.png");
-                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1440p.png");
+                    secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
+                    thirdRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
                 }
                 else {
                     option.setResolution(Resolution::p1080);
-                    currentRes.setTextureFile("..\\src\\textures\\background\\Options\\1080p.png");
-                    thirdRes.setTextureFile("..\\src\\textures\\background\\Options\\1440p.png");
+                    currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
+                    thirdRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1440p.png");
                 }
             }
         }
@@ -2511,10 +2511,10 @@ bool game::optionsS (sf::RenderWindow* window) {
     std::string musicPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_muzyki.png";
     std::string mainPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_glowna.png";
     if (option.getLanguage() == Language::ENG) {
-        general.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\general.png");
-        sound.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\sound.png");
-        graphics.setTextureFile("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
-        back.setTextureFile("..\\src\\textures\\background\\Saves\\go_back.png");
+        general.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\general.png");
+        sound.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\sound.png");
+        graphics.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\graphics.png");
+        back.setNewTexturePath("..\\src\\textures\\background\\Saves\\go_back.png");
         enviromentPath = "..\\src\\textures\\background\\Options\\ENG\\enviromental_sound_volume.png";
         effectPath = "..\\src\\textures\\background\\Options\\ENG\\sound_effects_volume.png";
         musicPath = "..\\src\\textures\\background\\Options\\ENG\\music_volume.png";
@@ -2646,8 +2646,8 @@ bool game::pauseMenu (sf::RenderWindow* window) {
     Button quit(270.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
     Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
     if (option.getLanguage() == Language::ENG) {
-        options.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
-        quit.setTextureFile("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
+        options.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
+        quit.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
     }
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {

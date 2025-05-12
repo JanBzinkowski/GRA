@@ -1,12 +1,11 @@
-#include "Hero.h"
 #pragma once
 
-class Mage: public Hero {
-    private:
-        std::map<DamageType, float> resistance;
+#include <iostream>
+#include "Enemy.h"
 
+class EnemyMage: public Enemy {
     public:
-        Mage (const std::string& name, const Stats& stat) : Hero(name, stat, {3, 6, 2, 4, 1}) {
+        EnemyMage (const std::string& name, const Stats& enemy_stats) : Enemy(name, enemy_stats, {3, 6, 2, 4, 1}) {
             setWeaknessMult(DamageType::Physical, 1.30f);
             setWeaknessMult(DamageType::MagicAir, 0.65f);
             setWeaknessMult(DamageType::MagicEarth, 0.65f);
@@ -17,8 +16,9 @@ class Mage: public Hero {
             setWeaknessMult(DamageType::MagicIce, 0.65f);
         }
 
-        std::string getClass () const {
-            return "Mage";
+        std::string getClass () const override {
+            return "EnemyMage";
         }
 };
+
 

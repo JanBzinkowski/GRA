@@ -1,25 +1,19 @@
 #include "character.h"
 #include <algorithm>
-#include "damage.h"
-#include "itemType.h"
-#include "button.h"
 
-
-extern std::unordered_map<int, itemStats> itemData;
-
-int character::getCurrentHP () const {
+int Character::getCurrentHP () const {
     return m_current_HP;
 }
 
-void character::setCurrentHP (const int current_HP) {
+void Character::setCurrentHP (const int current_HP) {
     m_current_HP = current_HP;
 }
 
-void character::incCurrentHP (const int current_HP_inc) {
+void Character::incCurrentHP (const int current_HP_inc) {
     m_current_HP += current_HP_inc;
 }
 
-float character::getMultDmg () const {
+float Character::getMultDmg () const {
     if (m_atk_type_nb == 1) {
         return 1;
     }
@@ -32,81 +26,81 @@ float character::getMultDmg () const {
     return 0;
 }
 
-Stats character::getStats () const {
+Stats Character::getStats () const {
     return m_stats;
 }
 
-StatsIncrese character::getStatsInc () const {
+StatsIncrese Character::getStatsInc () const {
     return m_stats_inc;
 }
 
-int character::getMaxHP () const {
+int Character::getMaxHP () const {
     return m_stats.base_hp;
 }
 
-int character::getLvl () const {
+int Character::getLvl () const {
     return m_stats.lvl;
 }
 
-int character::getAd () const {
+int Character::getAd () const {
     return m_stats.ad;
 }
 
-int character::getDef () const {
+int Character::getDef () const {
     return m_stats.def;
 }
 
-int character::getMaxMana () const {
+int Character::getMaxMana () const {
     return m_stats.mana;
 }
 
-std::string character::getName () const {
+std::string Character::getName () const {
     return m_name;
 }
 
-std::string character::getPath () const {
+std::string Character::getPath () const {
     return m_stats.path;
 }
 
-int character::getSpeed () const {
+int Character::getSpeed () const {
     return m_stats.speed;
 }
 
-int character::getMaxHPInc () const {
+int Character::getMaxHPInc () const {
     return m_stats_inc.base_HP_inc;
 }
 
-int character::getAdInc () const {
+int Character::getAdInc () const {
     return m_stats_inc.ad_inc;
 }
 
-int character::getDefInc () const {
+int Character::getDefInc () const {
     return m_stats_inc.def_inc;
 }
 
-int character::getMaxManaInc () const {
+int Character::getMaxManaInc () const {
     return m_stats_inc.mana_inc;
 }
 
-int character::getSpeedInc () const {
+int Character::getSpeedInc () const {
     return m_stats_inc.speed_inc;
 }
 
 
-float character::getResistance (const DamageType& type) const {
-    auto it = m_resistance.find(type);
-    return it != m_resistance.end()? it->second : 1.0f;
+float Character::getWeaknessMult (const DamageType& type) const {
+    auto it = m_weakness_multiplayer.find(type);
+    return it != m_weakness_multiplayer.end()? it->second : 1.0f;
 }
 
-void character::setResist (const DamageType& type, float resist) {
-    m_resistance[type] = resist;
+void Character::setWeaknessMult (const DamageType& type, float weakness_mult) {
+    m_weakness_multiplayer[type] = weakness_mult;
 }
 
-int character::getAtkTypeNB () const {
+int Character::getAtkTypeNB () const {
     return m_atk_type_nb;
 }
 
-void character::setAtkTypeNB (int nb) {
-    m_atk_type_nb = nb;
+void Character::setAtkTypeNB (int attack_number) {
+    m_atk_type_nb = attack_number;
 }
 

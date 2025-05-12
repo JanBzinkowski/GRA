@@ -8,7 +8,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
-class Hero: public character {
+class Hero: public Character {
     sf::Clock gameplay_time;
     sf::Time playtime = sf::Time::Zero;
 
@@ -48,7 +48,7 @@ class Hero: public character {
     int exp = 0;
 
     public:
-        Hero (const std::string& name, const Stats& stat, const StatsIncrese& incstats, int extra = 0) : character(name, stat, incstats), currentmana(stat.mana), extraSlot(extra) {
+        Hero (const std::string& name, const Stats& stat, const StatsIncrese& incstats, int extra = 0) : Character(name, stat, incstats), currentmana(stat.mana), extraSlot(extra) {
             for (int i = 0; i < extra; i++) {
                 heroInv.addSlot();
             }

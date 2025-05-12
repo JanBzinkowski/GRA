@@ -2,8 +2,9 @@
 #include "Warrior.h"
 #include "Archer.h"
 #include "Mage.h"
-#include "damage.h"
+#include "DamageCalculation.h"
 #include <fstream>
+#include <math.h>
 
 std::string Hero::getClass () const {
     return "Hero";
@@ -451,8 +452,8 @@ int Hero::getDamaged (Enemy*& enemy, const DamageType& type) {
         if (lvl_diff >= 10)
             lvl_diff = 9;
         float reduction = reduct(enemy);
-        float resistancemult = enemy->getResistance(type);
-        dmg = dmgcalc::damageCalculator(this->getAd(), this->getLvl(), this->getMultDmg(), reduction, resistancemult, lvl_diff);
+        float resistancemult = enemy->getWeaknessMult(type);
+        dmg = DMGCalculation::damageCalculator(this->getAd(), this->getLvl(), this->getMultDmg(), reduction, resistancemult, lvl_diff);
     }
     this->incCurrentHP(-dmg);
     if (this->getCurrentHP() < 0)
@@ -678,8 +679,8 @@ void Hero::save_to_file () {
     int play = this->getPlaytime().asSeconds();
     if (file.is_open()) {
         file << this->getClass() << "\n" << this->getName() << "\n" << play << "\n" << this->getLvl() << "\n" << this->getMaxHP() << "\n" << this->getAd() << "\n" << this->getDef() << "\n" << this->getMaxMana() << "\n" << this->getSpeed() << "\n" << this->getMaxHPInc() << "\n" << this->getAdInc() << "\n" << this->getDefInc() << "\n" << this->getMaxManaInc() << "\n" << this->getSpeedInc() << "\n" << this->current_gold << "\n" << this->getCurrentHP() << "\n" << this->currentmana << "\n" << this->
-                exp << "\n" << this->prologueState() << "\n" << this->getHPpot() << "\n" << this->getHPRegpot() << "\n" << this->getManapot() << "\n" << this->getActionpot() << "\n" << this->getResistance(DamageType::MagicEnergy) << "\n" << this->getResistance(DamageType::MagicFire) << "\n" << this->getResistance(DamageType::MagicIce) << "\n" << this->getResistance(DamageType::MagicEarth) << "\n" << this->getResistance(DamageType::MagicWater) << "\n" << this->
-                getResistance(DamageType::MagicPoison) << "\n" << this->getResistance(DamageType::MagicAir) << "\n" << this->getResistance(DamageType::Physical) << "\n" << this->getResistance(DamageType::Enviroment) << "\n" << this->getExtraSlot() << "\n";
+                exp << "\n" << this->prologueState() << "\n" << this->getHPpot() << "\n" << this->getHPRegpot() << "\n" << this->getManapot() << "\n" << this->getActionpot() << "\n" << this->getWeaknessMult(DamageType::MagicEnergy) << "\n" << this->getWeaknessMult(DamageType::MagicFire) << "\n" << this->getWeaknessMult(DamageType::MagicIce) << "\n" << this->getWeaknessMult(DamageType::MagicEarth) << "\n" << this->getWeaknessMult(DamageType::MagicWater) << "\n" << this->
+                getWeaknessMult(DamageType::MagicPoison) << "\n" << this->getWeaknessMult(DamageType::MagicAir) << "\n" << this->getWeaknessMult(DamageType::Physical) << "\n" << this->getWeaknessMult(DamageType::Environment) << "\n" << this->getExtraSlot() << "\n";
 
         int invSize = this->heroInv.getInvSize() - this->heroInv.getAvaiableAmount();
         file << invSize << "\n";
@@ -796,15 +797,15 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
         hero->setPlaytime(sf::seconds(playtime));
         float energy, fire, ice, earth, water, poison, air, phys, env;
         file >> energy >> fire >> ice >> earth >> water >> poison >> air >> phys >> env;
-        hero->setResist(DamageType::MagicEnergy, energy);
-        hero->setResist(DamageType::MagicFire, fire);
-        hero->setResist(DamageType::MagicIce, ice);
-        hero->setResist(DamageType::MagicEarth, earth);
-        hero->setResist(DamageType::MagicWater, water);
-        hero->setResist(DamageType::MagicPoison, poison);
-        hero->setResist(DamageType::MagicAir, air);
-        hero->setResist(DamageType::Physical, phys);
-        hero->setResist(DamageType::Enviroment, env);
+        hero->setWeaknessMult(DamageType::MagicEnergy, energy);
+        hero->setWeaknessMult(DamageType::MagicFire, fire);
+        hero->setWeaknessMult(DamageType::MagicIce, ice);
+        hero->setWeaknessMult(DamageType::MagicEarth, earth);
+        hero->setWeaknessMult(DamageType::MagicWater, water);
+        hero->setWeaknessMult(DamageType::MagicPoison, poison);
+        hero->setWeaknessMult(DamageType::MagicAir, air);
+        hero->setWeaknessMult(DamageType::Physical, phys);
+        hero->setWeaknessMult(DamageType::Environment, env);
 
         int invSize;
         int extra;

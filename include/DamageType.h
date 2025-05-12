@@ -4,7 +4,7 @@ enum class DamageType
 {
     MagicEnergy,
     Physical,
-    Enviroment,
+    Environment,
     MagicFire,
     MagicIce,
     MagicPoison,

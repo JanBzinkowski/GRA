@@ -1,6 +1,6 @@
-CMakeFiles/GRA.dir/src/AllTimeGUI.cpp.obj: \
- C:\Users\janek\Desktop\gra\GRA\src\AllTimeGUI.cpp \
- C:/Users/janek/Desktop/gra/GRA/include/AllTimeGUI.h \
+CMakeFiles/GRA.dir/src/HUD.cpp.obj: \
+ C:\Users\janek\Desktop\gra\GRA\src\HUD.cpp \
+ C:/Users/janek/Desktop/gra/GRA/include/HUD.h \
  C:/Users/janek/Desktop/gra/GRA/include/gametime.h \
  C:/SFML/SFML-3.0.0/include/SFML/System/Clock.hpp \
  C:/SFML/SFML-3.0.0/include/SFML/System/Export.hpp \
@@ -286,7 +286,7 @@ CMakeFiles/GRA.dir/src/AllTimeGUI.cpp.obj: \
  C:/SFML/SFML-3.0.0/include/SFML/System/Sleep.hpp \
  C:/Users/janek/Desktop/gra/GRA/include/Hero.h \
  C:/Users/janek/Desktop/gra/GRA/include/character.h \
- C:/Users/janek/Desktop/gra/GRA/include/dmgtype.h \
+ C:/Users/janek/Desktop/gra/GRA/include/DamageType.h \
  C:/mingw64/include/c++/14.2.0/map \
  C:/mingw64/include/c++/14.2.0/bits/stl_tree.h \
  C:/mingw64/include/c++/14.2.0/bits/stl_map.h \

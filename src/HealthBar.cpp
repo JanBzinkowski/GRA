@@ -3,7 +3,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-HealthBar::HealthBar (float x, float y, character* hero): person(hero) {
+HealthBar::HealthBar (float x, float y, Character* hero): person(hero) {
     if (!texture.loadFromFile("..\\src\\textures\\GUI\\Enemy\\health_bar.png")) {
         std::cerr << "Failed to load texture from file: ..\\src\\textures\\GUI\\Enemy\\health_bar.png" << std::endl;
         throw std::runtime_error("Failed to load texture from file: ..\\src\\textures\\GUI\\Enemy\\health_bar.png");

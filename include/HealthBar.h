@@ -17,10 +17,10 @@ class HealthBar: public sf::Drawable {
         sf::RectangleShape red;
         sf::RectangleShape white;
         std::unique_ptr<sf::Sprite> sprite;
-        character* person;
+        Character* person;
 
     public:
-        HealthBar (float x, float y, character* hero);
+        HealthBar (float x, float y, Character* hero);
         void updateRed ();
 };
 

@@ -4,7 +4,7 @@
 #include "itemType.h"
 
 class Item {
-    friend class character;
+    friend class Character;
 
     private:
         int id;

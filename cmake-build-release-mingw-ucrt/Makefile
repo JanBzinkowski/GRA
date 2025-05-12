@@ -152,6 +152,30 @@ src/Button.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Button.cpp.s
 .PHONY : src/Button.cpp.s
 
+src/DamageCalculation.obj: src/DamageCalculation.cpp.obj
+.PHONY : src/DamageCalculation.obj
+
+# target to build an object file
+src/DamageCalculation.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.obj
+.PHONY : src/DamageCalculation.cpp.obj
+
+src/DamageCalculation.i: src/DamageCalculation.cpp.i
+.PHONY : src/DamageCalculation.i
+
+# target to preprocess a source file
+src/DamageCalculation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.i
+.PHONY : src/DamageCalculation.cpp.i
+
+src/DamageCalculation.s: src/DamageCalculation.cpp.s
+.PHONY : src/DamageCalculation.s
+
+# target to generate assembly for a file
+src/DamageCalculation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.s
+.PHONY : src/DamageCalculation.cpp.s
+
 src/Enemy.obj: src/Enemy.cpp.obj
 .PHONY : src/Enemy.obj
 
@@ -392,30 +416,6 @@ src/character.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/character.cpp.s
 .PHONY : src/character.cpp.s
 
-src/damage.obj: src/damage.cpp.obj
-.PHONY : src/damage.obj
-
-# target to build an object file
-src/damage.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/damage.cpp.obj
-.PHONY : src/damage.cpp.obj
-
-src/damage.i: src/damage.cpp.i
-.PHONY : src/damage.i
-
-# target to preprocess a source file
-src/damage.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/damage.cpp.i
-.PHONY : src/damage.cpp.i
-
-src/damage.s: src/damage.cpp.s
-.PHONY : src/damage.s
-
-# target to generate assembly for a file
-src/damage.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/damage.cpp.s
-.PHONY : src/damage.cpp.s
-
 src/dmgtype.obj: src/dmgtype.cpp.obj
 .PHONY : src/dmgtype.obj
 
@@ -596,6 +596,9 @@ help:
 	@echo ... src/Button.obj
 	@echo ... src/Button.i
 	@echo ... src/Button.s
+	@echo ... src/DamageCalculation.obj
+	@echo ... src/DamageCalculation.i
+	@echo ... src/DamageCalculation.s
 	@echo ... src/Enemy.obj
 	@echo ... src/Enemy.i
 	@echo ... src/Enemy.s
@@ -626,9 +629,6 @@ help:
 	@echo ... src/character.obj
 	@echo ... src/character.i
 	@echo ... src/character.s
-	@echo ... src/damage.obj
-	@echo ... src/damage.i
-	@echo ... src/damage.s
 	@echo ... src/dmgtype.obj
 	@echo ... src/dmgtype.i
 	@echo ... src/dmgtype.s
