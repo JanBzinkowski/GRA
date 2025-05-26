@@ -10,6 +10,8 @@ void Enemy::enemyLvlUp () {
     stat.ad += inc_stats.ad_inc;
     stat.base_hp += inc_stats.base_HP_inc * stat.lvl;
     stat.def += inc_stats.def_inc;
+    stat.speed += inc_stats.speed_inc;
+    setStats(stat);
 }
 
 void Enemy::setGoldDrop (int gold) {

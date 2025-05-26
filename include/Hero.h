@@ -9,48 +9,48 @@
 #include <SFML/System/Time.hpp>
 
 class Hero: public Character {
-    sf::Clock gameplay_time;
-    sf::Time playtime = sf::Time::Zero;
+    sf::Clock m_gameplay_time;
+    sf::Time m_playtime = sf::Time::Zero;
 
-    int extraSlot = 0;
-    Inventory heroInv;
+    int m_extraSlot = 0;
+    Inventory m_inventory;
 
-    std::string save;
+    std::string m_save_path;
 
-    bool prologue = false;
-    bool firstcity = false;
-    bool firstchurch = false;
-    bool firstblacksmith = false;
-    bool firsttavern = false;
-    bool firstmap = false;
+    bool m_prologue_state = false;
+    bool m_first_time_city = false;
+    bool m_first_time_church = false;
+    bool m_first_time_blacksmith = false;
+    bool m_first_time_tavern = false;
+    bool m_first_time_map = false;
 
-    int healthpotion = 0;
-    int manapotion = 0;
-    int manapotionT = 0;
-    int regenpotion = 0;
-    int regenpotionT = 0;
-    int actionPot = 0;
-    bool fastaction = false;
+    int m_health_potion_amount = 0;
+    int m_mana_potion_amount = 0;
+    int m_mana_potion_time = 0;
+    int m_regen_potion_amount = 0;
+    int m_regen_potion_time = 0;
+    int m_action_potion_amount = 0;
+    bool m_fast_action = false;
 
-    int potionCD = 0;
+    int m_potion_cooldown = 0;
 
-    std::optional<Item> helmetslot = std::nullopt;
-    std::optional<Item> chestplateslot = std::nullopt;
-    std::optional<Item> glovesslot = std::nullopt;
-    std::optional<Item> leggingsslot = std::nullopt;
-    std::optional<Item> bootsslot = std::nullopt;
-    std::optional<Item> ringslot = std::nullopt;
-    std::optional<Item> necklaceslot = std::nullopt;
-    std::optional<Item> weaponslot = std::nullopt;
+    std::optional<Item> m_helmet_slot = std::nullopt;
+    std::optional<Item> m_chestplate_slot = std::nullopt;
+    std::optional<Item> m_gloves_slot = std::nullopt;
+    std::optional<Item> m_leggings_slot = std::nullopt;
+    std::optional<Item> m_boots_slot = std::nullopt;
+    std::optional<Item> m_ring_slot = std::nullopt;
+    std::optional<Item> m_necklace_slot = std::nullopt;
+    std::optional<Item> m_weapon_slot = std::nullopt;
 
-    int current_gold = 10;
-    int currentmana;
+    int m_current_gold = 10;
+    int m_current_mana;
     int exp = 0;
 
     public:
-        Hero (const std::string& name, const Stats& stat, const StatsIncrese& incstats, int extra = 0) : Character(name, stat, incstats), currentmana(stat.mana), extraSlot(extra) {
+        Hero (const std::string& name, const Stats& stat, const StatsIncrese& incstats, int extra = 0) : Character(name, stat, incstats), m_current_mana(stat.mana), m_extraSlot(extra) {
             for (int i = 0; i < extra; i++) {
-                heroInv.addSlot();
+                m_inventory.addSlot();
             }
         }
 
@@ -118,10 +118,10 @@ class Hero: public Character {
 
         void regen ();
         void instaHP ();
-        void manaregen ();
-        void potionmanaregen ();
+        void manaRegen ();
+        void manaRegenPotion ();
 
-        void lvlup ();
+        bool lvlup ();
         int getDamaged (Enemy*& enemy, const DamageType& type);
         float getAtkChance (Enemy*& enemy) const;
         float reduct(Enemy*& enemy) const;

@@ -6,11 +6,11 @@ void Options::setTutorials(bool t) {
   tutorials = t;
 }
 
-bool Options::getTutorials() {
+bool Options::getTutorials() const {
   return tutorials;
 }
 
-Language Options::getLanguage() {
+Language Options::getLanguage() const {
   return language;
 }
 
@@ -18,7 +18,7 @@ void Options::setLanguage(Language l) {
   language = l;
 }
 
-FPS Options::getFPS() {
+FPS Options::getFPS() const {
   return fps;
 }
 
@@ -26,7 +26,7 @@ void Options::setFPS(FPS f) {
   fps = f;
 }
 
-Resolution Options::getResolution() {
+Resolution Options::getResolution() const {
   return resolution;
 }
 
@@ -34,7 +34,7 @@ void Options::setResolution(Resolution r) {
   resolution = r;
 }
 
-Mode Options::getMode() {
+Mode Options::getMode() const {
   return mode;
 }
 
@@ -46,7 +46,7 @@ void Options::setenviromentVolume(int v){
   enviromentVolume = v;
 }
 
-int Options::getenviromentVolume(){
+int Options::getenviromentVolume() const {
   return enviromentVolume;
 }
 
@@ -54,7 +54,7 @@ void Options::seteffectsVolume(int v){
   effectsVolume = v;
 }
 
-int Options::geteffectsVolume(){
+int Options::geteffectsVolume() const {
   return effectsVolume;
 }
 
@@ -62,7 +62,7 @@ void Options::setmusicVolume(int v){
   musicVolume = v;
 }
 
-int Options::getmusicVolume(){
+int Options::getmusicVolume() const {
   return musicVolume;
 }
 
@@ -70,11 +70,11 @@ void Options::setmasterVolume(int v) {
   masterVolume = v;
 }
 
-int Options::getmasterVolume() {
+int Options::getmasterVolume() const {
   return masterVolume;
 }
 
-void Options::saveToFile() {
+void Options::saveToFile() const {
   std::string filename = "..\\src\\options\\options.txt";
   std::ofstream file(filename, std::ios::out);
   if (file.is_open())

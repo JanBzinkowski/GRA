@@ -11,103 +11,103 @@ std::string Hero::getClass () const {
 }
 
 void Hero::setCurrentMana (int mana) {
-    currentmana = mana;
+    m_current_mana = mana;
 }
 
 void Hero::incCurrentMana (int inc) {
-    currentmana += inc;
+    m_current_mana += inc;
 }
 
 int Hero::getCurrentMana () const {
-    return currentmana;
+    return m_current_mana;
 }
 
 void Hero::startClock () {
-    gameplay_time.start();
+    m_gameplay_time.start();
 }
 
 void Hero::restartClock () {
-    gameplay_time.reset();
+    m_gameplay_time.reset();
 }
 
 sf::Time Hero::getPlaytime () {
-    playtime += gameplay_time.getElapsedTime();
+    m_playtime += m_gameplay_time.getElapsedTime();
     restartClock();
-    return playtime;
+    return m_playtime;
 }
 
 void Hero::setPlaytime (sf::Time time) {
-    playtime = time;
+    m_playtime = time;
 }
 
 void Hero::setSave (const std::string fileName) {
-    save = fileName;
+    m_save_path = fileName;
 }
 
 const std::string Hero::getSave () {
-    return save;
+    return m_save_path;
 }
 
 int Hero::get1stAvaiableIndex () const {
-    return heroInv.get1stAvailableSlot();
+    return m_inventory.get1stAvailableSlot();
 }
 
 int Hero::getAvaiableAmount () const {
-    return heroInv.getAvaiableAmount();
+    return m_inventory.getAvaiableAmount();
 }
 
 bool Hero::isAvailable (const int slot) const {
-    return heroInv.isAvaiable(slot);
+    return m_inventory.isAvaiable(slot);
 }
 
 void Hero::swapItems (size_t i, size_t x) {
-    heroInv.swapItems(i, x);
+    m_inventory.swapItems(i, x);
 }
 
 int Hero::getInvSize () const {
-    return heroInv.getInvSize();
+    return m_inventory.getInvSize();
 }
 
 Item Hero::getItemFromEqp (itemType type) const {
     switch (type) {
         case itemType::Helmet: {
-            if (helmetslot)
-                return *helmetslot;
+            if (m_helmet_slot)
+                return *m_helmet_slot;
             break;
         }
         case itemType::Chestplate: {
-            if (chestplateslot)
-                return *chestplateslot;
+            if (m_chestplate_slot)
+                return *m_chestplate_slot;
             break;
         }
         case itemType::Necklace: {
-            if (necklaceslot)
-                return *necklaceslot;
+            if (m_necklace_slot)
+                return *m_necklace_slot;
             break;
         }
         case itemType::Gloves: {
-            if (glovesslot)
-                return *glovesslot;
+            if (m_gloves_slot)
+                return *m_gloves_slot;
             break;
         }
         case itemType::Ring: {
-            if (ringslot)
-                return *ringslot;
+            if (m_ring_slot)
+                return *m_ring_slot;
             break;
         }
         case itemType::Leggings: {
-            if (leggingsslot)
-                return *leggingsslot;
+            if (m_leggings_slot)
+                return *m_leggings_slot;
             break;
         }
         case itemType::Boots: {
-            if (bootsslot)
-                return *bootsslot;
+            if (m_boots_slot)
+                return *m_boots_slot;
             break;
         }
         case itemType::Weapon: {
-            if (weaponslot)
-                return *weaponslot;
+            if (m_weapon_slot)
+                return *m_weapon_slot;
             break;
         }
         default:
@@ -117,50 +117,50 @@ Item Hero::getItemFromEqp (itemType type) const {
 }
 
 Item Hero::getItemFromInventory (int slot) const {
-    return heroInv.m_inventory[slot];
+    return m_inventory.m_inventory[slot];
 }
 
 void Hero::removeFromEqp (const itemType type) {
     Item item(0);
     switch (type) {
         case itemType::Helmet: {
-            item = *helmetslot;
-            helmetslot = std::nullopt;
+            item = *m_helmet_slot;
+            m_helmet_slot = std::nullopt;
             break;
         }
         case itemType::Chestplate: {
-            item = *chestplateslot;
-            chestplateslot = std::nullopt;
+            item = *m_chestplate_slot;
+            m_chestplate_slot = std::nullopt;
             break;
         }
         case itemType::Necklace: {
-            item = *necklaceslot;
-            necklaceslot = std::nullopt;
+            item = *m_necklace_slot;
+            m_necklace_slot = std::nullopt;
             break;
         }
         case itemType::Gloves: {
-            item = *glovesslot;
-            glovesslot = std::nullopt;
+            item = *m_gloves_slot;
+            m_gloves_slot = std::nullopt;
             break;
         }
         case itemType::Ring: {
-            item = *ringslot;
-            ringslot = std::nullopt;
+            item = *m_ring_slot;
+            m_ring_slot = std::nullopt;
             break;
         }
         case itemType::Leggings: {
-            item = *leggingsslot;
-            leggingsslot = std::nullopt;
+            item = *m_leggings_slot;
+            m_leggings_slot = std::nullopt;
             break;
         }
         case itemType::Boots: {
-            item = *bootsslot;
-            bootsslot = std::nullopt;
+            item = *m_boots_slot;
+            m_boots_slot = std::nullopt;
             break;
         }
         case itemType::Weapon: {
-            item = *weaponslot;
-            weaponslot = std::nullopt;
+            item = *m_weapon_slot;
+            m_weapon_slot = std::nullopt;
             break;
         }
     }
@@ -168,11 +168,11 @@ void Hero::removeFromEqp (const itemType type) {
 }
 
 void Hero::addToInv (const Item& item, const int slot) {
-    heroInv.addItem(item, slot);
+    m_inventory.addItem(item, slot);
 }
 
 void Hero::removeFromInv (const int slot) {
-    heroInv.removeItem(slot);
+    m_inventory.removeItem(slot);
 }
 
 void Hero::equipItem (const Item& item) {
@@ -180,35 +180,35 @@ void Hero::equipItem (const Item& item) {
     unequip(type);
     switch (type) {
         case itemType::Helmet: {
-            helmetslot = item;
+            m_helmet_slot = item;
             break;
         }
         case itemType::Chestplate: {
-            chestplateslot = item;
+            m_chestplate_slot = item;
             break;
         }
         case itemType::Necklace: {
-            necklaceslot = item;
+            m_necklace_slot = item;
             break;
         }
         case itemType::Gloves: {
-            glovesslot = item;
+            m_gloves_slot = item;
             break;
         }
         case itemType::Ring: {
-            ringslot = item;
+            m_ring_slot = item;
             break;
         }
         case itemType::Leggings: {
-            leggingsslot = item;
+            m_leggings_slot = item;
             break;
         }
         case itemType::Boots: {
-            bootsslot = item;
+            m_boots_slot = item;
             break;
         }
         case itemType::Weapon: {
-            weaponslot = item;
+            m_weapon_slot = item;
             break;
         }
     }
@@ -218,7 +218,7 @@ void Hero::equipItem (const Item& item) {
 
 void Hero::equipFromInv (const int& slot) {
     bool remove = false;
-    Item item = heroInv.getItemByIndex(slot);
+    Item item = m_inventory.getItemByIndex(slot);
     itemType type = item.getType();
     if (checkIfEqp(type))
         unequip(type, slot);
@@ -226,35 +226,35 @@ void Hero::equipFromInv (const int& slot) {
         remove = true;
     switch (type) {
         case itemType::Helmet: {
-            helmetslot = item;
+            m_helmet_slot = item;
             break;
         }
         case itemType::Chestplate: {
-            chestplateslot = item;
+            m_chestplate_slot = item;
             break;
         }
         case itemType::Necklace: {
-            necklaceslot = item;
+            m_necklace_slot = item;
             break;
         }
         case itemType::Gloves: {
-            glovesslot = item;
+            m_gloves_slot = item;
             break;
         }
         case itemType::Ring: {
-            ringslot = item;
+            m_ring_slot = item;
             break;
         }
         case itemType::Leggings: {
-            leggingsslot = item;
+            m_leggings_slot = item;
             break;
         }
         case itemType::Boots: {
-            bootsslot = item;
+            m_boots_slot = item;
             break;
         }
         case itemType::Weapon: {
-            weaponslot = item;
+            m_weapon_slot = item;
             break;
         }
     }
@@ -267,42 +267,42 @@ void Hero::equipFromInv (const int& slot) {
 bool Hero::checkIfEqp (itemType type) const {
     switch (type) {
         case itemType::Helmet: {
-            if (helmetslot)
+            if (m_helmet_slot)
                 return true;
             break;
         }
         case itemType::Chestplate: {
-            if (chestplateslot)
+            if (m_chestplate_slot)
                 return true;
             break;
         }
         case itemType::Necklace: {
-            if (necklaceslot)
+            if (m_necklace_slot)
                 return true;
             break;
         }
         case itemType::Gloves: {
-            if (glovesslot)
+            if (m_gloves_slot)
                 return true;
             break;
         }
         case itemType::Ring: {
-            if (ringslot)
+            if (m_ring_slot)
                 return true;
             break;
         }
         case itemType::Leggings: {
-            if (leggingsslot)
+            if (m_leggings_slot)
                 return true;
             break;
         }
         case itemType::Boots: {
-            if (bootsslot)
+            if (m_boots_slot)
                 return true;
             break;
         }
         case itemType::Weapon: {
-            if (weaponslot)
+            if (m_weapon_slot)
                 return true;
             break;
         }
@@ -314,78 +314,78 @@ bool Hero::checkIfEqp (itemType type) const {
 
 void Hero::unequip (const itemType type, int slot) {
     if (slot < 0)
-        slot = heroInv.get1stAvailableSlot();
+        slot = m_inventory.get1stAvailableSlot();
     itemStats stats = Item(0).getStats();
     switch (type) {
         case itemType::Helmet: {
-            if (helmetslot) {
-                stats = helmetslot->getStats();
-                heroInv.m_inventory[slot] = *helmetslot;
-                helmetslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_helmet_slot) {
+                stats = m_helmet_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_helmet_slot;
+                m_helmet_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Chestplate: {
-            if (chestplateslot) {
-                stats = chestplateslot->getStats();
-                heroInv.m_inventory[slot] = *chestplateslot;
-                chestplateslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_chestplate_slot) {
+                stats = m_chestplate_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_chestplate_slot;
+                m_chestplate_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Necklace: {
-            if (necklaceslot) {
-                stats = necklaceslot->getStats();
-                heroInv.m_inventory[slot] = *necklaceslot;
-                necklaceslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_necklace_slot) {
+                stats = m_necklace_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_necklace_slot;
+                m_necklace_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Gloves: {
-            if (glovesslot) {
-                stats = glovesslot->getStats();
-                heroInv.m_inventory[slot] = *glovesslot;
-                glovesslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_gloves_slot) {
+                stats = m_gloves_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_gloves_slot;
+                m_gloves_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Ring: {
-            if (ringslot) {
-                stats = ringslot->getStats();
-                heroInv.m_inventory[slot] = *ringslot;
-                ringslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_ring_slot) {
+                stats = m_ring_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_ring_slot;
+                m_ring_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Leggings: {
-            if (leggingsslot) {
-                stats = leggingsslot->getStats();
-                heroInv.m_inventory[slot] = *leggingsslot;
-                leggingsslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_leggings_slot) {
+                stats = m_leggings_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_leggings_slot;
+                m_leggings_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Boots: {
-            if (bootsslot) {
-                stats = bootsslot->getStats();
-                heroInv.m_inventory[slot] = *bootsslot;
-                bootsslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_boots_slot) {
+                stats = m_boots_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_boots_slot;
+                m_boots_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
         case itemType::Weapon: {
-            if (weaponslot) {
-                stats = weaponslot->getStats();
-                heroInv.m_inventory[slot] = *weaponslot;
-                weaponslot.reset();
-                heroInv.removeAvaiableSlot(slot);
+            if (m_weapon_slot) {
+                stats = m_weapon_slot->getStats();
+                m_inventory.m_inventory[slot] = *m_weapon_slot;
+                m_weapon_slot.reset();
+                m_inventory.removeAvaiableSlot(slot);
             }
             break;
         }
@@ -406,41 +406,28 @@ void Hero::updateStats (itemStats stats, bool equip) {
     hero_stats.speed += stats.speed * mod;
 }
 
-void Hero::lvlup () {
+bool Hero::lvlup () {
     Stats stat = getStats();
     StatsIncrese incstats = getStatsInc();
     int exp_treshold = 5 * pow(stat.lvl, 2.2) + 25;
     if (exp >= exp_treshold) {
         exp -= exp_treshold;
         stat.lvl++;
-        std::cout << "\nCongratulations! You have leveled up to level " << stat.lvl << "!\n" << std::endl;
-        std::cout << "Atk: " << stat.ad << " + " << incstats.ad_inc << std::endl;
-        std::cout << "Def: " << stat.def << " + " << incstats.def_inc << std::endl;
-        std::cout << "HP: " << stat.base_hp << " + " << incstats.base_HP_inc * stat.lvl << std::endl;
-        std::cout << "Mana: " << stat.mana << " + " << incstats.mana_inc << std::endl;
-        std::cout << "Gold Coins: " << current_gold << " + " << 5 * stat.lvl << std::endl;
-        std::cout << "\nHP and mana restored." << std::endl;
 
         stat.ad += incstats.ad_inc;
         stat.base_hp += incstats.base_HP_inc * stat.lvl;
         stat.def += incstats.def_inc;
         stat.mana += incstats.mana_inc;
-        current_gold += 5 * stat.lvl;
+
+        m_current_gold += 5 * stat.lvl;
+
         setCurrentHP(stat.base_hp);
-        currentmana = stat.mana;
-        if (stat.lvl == 2) {
-            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
-            std::cout << "\n\nYou have unlocked:\n  - Potions\n  - Items" << std::endl;
-        }
-        if (stat.lvl == 5) {
-            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
-            std::cout << "\n\nYou have unlocked:\n  - Potion of Mana Regeneration" << std::endl;
-        }
-        if (stat.lvl == 8) {
-            std::cout << "\n-------------------------------------------------------------------------------------------------------------------------------" << std::endl;
-            std::cout << "\n\nYou have unlocked:\n  - Potion of Fast Action\n  - Uncommon Items" << std::endl;
-        }
+        m_current_mana = stat.mana;
+
+        setStats(stat);
+        return true;
     }
+    return false;
 }
 
 int Hero::getDamaged (Enemy*& enemy, const DamageType& type) {
@@ -506,15 +493,15 @@ void Hero::pray () {
 }
 
 void Hero::goldInc (int gold) {
-    current_gold += gold;
+    m_current_gold += gold;
 }
 
 void Hero::setCurrentGold (int gold) {
-    current_gold = gold;
+    m_current_gold = gold;
 }
 
 int Hero::getCurrentGold () const {
-    return current_gold;
+    return m_current_gold;
 }
 
 void Hero::expInc (int experience) {
@@ -530,51 +517,51 @@ int Hero::getCurrentExp () const {
 }
 
 void Hero::prologueSet (bool isPrologue) {
-    prologue = isPrologue;
+    m_prologue_state = isPrologue;
 }
 
 bool Hero::prologueState () const {
-    return prologue;
+    return m_prologue_state;
 }
 
 void Hero::citySet (bool isCity) {
-    firstcity = isCity;
+    m_first_time_city = isCity;
 }
 
 bool Hero::cityState () const {
-    return firstcity;
+    return m_first_time_city;
 }
 
 void Hero::blacksmithSet (bool isBlacksmith) {
-    firstblacksmith = isBlacksmith;
+    m_first_time_blacksmith = isBlacksmith;
 }
 
 bool Hero::blacksmithState () const {
-    return firstblacksmith;
+    return m_first_time_blacksmith;
 }
 
 void Hero::churchSet (bool isChurch) {
-    firstchurch = isChurch;
+    m_first_time_church = isChurch;
 }
 
 bool Hero::churchState () const {
-    return firstchurch;
+    return m_first_time_church;
 }
 
 void Hero::tavernSet (bool isTavern) {
-    firsttavern = isTavern;
+    m_first_time_tavern = isTavern;
 }
 
 bool Hero::tavernState () const {
-    return firsttavern;
+    return m_first_time_tavern;
 }
 
 void Hero::mapSet (bool isMap) {
-    firstmap = isMap;
+    m_first_time_map = isMap;
 }
 
 bool Hero::mapState () const {
-    return firstmap;
+    return m_first_time_map;
 }
 
 void Hero::regen () {
@@ -589,88 +576,88 @@ void Hero::instaHP () {
         setCurrentHP(getMaxHP());
 }
 
-void Hero::manaregen () {
-    currentmana += getLvl();
-    if (currentmana > getMaxMana())
-        currentmana = getMaxMana();
+void Hero::manaRegen () {
+    m_current_mana += getLvl();
+    if (m_current_mana > getMaxMana())
+        m_current_mana = getMaxMana();
 }
 
-void Hero::potionmanaregen () {
-    currentmana += getLvl() / 2;
-    if (currentmana > getMaxMana())
-        currentmana = getMaxMana();
+void Hero::manaRegenPotion () {
+    m_current_mana += getLvl() / 2;
+    if (m_current_mana > getMaxMana())
+        m_current_mana = getMaxMana();
 }
 
 void Hero::setHPpot (int x) {
-    healthpotion += x;
+    m_health_potion_amount += x;
 }
 
 int Hero::getHPpot () const {
-    return healthpotion;
+    return m_health_potion_amount;
 }
 
 void Hero::setManapot (int x) {
-    manapotion += x;
+    m_mana_potion_amount += x;
 }
 
 int Hero::getManapot () const {
-    return manapotion;
+    return m_mana_potion_amount;
 }
 
 void Hero::setHPRegpot (int x) {
-    regenpotion += x;
+    m_regen_potion_amount += x;
 }
 
 int Hero::getHPRegpot () const {
-    return regenpotion;
+    return m_regen_potion_amount;
 }
 
 void Hero::setManapotT (int x) {
-    manapotionT += x;
+    m_mana_potion_time += x;
 }
 
 int Hero::getManapotT () const {
-    return manapotionT;
+    return m_mana_potion_time;
 }
 
 void Hero::setHPRegpotT (int x) {
-    regenpotionT += x;
+    m_regen_potion_time += x;
 }
 
 int Hero::getHPRegpotT () const {
-    return regenpotionT;
+    return m_regen_potion_time;
 }
 
 void Hero::setActionpot (int x) {
-    actionPot += x;
+    m_action_potion_amount += x;
 }
 
 int Hero::getActionpot () const {
-    return actionPot;
+    return m_action_potion_amount;
 }
 
 void Hero::setFastAction (bool isFastAction) {
-    fastaction = isFastAction;
+    m_fast_action = isFastAction;
 }
 
 bool Hero::getFastAction () const {
-    return fastaction;
+    return m_fast_action;
 }
 
 void Hero::setPotionCD () {
-    potionCD = 3;
+    m_potion_cooldown = 3;
 }
 
 int Hero::getPotionCD () const {
-    return potionCD;
+    return m_potion_cooldown;
 }
 
 int Hero::getExtraSlot () const {
-    return extraSlot;
+    return m_extraSlot;
 }
 
 void Hero::setExtraSlot (int extra) {
-    extraSlot = extra;
+    m_extraSlot = extra;
 }
 
 void Hero::save_to_file () {
@@ -678,14 +665,14 @@ void Hero::save_to_file () {
     std::ofstream file(filename);
     int play = this->getPlaytime().asSeconds();
     if (file.is_open()) {
-        file << this->getClass() << "\n" << this->getName() << "\n" << play << "\n" << this->getLvl() << "\n" << this->getMaxHP() << "\n" << this->getAd() << "\n" << this->getDef() << "\n" << this->getMaxMana() << "\n" << this->getSpeed() << "\n" << this->getMaxHPInc() << "\n" << this->getAdInc() << "\n" << this->getDefInc() << "\n" << this->getMaxManaInc() << "\n" << this->getSpeedInc() << "\n" << this->current_gold << "\n" << this->getCurrentHP() << "\n" << this->currentmana << "\n" << this->
+        file << this->getClass() << "\n" << this->getName() << "\n" << play << "\n" << this->getLvl() << "\n" << this->getMaxHP() << "\n" << this->getAd() << "\n" << this->getDef() << "\n" << this->getMaxMana() << "\n" << this->getSpeed() << "\n" << this->getMaxHPInc() << "\n" << this->getAdInc() << "\n" << this->getDefInc() << "\n" << this->getMaxManaInc() << "\n" << this->getSpeedInc() << "\n" << this->m_current_gold << "\n" << this->getCurrentHP() << "\n" << this->m_current_mana << "\n" << this->
                 exp << "\n" << this->prologueState() << "\n" << this->getHPpot() << "\n" << this->getHPRegpot() << "\n" << this->getManapot() << "\n" << this->getActionpot() << "\n" << this->getWeaknessMult(DamageType::MagicEnergy) << "\n" << this->getWeaknessMult(DamageType::MagicFire) << "\n" << this->getWeaknessMult(DamageType::MagicIce) << "\n" << this->getWeaknessMult(DamageType::MagicEarth) << "\n" << this->getWeaknessMult(DamageType::MagicWater) << "\n" << this->
                 getWeaknessMult(DamageType::MagicPoison) << "\n" << this->getWeaknessMult(DamageType::MagicAir) << "\n" << this->getWeaknessMult(DamageType::Physical) << "\n" << this->getWeaknessMult(DamageType::Environment) << "\n" << this->getExtraSlot() << "\n";
 
-        int invSize = this->heroInv.getInvSize() - this->heroInv.getAvaiableAmount();
+        int invSize = this->m_inventory.getInvSize() - this->m_inventory.getAvaiableAmount();
         file << invSize << "\n";
 
-        const auto& inv = this->heroInv.m_inventory;
+        const auto& inv = this->m_inventory.m_inventory;
 
         for (size_t i = 0; i < inv.size(); ++i) {
             const Item& item = inv[i];
@@ -695,58 +682,58 @@ void Hero::save_to_file () {
             }
         }
 
-        if (helmetslot) {
-            itemStats item_stats = helmetslot->getStats();
-            file << "x\n" << helmetslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_helmet_slot) {
+            itemStats item_stats = m_helmet_slot->getStats();
+            file << "x\n" << m_helmet_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOHELMET\n";
 
-        if (necklaceslot) {
-            itemStats item_stats = necklaceslot->getStats();
-            file << "x\n" << necklaceslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_necklace_slot) {
+            itemStats item_stats = m_necklace_slot->getStats();
+            file << "x\n" << m_necklace_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NONECKLACE\n";
 
-        if (chestplateslot) {
-            itemStats item_stats = chestplateslot->getStats();
-            file << "x\n" << chestplateslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_chestplate_slot) {
+            itemStats item_stats = m_chestplate_slot->getStats();
+            file << "x\n" << m_chestplate_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOCHEST\n";
 
-        if (glovesslot) {
-            itemStats item_stats = glovesslot->getStats();
-            file << "x\n" << glovesslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_gloves_slot) {
+            itemStats item_stats = m_gloves_slot->getStats();
+            file << "x\n" << m_gloves_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOGLOVES\n";
 
-        if (ringslot) {
-            itemStats item_stats = ringslot->getStats();
-            file << "x\n" << ringslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_ring_slot) {
+            itemStats item_stats = m_ring_slot->getStats();
+            file << "x\n" << m_ring_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NORING\n";
 
-        if (leggingsslot) {
-            itemStats item_stats = leggingsslot->getStats();
-            file << "x\n" << leggingsslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_leggings_slot) {
+            itemStats item_stats = m_leggings_slot->getStats();
+            file << "x\n" << m_leggings_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOLEGS\n";
 
-        if (bootsslot) {
-            itemStats item_stats = bootsslot->getStats();
-            file << "x\n" << bootsslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_boots_slot) {
+            itemStats item_stats = m_boots_slot->getStats();
+            file << "x\n" << m_boots_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOBOOTS\n";
 
-        if (weaponslot) {
-            itemStats item_stats = weaponslot->getStats();
-            file << "x\n" << weaponslot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
+        if (m_weapon_slot) {
+            itemStats item_stats = m_weapon_slot->getStats();
+            file << "x\n" << m_weapon_slot->getId() << "\n" << item_stats.hp << "\n" << item_stats.ad << "\n" << item_stats.def << "\n" << item_stats.mana << "\n" << item_stats.speed << "\n";
         }
         else
             file << "NOWEAPON\n";
@@ -825,7 +812,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             file >> stats.mana;
             file >> stats.speed;
             item.setStats(stats);
-            hero->heroInv.addItem(item, slot);
+            hero->m_inventory.addItem(item, slot);
         }
         std::string isSlot;
         file >> isSlot;
@@ -837,7 +824,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item helmet(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             helmet.setStats(stats);
-            hero->helmetslot = std::make_optional<Item>(helmet);
+            hero->m_helmet_slot = std::make_optional<Item>(helmet);
         }
         file >> isSlot;
         if (isSlot == "NONECKLACE");
@@ -848,7 +835,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item necklace(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             necklace.setStats(stats);
-            hero->necklaceslot = std::make_optional<Item>(necklace);
+            hero->m_necklace_slot = std::make_optional<Item>(necklace);
         }
         file >> isSlot;
         if (isSlot == "NOCHEST");
@@ -859,7 +846,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item chest(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             chest.setStats(stats);
-            hero->chestplateslot = std::make_optional<Item>(chest);
+            hero->m_chestplate_slot = std::make_optional<Item>(chest);
         }
         file >> isSlot;
         if (isSlot == "NOGLOVES");
@@ -870,7 +857,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item gloves(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             gloves.setStats(stats);
-            hero->glovesslot = std::make_optional<Item>(gloves);
+            hero->m_gloves_slot = std::make_optional<Item>(gloves);
         }
         file >> isSlot;
         if (isSlot == "NORING");
@@ -881,7 +868,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item ring(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             ring.setStats(stats);
-            hero->ringslot = std::make_optional<Item>(ring);
+            hero->m_ring_slot = std::make_optional<Item>(ring);
         }
         file >> isSlot;
         if (isSlot == "NOLEGS");
@@ -892,7 +879,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item leg(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             leg.setStats(stats);
-            hero->leggingsslot = std::make_optional<Item>(leg);
+            hero->m_leggings_slot = std::make_optional<Item>(leg);
         }
         file >> isSlot;
         if (isSlot == "NOBOOTS");
@@ -903,7 +890,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item boots(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             boots.setStats(stats);
-            hero->bootsslot = std::make_optional<Item>(boots);
+            hero->m_boots_slot = std::make_optional<Item>(boots);
         }
         file >> isSlot;
         if (isSlot == "NOWEAPON");
@@ -914,7 +901,7 @@ bool Hero::load_from_file (const std::string filename, Hero*& hero) {
             Item weapon(id);
             file >> stats.hp >> stats.ad >> stats.def >> stats.mana >> stats.speed;
             weapon.setStats(stats);
-            hero->weaponslot = std::make_optional<Item>(weapon);
+            hero->m_weapon_slot = std::make_optional<Item>(weapon);
         }
         hero->setSave(filename);
         hero->startClock();

@@ -30,6 +30,10 @@ Stats Character::getStats () const {
     return m_stats;
 }
 
+void Character::setStats (const Stats& stats) {
+    m_stats = stats;
+}
+
 StatsIncrese Character::getStatsInc () const {
     return m_stats_inc;
 }
@@ -103,4 +107,3 @@ int Character::getAtkTypeNB () const {
 void Character::setAtkTypeNB (int attack_number) {
     m_atk_type_nb = attack_number;
 }
-

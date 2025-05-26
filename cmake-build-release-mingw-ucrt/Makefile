@@ -368,6 +368,30 @@ src/Item.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Item.cpp.s
 .PHONY : src/Item.cpp.s
 
+src/LvlUpPopup.obj: src/LvlUpPopup.cpp.obj
+.PHONY : src/LvlUpPopup.obj
+
+# target to build an object file
+src/LvlUpPopup.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj
+.PHONY : src/LvlUpPopup.cpp.obj
+
+src/LvlUpPopup.i: src/LvlUpPopup.cpp.i
+.PHONY : src/LvlUpPopup.i
+
+# target to preprocess a source file
+src/LvlUpPopup.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.i
+.PHONY : src/LvlUpPopup.cpp.i
+
+src/LvlUpPopup.s: src/LvlUpPopup.cpp.s
+.PHONY : src/LvlUpPopup.s
+
+# target to generate assembly for a file
+src/LvlUpPopup.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.s
+.PHONY : src/LvlUpPopup.cpp.s
+
 src/Slider.obj: src/Slider.cpp.obj
 .PHONY : src/Slider.obj
 
@@ -391,6 +415,30 @@ src/Slider.s: src/Slider.cpp.s
 src/Slider.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Slider.cpp.s
 .PHONY : src/Slider.cpp.s
+
+src/TextCentering.obj: src/TextCentering.cpp.obj
+.PHONY : src/TextCentering.obj
+
+# target to build an object file
+src/TextCentering.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/TextCentering.cpp.obj
+.PHONY : src/TextCentering.cpp.obj
+
+src/TextCentering.i: src/TextCentering.cpp.i
+.PHONY : src/TextCentering.i
+
+# target to preprocess a source file
+src/TextCentering.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/TextCentering.cpp.i
+.PHONY : src/TextCentering.cpp.i
+
+src/TextCentering.s: src/TextCentering.cpp.s
+.PHONY : src/TextCentering.s
+
+# target to generate assembly for a file
+src/TextCentering.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/TextCentering.cpp.s
+.PHONY : src/TextCentering.cpp.s
 
 src/character.obj: src/character.cpp.obj
 .PHONY : src/character.obj
@@ -623,9 +671,15 @@ help:
 	@echo ... src/Item.obj
 	@echo ... src/Item.i
 	@echo ... src/Item.s
+	@echo ... src/LvlUpPopup.obj
+	@echo ... src/LvlUpPopup.i
+	@echo ... src/LvlUpPopup.s
 	@echo ... src/Slider.obj
 	@echo ... src/Slider.i
 	@echo ... src/Slider.s
+	@echo ... src/TextCentering.obj
+	@echo ... src/TextCentering.i
+	@echo ... src/TextCentering.s
 	@echo ... src/character.obj
 	@echo ... src/character.i
 	@echo ... src/character.s

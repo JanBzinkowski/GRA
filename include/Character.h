@@ -46,6 +46,7 @@ class Character {
         float getWeaknessMult (const DamageType& type) const;
 
         Stats getStats () const;
+        void setStats(const Stats& stats);
         StatsIncrese getStatsInc () const;
 
         int getMaxHP () const;

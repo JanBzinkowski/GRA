@@ -45,27 +45,27 @@ class Options {
       if (!loadFromFile())
         saveToFile();
     }
-    bool getTutorials();
+    bool getTutorials() const;
     void setTutorials(bool t);
-    Resolution getResolution();
+    Resolution getResolution() const;
     void setResolution(Resolution r);
-    Mode getMode();
+    Mode getMode() const;
     void setMode(Mode m);
-    FPS getFPS();
+    FPS getFPS() const;
     void setFPS(FPS f);
-    Language getLanguage();
+    Language getLanguage() const;
     void setLanguage(Language l);
-    int getenviromentVolume();
+    int getenviromentVolume() const;
     void setenviromentVolume(int v);
-    int geteffectsVolume();
+    int geteffectsVolume() const;
     void seteffectsVolume(int v);
-    int getmusicVolume();
+    int getmusicVolume() const;
     void setmusicVolume(int v);
-    int getmasterVolume();
+    int getmasterVolume() const;
     void setmasterVolume(int v);
 
     bool loadFromFile();
-    void saveToFile();
+    void saveToFile() const;
 };
 
 #endif //OPTIONS_H

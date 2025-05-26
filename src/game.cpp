@@ -8,7 +8,7 @@
 #include <button.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <fstream>
-
+#include "LvlUpPopup.h"
 #include "HealthBar.h"
 #include "Slider.h"
 #define PotionTime 3
@@ -37,29 +37,40 @@ bool game::areShopsOpen () const {
 }
 
 void game::loss () {
-    std::cout << "You have fainted." << std::endl;
-    std::cout << "Luckily someone found you and brought you to the church, but he wanted half of your gold in exchange." << std::endl;
     hero->setCurrentGold(hero->getCurrentGold() / 2);
     hero->pray();
 }
 
 bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow*& window, sf::Sprite background) {
+    int i = 0;
     std::uniform_int_distribution<> dist(indexmin, indexmax);
     int index = dist(gen);
     Enemy* enemy = createEnemy(enemies.at(index));
+    if (enemy == nullptr) {
+        std::cerr << "Error: Enemy creation failed." << std::endl;
+        return false;
+    }
     enemy->setEXPDrop(exp);
     enemy->setGoldDrop(gold);
-    while (enemy->getLvl() < hero->getLvl() || enemy->getLvl() >= maxlvl) {
+    while (enemy->getLvl() < hero->getLvl() && enemy->getLvl() <= maxlvl) {
         enemy->enemyLvlUp();
         enemy->setCurrentHP(enemy->getMaxHP());
     }
     int res = fight(enemy, window);
+    bool lvl_up_flag_1=false;
+    bool lvl_up_flag_2=false;
     if (res == 0) {
         loss();
         return false;
     }
+    else if (res == 2) {
+        lvl_up_flag_1 = true;
+    }
 
     HUD gui(hero, &time);
+
+    LvlUpPopup lvl_up_popup(hero, font, option, window);
+    lvl_up_popup.updateText(window);
 
     Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
     Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
@@ -71,21 +82,36 @@ bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, 
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (arrow_l.isPressed(mousePos)) {
+            if (lvl_up_flag_1) {
+                    while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                    lvl_up_popup.updateText(window, true);
+                    lvl_up_flag_1 = false;
+                lvl_up_flag_2 = true;
+            }
+            else if (lvl_up_flag_2) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                lvl_up_flag_2 = false;
+            }
+            else if (arrow_l.isPressed(mousePos) && !lvl_up_flag_1 && !lvl_up_flag_2) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::City);
                 return false;
             }
-            else if (arrow_r.isPressed(mousePos)) {
+            else if (arrow_r.isPressed(mousePos) && !lvl_up_flag_1 && !lvl_up_flag_2) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 return true;
             }
         }
         window->clear();
         window->draw(background);
-        window->draw(arrow_l);
-        window->draw(arrow_r);
         window->draw(gui);
+        if (lvl_up_flag_1 || lvl_up_flag_2) {
+            window->draw(lvl_up_popup);
+        }
+        else {
+            window->draw(arrow_l);
+            window->draw(arrow_r);
+        }
         window->display();
     }
     return true;
@@ -117,9 +143,9 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         enemy3->enemyLvlUp();
         enemy3->setCurrentHP(enemy3->getMaxHP());
     }
-    std::cout << "Watch out! You have been attacked by " << enemy1->getName() << " (Lvl " << enemy1->getLvl() << ")" << enemy2->getName() << " (Lvl " << enemy2->getLvl() << ")" << enemy3->getName() << " (Lvl " << enemy3->getLvl() << ")!" << std::endl;
 
-
+    bool lvl_up_flag_1=false;
+    bool lvl_up_flag_2=false;
     int res = fight3(enemy1, enemy2, enemy3, window);
     if (res == 0) {
         loss();
@@ -128,8 +154,14 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         enemy3 = nullptr;
         return false;
     }
+    else if (res == 2) {
+        lvl_up_flag_1 = true;
+    }
 
     HUD gui(hero, &time);
+
+    LvlUpPopup lvl_up_popup(hero, font, option, window);
+    lvl_up_popup.updateText(window);
 
     Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
     Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
@@ -141,7 +173,17 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            if (arrow_l.isPressed(mousePos)) {
+            if (lvl_up_flag_1) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                lvl_up_popup.updateText(window, true);
+                lvl_up_flag_1 = false;
+                lvl_up_flag_2 = true;
+            }
+            else if (lvl_up_flag_2) {
+                while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+                lvl_up_flag_2 = false;
+            }
+            else if (arrow_l.isPressed(mousePos) && !lvl_up_flag_1 && !lvl_up_flag_2) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 setLocation(Location::City);
                 enemy1 = nullptr;
@@ -149,7 +191,7 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
                 enemy3 = nullptr;
                 return false;
             }
-            else if (arrow_r.isPressed(mousePos)) {
+            else if (arrow_r.isPressed(mousePos) && !lvl_up_flag_1 && !lvl_up_flag_2) {
                 while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
                 enemy1 = nullptr;
                 enemy2 = nullptr;
@@ -159,8 +201,13 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         }
         window->clear();
         window->draw(background);
-        window->draw(arrow_l);
-        window->draw(arrow_r);
+        if (lvl_up_flag_1 || lvl_up_flag_2) {
+            window->draw(lvl_up_popup);
+        }
+        else {
+            window->draw(arrow_l);
+            window->draw(arrow_r);
+        }
         window->draw(gui);
         window->display();
     }
@@ -172,31 +219,14 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
 
 void game::lvl0 (sf::RenderWindow* window) {
     time.pause();
-    std::cout << "Currently playing: Tutorial" << std::endl;
     Enemy* enemy1 = createEnemy(enemies.at(0));
     enemy1->setEXPDrop(30);
     enemy1->setGoldDrop(10);
 
-
-    std::cout << "One day when you have been laying under an old oak tree in the middle of plains nearby the city you heard loud crack and scream..." << std::endl;
-
-    std::cout << "\nYou rushed to the source of all that noise to see what is going on." << std::endl;
-
-    std::cout << "\nYou found the King, whose carriage just broke down. The king seemed distressed so you came closer." << std::endl;
-
-    std::cout << "\nThe King got attacked by a bunny. But there was something wrong with that bunny... You came to help and then the Killer Bunny attacked you." << std::endl;
-
     if (fight(enemy1, window) == 0) {
         if (getLocation() != Location::MainMenu && getLocation() != Location::Quit) {
-            std::cout << "Sadly you have been badly injured by your enemy." << std::endl;
-            std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
-            std::cout << "\nBut won or lost, this fight taught you various things. You gain 6XP." << std::endl;
             hero->expInc(30);
             hero->lvlup();
-            std::cout << "You have been brought to the church." << std::endl;
-            std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
-            std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
-            std::cout << "\nBut remember that it won't happen again." << std::endl;
             hero->goldInc(20);
             hero->pray();
         }
@@ -204,7 +234,6 @@ void game::lvl0 (sf::RenderWindow* window) {
             return;
     }
     else {
-        std::cout << "Watch out! New wave of enemies incoming!" << std::endl;
         Enemy* enemy2 = createEnemy(enemies.at(1));
         enemy2->setEXPDrop(20);
         enemy2->setGoldDrop(10);
@@ -217,12 +246,6 @@ void game::lvl0 (sf::RenderWindow* window) {
 
         if (fight3(enemy2, enemy3, enemy4, window) == 0) {
             if (getLocation() != Location::MainMenu && getLocation() != Location::Quit) {
-                std::cout << "Sadly you have been badly injured by your enemies." << std::endl;
-                std::cout << "\nLuckily King's guards came in time to save both you and the King." << std::endl;
-                std::cout << "You have been brought to the church." << std::endl;
-                std::cout << "\nMonks took care of u and you made a full recovery." << std::endl;
-                std::cout << "\nKing paid for all of the expenses and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
-                std::cout << "\nBut remember that it won't happen again." << std::endl;
                 hero->goldInc(20);
                 hero->pray();
             }
@@ -230,10 +253,6 @@ void game::lvl0 (sf::RenderWindow* window) {
                 return;
         }
         else {
-            std::cout << "\nKing's guards came to save both you and the King." << std::endl;
-            std::cout << "\nThey escorted you to the city." << std::endl;
-            std::cout << "\nKing thanked you and gave you 20 Gold Coins as a reward for your bravery." << std::endl;
-            std::cout << "\nThe King departed with his guards towards the castle." << std::endl;
             hero->goldInc(20);
         }
         hero->prologueSet(true);
@@ -267,9 +286,10 @@ void game::forest (sf::RenderWindow* window) {
         return;
     if (!enemyenc(4, 8, 10, 15, 10, window, bg))
         return;
-    std::cout << "Huge wave of enemies ahead!" << std::endl;
+
     if (!enemyenc3(9, 12, 14, 20, 10, window, bg))
         return;
+
     if (!enemyenc(7, 12, 14, 20, 10, window, bg))
         return;
     if (!enemyenc(7, 12, 14, 20, 10, window, bg))
@@ -409,7 +429,7 @@ int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
                 hero->setHPRegpotT(-1);
             }
             if (hero->getManapotT() > 0) {
-                hero->manaregen();
+                hero->manaRegen();
                 hero->setManapotT(-1);
             }
             regenHandled = true;
@@ -454,11 +474,11 @@ int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
             enemy = nullptr;
             delete enemy;
             if (win) {
+                if(hero->lvlup())
+                    return 2;
                 return 1;
             }
-            else {
-                return 0;
-            }
+            return 0;
         }
 
         window->clear();
@@ -626,7 +646,7 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
                 hero->setHPRegpotT(-1);
             }
             if (hero->getManapotT() > 0) {
-                hero->manaregen();
+                hero->manaRegen();
                 hero->setManapotT(-1);
             }
             regenHandled = true;
@@ -686,11 +706,11 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
             enemy = nullptr;
             delete enemy;
             if (win) {
+                if(hero->lvlup())
+                    return 2;
                 return 1;
             }
-            else {
-                return 0;
-            }
+            return 0;
         }
 
         window->clear();
@@ -733,7 +753,6 @@ void game::fightEnd (Enemy*& enemy) {
     if (enemy->getCurrentHP() <= 0) {
         hero->expInc(enemy->getEXPDrop());
         hero->goldInc(enemy->getGoldDrop());
-        hero->lvlup();
     }
 }
 

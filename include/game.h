@@ -114,6 +114,7 @@ class game {
         bool retcity ();
         bool enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow*& window, sf::Sprite background);
         bool enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl, sf::RenderWindow* window, sf::Sprite background);
+
         void lvl0 (sf::RenderWindow* window);
         void forest (sf::RenderWindow* window);
 

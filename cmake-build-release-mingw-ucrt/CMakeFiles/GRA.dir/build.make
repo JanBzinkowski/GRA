@@ -218,11 +218,26 @@ CMakeFiles/GRA.dir/src/Item.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GRA.dir/src/Item.cpp.s"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\janek\Desktop\gra\GRA\src\Item.cpp -o CMakeFiles\GRA.dir\src\Item.cpp.s
 
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj: CMakeFiles/GRA.dir/flags.make
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/LvlUpPopup.cpp
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj -MF CMakeFiles\GRA.dir\src\LvlUpPopup.cpp.obj.d -o CMakeFiles\GRA.dir\src\LvlUpPopup.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\LvlUpPopup.cpp
+
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.i"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\janek\Desktop\gra\GRA\src\LvlUpPopup.cpp > CMakeFiles\GRA.dir\src\LvlUpPopup.cpp.i
+
+CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.s"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\janek\Desktop\gra\GRA\src\LvlUpPopup.cpp -o CMakeFiles\GRA.dir\src\LvlUpPopup.cpp.s
+
 CMakeFiles/GRA.dir/src/Slider.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/Slider.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/Slider.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/Slider.cpp
 CMakeFiles/GRA.dir/src/Slider.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/GRA.dir/src/Slider.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/GRA.dir/src/Slider.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/Slider.cpp.obj -MF CMakeFiles\GRA.dir\src\Slider.cpp.obj.d -o CMakeFiles\GRA.dir\src\Slider.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\Slider.cpp
 
 CMakeFiles/GRA.dir/src/Slider.cpp.i: cmake_force
@@ -233,11 +248,26 @@ CMakeFiles/GRA.dir/src/Slider.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GRA.dir/src/Slider.cpp.s"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\janek\Desktop\gra\GRA\src\Slider.cpp -o CMakeFiles\GRA.dir\src\Slider.cpp.s
 
+CMakeFiles/GRA.dir/src/TextCentering.cpp.obj: CMakeFiles/GRA.dir/flags.make
+CMakeFiles/GRA.dir/src/TextCentering.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
+CMakeFiles/GRA.dir/src/TextCentering.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/TextCentering.cpp
+CMakeFiles/GRA.dir/src/TextCentering.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/GRA.dir/src/TextCentering.cpp.obj"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/TextCentering.cpp.obj -MF CMakeFiles\GRA.dir\src\TextCentering.cpp.obj.d -o CMakeFiles\GRA.dir\src\TextCentering.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\TextCentering.cpp
+
+CMakeFiles/GRA.dir/src/TextCentering.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GRA.dir/src/TextCentering.cpp.i"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\janek\Desktop\gra\GRA\src\TextCentering.cpp > CMakeFiles\GRA.dir\src\TextCentering.cpp.i
+
+CMakeFiles/GRA.dir/src/TextCentering.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GRA.dir/src/TextCentering.cpp.s"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\janek\Desktop\gra\GRA\src\TextCentering.cpp -o CMakeFiles\GRA.dir\src\TextCentering.cpp.s
+
 CMakeFiles/GRA.dir/src/character.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/character.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/character.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/character.cpp
 CMakeFiles/GRA.dir/src/character.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/GRA.dir/src/character.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/GRA.dir/src/character.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/character.cpp.obj -MF CMakeFiles\GRA.dir\src\character.cpp.obj.d -o CMakeFiles\GRA.dir\src\character.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\character.cpp
 
 CMakeFiles/GRA.dir/src/character.cpp.i: cmake_force
@@ -252,7 +282,7 @@ CMakeFiles/GRA.dir/src/dmgtype.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/dmgtype.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/dmgtype.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/dmgtype.cpp
 CMakeFiles/GRA.dir/src/dmgtype.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/GRA.dir/src/dmgtype.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/GRA.dir/src/dmgtype.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/dmgtype.cpp.obj -MF CMakeFiles\GRA.dir\src\dmgtype.cpp.obj.d -o CMakeFiles\GRA.dir\src\dmgtype.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\dmgtype.cpp
 
 CMakeFiles/GRA.dir/src/dmgtype.cpp.i: cmake_force
@@ -267,7 +297,7 @@ CMakeFiles/GRA.dir/src/game.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/game.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/game.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/game.cpp
 CMakeFiles/GRA.dir/src/game.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/GRA.dir/src/game.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/GRA.dir/src/game.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/game.cpp.obj -MF CMakeFiles\GRA.dir\src\game.cpp.obj.d -o CMakeFiles\GRA.dir\src\game.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\game.cpp
 
 CMakeFiles/GRA.dir/src/game.cpp.i: cmake_force
@@ -282,7 +312,7 @@ CMakeFiles/GRA.dir/src/global.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/global.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/global.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/global.cpp
 CMakeFiles/GRA.dir/src/global.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/GRA.dir/src/global.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/GRA.dir/src/global.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/global.cpp.obj -MF CMakeFiles\GRA.dir\src\global.cpp.obj.d -o CMakeFiles\GRA.dir\src\global.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\global.cpp
 
 CMakeFiles/GRA.dir/src/global.cpp.i: cmake_force
@@ -297,7 +327,7 @@ CMakeFiles/GRA.dir/src/itemMap.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/itemMap.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/itemMap.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/itemMap.cpp
 CMakeFiles/GRA.dir/src/itemMap.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/GRA.dir/src/itemMap.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/GRA.dir/src/itemMap.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/itemMap.cpp.obj -MF CMakeFiles\GRA.dir\src\itemMap.cpp.obj.d -o CMakeFiles\GRA.dir\src\itemMap.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\itemMap.cpp
 
 CMakeFiles/GRA.dir/src/itemMap.cpp.i: cmake_force
@@ -312,7 +342,7 @@ CMakeFiles/GRA.dir/src/itemType.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/itemType.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/itemType.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/itemType.cpp
 CMakeFiles/GRA.dir/src/itemType.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/GRA.dir/src/itemType.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/GRA.dir/src/itemType.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/itemType.cpp.obj -MF CMakeFiles\GRA.dir\src\itemType.cpp.obj.d -o CMakeFiles\GRA.dir\src\itemType.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\itemType.cpp
 
 CMakeFiles/GRA.dir/src/itemType.cpp.i: cmake_force
@@ -327,7 +357,7 @@ CMakeFiles/GRA.dir/src/main.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/main.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/main.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/main.cpp
 CMakeFiles/GRA.dir/src/main.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/GRA.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/GRA.dir/src/main.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/main.cpp.obj -MF CMakeFiles\GRA.dir\src\main.cpp.obj.d -o CMakeFiles\GRA.dir\src\main.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\main.cpp
 
 CMakeFiles/GRA.dir/src/main.cpp.i: cmake_force
@@ -342,7 +372,7 @@ CMakeFiles/GRA.dir/src/options.cpp.obj: CMakeFiles/GRA.dir/flags.make
 CMakeFiles/GRA.dir/src/options.cpp.obj: CMakeFiles/GRA.dir/includes_CXX.rsp
 CMakeFiles/GRA.dir/src/options.cpp.obj: C:/Users/janek/Desktop/gra/GRA/src/options.cpp
 CMakeFiles/GRA.dir/src/options.cpp.obj: CMakeFiles/GRA.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/GRA.dir/src/options.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/GRA.dir/src/options.cpp.obj"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRA.dir/src/options.cpp.obj -MF CMakeFiles\GRA.dir\src\options.cpp.obj.d -o CMakeFiles\GRA.dir\src\options.cpp.obj -c C:\Users\janek\Desktop\gra\GRA\src\options.cpp
 
 CMakeFiles/GRA.dir/src/options.cpp.i: cmake_force
@@ -365,7 +395,9 @@ GRA_OBJECTS = \
 "CMakeFiles/GRA.dir/src/Hero.cpp.obj" \
 "CMakeFiles/GRA.dir/src/Inventory.cpp.obj" \
 "CMakeFiles/GRA.dir/src/Item.cpp.obj" \
+"CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj" \
 "CMakeFiles/GRA.dir/src/Slider.cpp.obj" \
+"CMakeFiles/GRA.dir/src/TextCentering.cpp.obj" \
 "CMakeFiles/GRA.dir/src/character.cpp.obj" \
 "CMakeFiles/GRA.dir/src/dmgtype.cpp.obj" \
 "CMakeFiles/GRA.dir/src/game.cpp.obj" \
@@ -388,7 +420,9 @@ C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/HealthBar.cpp
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/Hero.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/Inventory.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/Item.cpp.obj
+C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/LvlUpPopup.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/Slider.cpp.obj
+C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/TextCentering.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/character.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/dmgtype.cpp.obj
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/src/game.cpp.obj
@@ -406,7 +440,7 @@ C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: C:/SFML/SFML-3.0.0/lib/libsfml-syste
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/linkLibs.rsp
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/objects1.rsp
 C:/Users/janek/Desktop/gra/GRA/bin/GRA.exe: CMakeFiles/GRA.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Linking CXX executable C:\Users\janek\Desktop\gra\GRA\bin\GRA.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX executable C:\Users\janek\Desktop\gra\GRA\bin\GRA.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\GRA.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
