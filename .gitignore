@@ -1,5 +1,6 @@
 /.idea/
 /cmake-build-debug/
 /cmake-build-release/
-CMakeLists.txt
+/cmake-build-release-mingw-ucrt/
 /src/cmake-build-debug/
+/bin/GRA.exe

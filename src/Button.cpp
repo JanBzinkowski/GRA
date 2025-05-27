@@ -1,26 +1,44 @@
+#include <Hero.h>
+
 #include "button.h"
 
-bool Button::isPressed (const sf::Vector2i& mousePos) {
-    sf::FloatRect bounds = sprite->getGlobalBounds();
-    return bounds.contains(static_cast<sf::Vector2f>(mousePos));
+bool Button::isPressed (const sf::Vector2i& mouse_position) {
+    sf::FloatRect bounds = m_sprite->getGlobalBounds();
+    return bounds.contains(static_cast<sf::Vector2f>(mouse_position));
 }
 
-void Button::setTexture (const sf::Texture& texture) {
-    sprite->setTexture(texture);
+void Button::setNewTexture (const sf::Texture& new_texture) {
+    m_sprite->setTexture(new_texture);
 }
 
-void Button::setTextureFile (const std::string& filePath) {
-    if (!texture.loadFromFile(filePath)) {
-        std::cerr << "Failed to load texture from file: " << filePath << std::endl;
-        throw std::runtime_error("Failed to load texture from file: " + filePath);
+void Button::setNewTexturePath (const std::string& new_file_path) {
+    if (!m_texture->loadFromFile(new_file_path)) {
+        std::cerr << "Failed to load texture from file: " << new_file_path << std::endl;
+        throw std::runtime_error("Failed to load texture from file: " + new_file_path);
     }
-    setTexture(texture);
+    setNewTexture(*m_texture);
 }
 
-void Button::setPosition (const sf::Vector2f& pos) {
-    sprite->setPosition({scale * pos.x, scale * pos.y});
+void Button::setPosition (const sf::Vector2f& new_position) {
+    m_sprite->setPosition({m_scale * new_position.x, m_scale * new_position.y});
 }
 
 sf::Vector2f Button::getPosition () {
-    return sprite->getPosition();
+    return m_sprite->getPosition();
+}
+
+Button::Button (float x, float y, sf::RenderWindow*& window, const std::string& file_path) {
+    m_scale = window->getSize().y/360.f;
+    m_texture = std::make_unique<sf::Texture>();
+    if (!m_texture->loadFromFile(file_path)) {
+        std::cerr << "Failed to load texture from file: " << file_path << std::endl;
+        throw std::runtime_error("Failed to load texture from file: " + file_path);
+    }
+    m_sprite = std::make_unique<sf::Sprite>(*m_texture);
+    m_sprite->setPosition({m_scale * x, m_scale * y});
+    m_sprite->scale({m_scale, m_scale});
+}
+
+void Button::draw (sf::RenderTarget& target, sf::RenderStates states) const {
+    target.draw(*m_sprite, states);
 }
