@@ -29,6 +29,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.30.4/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.30.4/CMakeRCCompiler.cmake"
   "CMakeFiles/3.30.4/CMakeSystem.cmake"
+  "C:/Users/janek/Desktop/gra/install/lib/cmake/GraLib/GraLibConfig-release.cmake"
+  "C:/Users/janek/Desktop/gra/install/lib/cmake/GraLib/GraLibConfig.cmake"
   "C:/mingw64/share/cmake-3.30/Modules/CMakeCInformation.cmake"
   "C:/mingw64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake"
   "C:/mingw64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake"

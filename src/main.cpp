@@ -3,9 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include "game.h"
 #include "options.h"
+#include "itemMap.h"
+#include "itemMapInit.h"
 
 
 int main () {
+    setItemData(itemDataMap);
     Options option;
     sf::Vector2u windowsize;
     if (option.getResolution() == Resolution::p1080) {

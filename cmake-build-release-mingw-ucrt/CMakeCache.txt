@@ -248,6 +248,9 @@ GRA_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 GRA_SOURCE_DIR:STATIC=C:/Users/janek/Desktop/gra/GRA
 
+//The directory containing a CMake configuration file for GraLib.
+GraLib_DIR:PATH=GraLib_DIR-NOTFOUND
+
 //The directory containing a CMake configuration file for SFML.
 SFML_DIR:PATH=C:/SFML/SFML-3.0.0/lib/cmake/SFML
 

@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <memory>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
@@ -13,6 +14,7 @@ class HealthBar: public sf::Drawable {
         void draw (sf::RenderTarget& target, sf::RenderStates states) const override;
 
     private:
+        float m_scale = 1.f;
         sf::Texture texture;
         sf::RectangleShape red;
         sf::RectangleShape white;
@@ -20,7 +22,7 @@ class HealthBar: public sf::Drawable {
         Character* person;
 
     public:
-        HealthBar (float x, float y, Character* hero);
+        HealthBar (float x, float y, sf::RenderWindow*& window, Character* hero);
         void updateRed ();
 };
 

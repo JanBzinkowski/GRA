@@ -152,54 +152,6 @@ src/Button.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Button.cpp.s
 .PHONY : src/Button.cpp.s
 
-src/DamageCalculation.obj: src/DamageCalculation.cpp.obj
-.PHONY : src/DamageCalculation.obj
-
-# target to build an object file
-src/DamageCalculation.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.obj
-.PHONY : src/DamageCalculation.cpp.obj
-
-src/DamageCalculation.i: src/DamageCalculation.cpp.i
-.PHONY : src/DamageCalculation.i
-
-# target to preprocess a source file
-src/DamageCalculation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.i
-.PHONY : src/DamageCalculation.cpp.i
-
-src/DamageCalculation.s: src/DamageCalculation.cpp.s
-.PHONY : src/DamageCalculation.s
-
-# target to generate assembly for a file
-src/DamageCalculation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/DamageCalculation.cpp.s
-.PHONY : src/DamageCalculation.cpp.s
-
-src/Enemy.obj: src/Enemy.cpp.obj
-.PHONY : src/Enemy.obj
-
-# target to build an object file
-src/Enemy.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Enemy.cpp.obj
-.PHONY : src/Enemy.cpp.obj
-
-src/Enemy.i: src/Enemy.cpp.i
-.PHONY : src/Enemy.i
-
-# target to preprocess a source file
-src/Enemy.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Enemy.cpp.i
-.PHONY : src/Enemy.cpp.i
-
-src/Enemy.s: src/Enemy.cpp.s
-.PHONY : src/Enemy.s
-
-# target to generate assembly for a file
-src/Enemy.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Enemy.cpp.s
-.PHONY : src/Enemy.cpp.s
-
 src/EnemyMap.obj: src/EnemyMap.cpp.obj
 .PHONY : src/EnemyMap.obj
 
@@ -223,30 +175,6 @@ src/EnemyMap.s: src/EnemyMap.cpp.s
 src/EnemyMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/EnemyMap.cpp.s
 .PHONY : src/EnemyMap.cpp.s
-
-src/GameTime.obj: src/GameTime.cpp.obj
-.PHONY : src/GameTime.obj
-
-# target to build an object file
-src/GameTime.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/GameTime.cpp.obj
-.PHONY : src/GameTime.cpp.obj
-
-src/GameTime.i: src/GameTime.cpp.i
-.PHONY : src/GameTime.i
-
-# target to preprocess a source file
-src/GameTime.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/GameTime.cpp.i
-.PHONY : src/GameTime.cpp.i
-
-src/GameTime.s: src/GameTime.cpp.s
-.PHONY : src/GameTime.s
-
-# target to generate assembly for a file
-src/GameTime.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/GameTime.cpp.s
-.PHONY : src/GameTime.cpp.s
 
 src/HUD.obj: src/HUD.cpp.obj
 .PHONY : src/HUD.obj
@@ -295,78 +223,6 @@ src/HealthBar.s: src/HealthBar.cpp.s
 src/HealthBar.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/HealthBar.cpp.s
 .PHONY : src/HealthBar.cpp.s
-
-src/Hero.obj: src/Hero.cpp.obj
-.PHONY : src/Hero.obj
-
-# target to build an object file
-src/Hero.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Hero.cpp.obj
-.PHONY : src/Hero.cpp.obj
-
-src/Hero.i: src/Hero.cpp.i
-.PHONY : src/Hero.i
-
-# target to preprocess a source file
-src/Hero.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Hero.cpp.i
-.PHONY : src/Hero.cpp.i
-
-src/Hero.s: src/Hero.cpp.s
-.PHONY : src/Hero.s
-
-# target to generate assembly for a file
-src/Hero.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Hero.cpp.s
-.PHONY : src/Hero.cpp.s
-
-src/Inventory.obj: src/Inventory.cpp.obj
-.PHONY : src/Inventory.obj
-
-# target to build an object file
-src/Inventory.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Inventory.cpp.obj
-.PHONY : src/Inventory.cpp.obj
-
-src/Inventory.i: src/Inventory.cpp.i
-.PHONY : src/Inventory.i
-
-# target to preprocess a source file
-src/Inventory.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Inventory.cpp.i
-.PHONY : src/Inventory.cpp.i
-
-src/Inventory.s: src/Inventory.cpp.s
-.PHONY : src/Inventory.s
-
-# target to generate assembly for a file
-src/Inventory.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Inventory.cpp.s
-.PHONY : src/Inventory.cpp.s
-
-src/Item.obj: src/Item.cpp.obj
-.PHONY : src/Item.obj
-
-# target to build an object file
-src/Item.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Item.cpp.obj
-.PHONY : src/Item.cpp.obj
-
-src/Item.i: src/Item.cpp.i
-.PHONY : src/Item.i
-
-# target to preprocess a source file
-src/Item.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Item.cpp.i
-.PHONY : src/Item.cpp.i
-
-src/Item.s: src/Item.cpp.s
-.PHONY : src/Item.s
-
-# target to generate assembly for a file
-src/Item.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/Item.cpp.s
-.PHONY : src/Item.cpp.s
 
 src/LvlUpPopup.obj: src/LvlUpPopup.cpp.obj
 .PHONY : src/LvlUpPopup.obj
@@ -440,54 +296,6 @@ src/TextCentering.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/TextCentering.cpp.s
 .PHONY : src/TextCentering.cpp.s
 
-src/character.obj: src/character.cpp.obj
-.PHONY : src/character.obj
-
-# target to build an object file
-src/character.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/character.cpp.obj
-.PHONY : src/character.cpp.obj
-
-src/character.i: src/character.cpp.i
-.PHONY : src/character.i
-
-# target to preprocess a source file
-src/character.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/character.cpp.i
-.PHONY : src/character.cpp.i
-
-src/character.s: src/character.cpp.s
-.PHONY : src/character.s
-
-# target to generate assembly for a file
-src/character.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/character.cpp.s
-.PHONY : src/character.cpp.s
-
-src/dmgtype.obj: src/dmgtype.cpp.obj
-.PHONY : src/dmgtype.obj
-
-# target to build an object file
-src/dmgtype.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/dmgtype.cpp.obj
-.PHONY : src/dmgtype.cpp.obj
-
-src/dmgtype.i: src/dmgtype.cpp.i
-.PHONY : src/dmgtype.i
-
-# target to preprocess a source file
-src/dmgtype.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/dmgtype.cpp.i
-.PHONY : src/dmgtype.cpp.i
-
-src/dmgtype.s: src/dmgtype.cpp.s
-.PHONY : src/dmgtype.s
-
-# target to generate assembly for a file
-src/dmgtype.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/dmgtype.cpp.s
-.PHONY : src/dmgtype.cpp.s
-
 src/game.obj: src/game.cpp.obj
 .PHONY : src/game.obj
 
@@ -560,30 +368,6 @@ src/itemMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/itemMap.cpp.s
 .PHONY : src/itemMap.cpp.s
 
-src/itemType.obj: src/itemType.cpp.obj
-.PHONY : src/itemType.obj
-
-# target to build an object file
-src/itemType.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/itemType.cpp.obj
-.PHONY : src/itemType.cpp.obj
-
-src/itemType.i: src/itemType.cpp.i
-.PHONY : src/itemType.i
-
-# target to preprocess a source file
-src/itemType.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/itemType.cpp.i
-.PHONY : src/itemType.cpp.i
-
-src/itemType.s: src/itemType.cpp.s
-.PHONY : src/itemType.s
-
-# target to generate assembly for a file
-src/itemType.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\GRA.dir\build.make CMakeFiles/GRA.dir/src/itemType.cpp.s
-.PHONY : src/itemType.cpp.s
-
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -644,33 +428,15 @@ help:
 	@echo ... src/Button.obj
 	@echo ... src/Button.i
 	@echo ... src/Button.s
-	@echo ... src/DamageCalculation.obj
-	@echo ... src/DamageCalculation.i
-	@echo ... src/DamageCalculation.s
-	@echo ... src/Enemy.obj
-	@echo ... src/Enemy.i
-	@echo ... src/Enemy.s
 	@echo ... src/EnemyMap.obj
 	@echo ... src/EnemyMap.i
 	@echo ... src/EnemyMap.s
-	@echo ... src/GameTime.obj
-	@echo ... src/GameTime.i
-	@echo ... src/GameTime.s
 	@echo ... src/HUD.obj
 	@echo ... src/HUD.i
 	@echo ... src/HUD.s
 	@echo ... src/HealthBar.obj
 	@echo ... src/HealthBar.i
 	@echo ... src/HealthBar.s
-	@echo ... src/Hero.obj
-	@echo ... src/Hero.i
-	@echo ... src/Hero.s
-	@echo ... src/Inventory.obj
-	@echo ... src/Inventory.i
-	@echo ... src/Inventory.s
-	@echo ... src/Item.obj
-	@echo ... src/Item.i
-	@echo ... src/Item.s
 	@echo ... src/LvlUpPopup.obj
 	@echo ... src/LvlUpPopup.i
 	@echo ... src/LvlUpPopup.s
@@ -680,12 +446,6 @@ help:
 	@echo ... src/TextCentering.obj
 	@echo ... src/TextCentering.i
 	@echo ... src/TextCentering.s
-	@echo ... src/character.obj
-	@echo ... src/character.i
-	@echo ... src/character.s
-	@echo ... src/dmgtype.obj
-	@echo ... src/dmgtype.i
-	@echo ... src/dmgtype.s
 	@echo ... src/game.obj
 	@echo ... src/game.i
 	@echo ... src/game.s
@@ -695,9 +455,6 @@ help:
 	@echo ... src/itemMap.obj
 	@echo ... src/itemMap.i
 	@echo ... src/itemMap.s
-	@echo ... src/itemType.obj
-	@echo ... src/itemType.i
-	@echo ... src/itemType.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s

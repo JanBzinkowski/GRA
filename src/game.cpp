@@ -11,6 +11,7 @@
 #include "LvlUpPopup.h"
 #include "HealthBar.h"
 #include "Slider.h"
+#include "itemMap.h"
 #define PotionTime 3
 
 
@@ -67,13 +68,13 @@ bool game::enemyenc (int indexmin, int indexmax, int exp, int gold, int maxlvl, 
         lvl_up_flag_1 = true;
     }
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
 
     LvlUpPopup lvl_up_popup(hero, font, option, window);
     lvl_up_popup.updateText(window);
 
-    Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
+    Button arrow_l(52.f, 145.f, window, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, window, "..\\src\\textures\\GUI\\arrow_key_right.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -158,13 +159,13 @@ bool game::enemyenc3 (int indexmin, int indexmax, int exp, int gold, int maxlvl,
         lvl_up_flag_1 = true;
     }
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
 
     LvlUpPopup lvl_up_popup(hero, font, option, window);
     lvl_up_popup.updateText(window);
 
-    Button arrow_l(52.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 145.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
+    Button arrow_l(52.f, 145.f, window, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 145.f, window, "..\\src\\textures\\GUI\\arrow_key_right.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -329,7 +330,7 @@ int game::enemyaction (Enemy*& enemy, Hero*& hero) {
 }
 
 int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
     sf::Clock clockHero;
     sf::Clock clockEnemy;
     int whofirst;
@@ -348,10 +349,10 @@ int game::fight (Enemy*& enemy, sf::RenderWindow* window) {
     if (whofirst == 1)
         heroAction = true;
 
-    HealthBar enemyBar(395.f, 130.f, enemy);
+    HealthBar enemyBar(395.f, 130.f, window, enemy);
 
-    Button heroGraphics(100.f, 150.f, hero->getPath());
-    Button enemyGraphics(400.f, 150.f, enemy->getPath());
+    Button heroGraphics(100.f, 150.f, window, hero->getPath());
+    Button enemyGraphics(400.f, 150.f, window, enemy->getPath());
     int damage_hero;
     int damage_enemy;
     sf::Text DealtToHero(font, "", 24 * scale);
@@ -510,7 +511,7 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
         return a->getSpeed() > b->getSpeed();
     });
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
     sf::Clock clockHero;
     clockHero.start();
     sf::Clock clockEnemy;
@@ -526,14 +527,14 @@ int game::fight3 (Enemy*& enemy1, Enemy*& enemy2, Enemy*& enemy3, sf::RenderWind
 
     Enemy* enemy = nullptr;
 
-    HealthBar enemyBar1(395.f, 130.f, enemy1);
-    HealthBar enemyBar2(495.f, 130.f, enemy2);
-    HealthBar enemyBar3(295.f, 130.f, enemy3);
+    HealthBar enemyBar1(395.f, 130.f, window, enemy1);
+    HealthBar enemyBar2(495.f, 130.f, window, enemy2);
+    HealthBar enemyBar3(295.f, 130.f, window, enemy3);
 
-    Button heroGraphics(100.f, 150.f, hero->getPath());
-    Button enemy1Graphics(400.f, 150.f, enemy1->getPath());
-    Button enemy2Graphics(500.f, 150.f, enemy2->getPath());
-    Button enemy3Graphics(300.f, 150.f, enemy3->getPath());
+    Button heroGraphics(100.f, 150.f, window, hero->getPath());
+    Button enemy1Graphics(400.f, 150.f, window, enemy1->getPath());
+    Button enemy2Graphics(500.f, 150.f, window, enemy2->getPath());
+    Button enemy3Graphics(300.f, 150.f, window, enemy3->getPath());
 
     int damage_hero;
     int damage_enemy;
@@ -790,16 +791,16 @@ void game::updateBlacksmith () {
 
 void game::church (sf::RenderWindow* window) {
     time.pause();
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
-    Button hppot(122.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
-    Button regenpot(244.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
-    Button manapot(366.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
-    Button actionpot(488.f, 200.f, "..\\src\\textures\\GUI\\20x20frame.png");
-    Button pray(320.f, 70.f, "..\\src\\textures\\GUI\\20x20frame.png");
-    Button h(128.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\hp_potion20x20.png");\
-    Button r(250.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\regen_potion20x20.png");
-    Button m(372.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\mana_potion20x20.png");
-    Button a(494.f, 206.f, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\action_potion20x20.png");
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
+    Button hppot(122.f, 200.f, window, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button regenpot(244.f, 200.f, window, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button manapot(366.f, 200.f, window, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button actionpot(488.f, 200.f, window, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button pray(320.f, 70.f, window, "..\\src\\textures\\GUI\\20x20frame.png");
+    Button h(128.f, 206.f, window, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\hp_potion20x20.png");\
+    Button r(250.f, 206.f, window, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\regen_potion20x20.png");
+    Button m(372.f, 206.f, window, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\mana_potion20x20.png");
+    Button a(494.f, 206.f, window, "..\\src\\textures\\GUI\\AllTimeGui\\potions\\action_potion20x20.png");
 
     if (hero->getLvl() < 2)
         h.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
@@ -811,7 +812,7 @@ void game::church (sf::RenderWindow* window) {
         a.setNewTexturePath("..\\src\\textures\\GUI\\AllTimeGui\\potions\\gui_lock20x20.png");
 
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
             if (event->is<sf::Event::Closed>())
@@ -881,10 +882,10 @@ void game::church (sf::RenderWindow* window) {
 
 void game::tavern (sf::RenderWindow* window) {
     time.pause();
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
-    Button sleep(100.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    Button drink(400.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    HUD gui(hero, &time);
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
+    Button sleep(100.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    Button drink(400.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    HUD gui(hero, &time, window);
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -981,11 +982,11 @@ void game::blacksmith (sf::RenderWindow* window) {
     blacksmith_background.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
 
-    Button arrow_l(281.f, 95.f, "..\\src\\textures\\GUI\\arrow_key_left.png");
-    Button arrow_r(588.f, 95.f, "..\\src\\textures\\GUI\\arrow_key_right.png");
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button arrow_l(281.f, 95.f, window, "..\\src\\textures\\GUI\\arrow_key_left.png");
+    Button arrow_r(588.f, 95.f, window, "..\\src\\textures\\GUI\\arrow_key_right.png");
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
 
     std::vector<Button> items;
     float startX = 377;
@@ -995,7 +996,7 @@ void game::blacksmith (sf::RenderWindow* window) {
     for (int i = 0; i < 6; ++i) {
         float x = startX + (i % 3) * spacingX;
         float y = startY + (i / 3) * spacingY;
-        items.emplace_back(x, y, blacksmithInv[i].getPath());
+        items.emplace_back(x, y, window, blacksmithInv[i].getPath());
     }
 
     std::vector<Button> backpack;
@@ -1005,10 +1006,10 @@ void game::blacksmith (sf::RenderWindow* window) {
     for (int i = 0; i < hero->getInvSize(); ++i) {
         int x = startXinv + spacingXinv * i;
         if (hero->getItemFromInventory(i).getId() > 0) {
-            backpack.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
+            backpack.emplace_back(x, startYinv, window, hero->getItemFromInventory(i).getPath());
         }
         else {
-            backpack.emplace_back(x, startYinv, "..\\src\\textures\\items\\Buty.png");
+            backpack.emplace_back(x, startYinv, window, "..\\src\\textures\\items\\Buty.png");
         }
     }
 
@@ -1037,7 +1038,7 @@ void game::blacksmith (sf::RenderWindow* window) {
     for (size_t i = 0; i < types.size(); ++i) {
         bool has = hero->checkIfEqp(types[i]);
         Item item = has? hero->getItemFromEqp(types[i]) : Item(0);
-        eqp.emplace_back(has, Button(xs[i], ys[i], item.getPath()));
+        eqp.emplace_back(has, Button(xs[i], ys[i], window, item.getPath()));
         texts_eqp.push_back(item.getData());
     }
 
@@ -1433,7 +1434,7 @@ void game::loadBlacksmithInv () {
         for (int i = 0; i < 6; i++) {
             int id;
             file >> id;
-            itemStats stats = itemData.at(id);
+            itemStats stats = itemDataMap.at(id);
             file >> stats.hp;
             file >> stats.ad;
             file >> stats.def;
@@ -1470,9 +1471,9 @@ void game::inventory (sf::RenderWindow* window) {
     inv_bg.scale({scale, scale});
     hover_frame.scale({scale, scale});
 
-    HUD gui(hero, &time);
+    HUD gui(hero, &time, window);
 
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
 
     std::vector<Button> inventory;
     int startXinv = 304;
@@ -1481,9 +1482,9 @@ void game::inventory (sf::RenderWindow* window) {
     for (int i = 0; i < hero->getInvSize(); ++i) {
         int x = startXinv + spacingXinv * i;
         if (hero->getItemFromInventory(i).getId() > 0)
-            inventory.emplace_back(x, startYinv, hero->getItemFromInventory(i).getPath());
+            inventory.emplace_back(x, startYinv, window, hero->getItemFromInventory(i).getPath());
         else
-            inventory.emplace_back(x, startYinv, "..\\src\\textures\\items\\Buty.png");
+            inventory.emplace_back(x, startYinv, window, "..\\src\\textures\\items\\Buty.png");
     }
 
     std::vector<std::string> texts_inv;
@@ -1506,7 +1507,7 @@ void game::inventory (sf::RenderWindow* window) {
     for (size_t i = 0; i < types.size(); ++i) {
         bool has = hero->checkIfEqp(types[i]);
         Item item = has? hero->getItemFromEqp(types[i]) : Item(0);
-        eqp.emplace_back(has, Button(xs[i], ys[i], item.getPath()));
+        eqp.emplace_back(has, Button(xs[i], ys[i], window, item.getPath()));
         texts_eqp.push_back(item.getData());
     }
 
@@ -1681,10 +1682,10 @@ void game::inventory (sf::RenderWindow* window) {
 }
 
 void game::mainMenu (sf::RenderWindow* window) {
-    Button play(170.f, 150.f, "..\\src\\textures\\background\\MainMenu\\PL\\graj_button.png");
-    Button options(170.f, 200.f, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
-    Button quit(470.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
-    Button credits(30.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\podziekowania_button.png");
+    Button play(170.f, 150.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\graj_button.png");
+    Button options(170.f, 200.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
+    Button quit(470.f, 280.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
+    Button credits(30.f, 280.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\podziekowania_button.png");
     if (option.getLanguage() == Language::ENG) {
         play.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\play_button.png");
         options.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
@@ -1780,9 +1781,9 @@ void game::createhero (sf::RenderWindow* window) {
     }
     std::string name = "BlankName";
     sf::Sprite ch(choose);
-    Button mage(240.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\mage.png");
-    Button warr(300.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\warrior.png");
-    Button arch(360.f, 100.f, "..\\src\\textures\\background\\Saves\\classes\\archer.png");
+    Button mage(240.f, 100.f, window, "..\\src\\textures\\background\\Saves\\classes\\mage.png");
+    Button warr(300.f, 100.f, window, "..\\src\\textures\\background\\Saves\\classes\\warrior.png");
+    Button arch(360.f, 100.f, window, "..\\src\\textures\\background\\Saves\\classes\\archer.png");
     ch.setPosition({scale * 170.f, scale * 200});
     ch.scale({scale, scale});
     while (window->isOpen()) {
@@ -1901,22 +1902,22 @@ std::string game::getTextSave (std::string filename) {
 }
 
 void game::saves (sf::RenderWindow* window) {
-    Button s1(110.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
-    Button s2(270.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
-    Button s3(430.f, 100.f, "..\\src\\textures\\background\\Saves\\save.png");
+    Button s1(110.f, 100.f, window, "..\\src\\textures\\background\\Saves\\save.png");
+    Button s2(270.f, 100.f, window, "..\\src\\textures\\background\\Saves\\save.png");
+    Button s3(430.f, 100.f, window, "..\\src\\textures\\background\\Saves\\save.png");
 
-    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
-    Button del1(110.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
-    Button del2(270.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
-    Button del3(430.f, 230.f, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button back(170.f, 300.f, window, "..\\src\\textures\\background\\Saves\\powrot.png");
+    Button del1(110.f, 230.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button del2(270.f, 230.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
+    Button del3(430.f, 230.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\usun.png");
     if (option.getLanguage() == Language::ENG) {
         back.setNewTexturePath("..\\src\\textures\\background\\Saves\\go_back.png");
         del1.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
         del2.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
         del3.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\delete.png");
     }
-    Button yes(364.f, 195.f, "..\\src\\textures\\GUI\\checkbox_yes.png");
-    Button no(274.f, 195.f, "..\\src\\textures\\GUI\\checkbox_no.png");
+    Button yes(364.f, 195.f, window, "..\\src\\textures\\GUI\\checkbox_yes.png");
+    Button no(274.f, 195.f, window, "..\\src\\textures\\GUI\\checkbox_no.png");
     sf::Texture sure;
     if (!sure.loadFromFile("..\\src\\textures\\background\\MainMenu\\ENG\\you_sure.png") && option.getLanguage() == Language::ENG) {
         std::cerr << "Failed to load texture from file: " << "..\\src\\textures\\background\\MainMenu\\ENG\\you_sure.png" << std::endl;
@@ -2043,10 +2044,10 @@ void game::optionsG (sf::RenderWindow* window) {
         std::cerr << "Failed to load texture from file: " << "..\\src\\options\\options.txt" << std::endl;
         throw std::runtime_error("Failed to load texture from file: ..\\src\\options\\options.txt");
     }
-    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    Button general(66.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, window, "..\\src\\textures\\background\\Saves\\powrot.png");
     std::string languagePath = "..\\src\\textures\\background\\Options\\PL\\jezyk.png";
     std::string tutorialsPath = "..\\src\\textures\\background\\Options\\PL\\samouczki.png";
     if (option.getLanguage() == Language::ENG) {
@@ -2073,10 +2074,10 @@ void game::optionsG (sf::RenderWindow* window) {
     tutorial.setPosition({scale * 15.f, scale * 120.f});
     lang.scale({scale, scale});
     tutorial.scale({scale, scale});
-    Button checkboxOff(415.f, 120.f, "..\\src\\textures\\GUI\\checkbox_no.png");
-    Button checkboxOn(415.f, 120.f, "..\\src\\textures\\GUI\\checkbox_yes.png");
-    Button currentLng(370.f, 70.f, "..\\src\\textures\\background\\Options\\ENG\\eng.png");
-    Button nextLng(370.f, 105.f, "..\\src\\textures\\background\\Options\\PL\\pl.png");
+    Button checkboxOff(415.f, 120.f, window, "..\\src\\textures\\GUI\\checkbox_no.png");
+    Button checkboxOn(415.f, 120.f, window, "..\\src\\textures\\GUI\\checkbox_yes.png");
+    Button currentLng(370.f, 70.f, window, "..\\src\\textures\\background\\Options\\ENG\\eng.png");
+    Button nextLng(370.f, 105.f, window, "..\\src\\textures\\background\\Options\\PL\\pl.png");
     if (option.getLanguage() == Language::PL) {
         currentLng.setNewTexturePath("..\\src\\textures\\background\\Options\\PL\\pl.png");
         nextLng.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\eng.png");
@@ -2182,10 +2183,10 @@ void game::optionsG (sf::RenderWindow* window) {
 }
 
 bool game::optionsGraph (sf::RenderWindow* window) {
-    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    Button general(66.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, window, "..\\src\\textures\\background\\Saves\\powrot.png");
     std::string limPath = "..\\src\\textures\\background\\Options\\PL\\limit_FPS.png";
     std::string modePath = "..\\src\\textures\\background\\Options\\PL\\tryb_wyswietlania.png";
     std::string resolutionPath = "..\\src\\textures\\background\\Options\\PL\\rozdzielcosc.png";
@@ -2225,9 +2226,9 @@ bool game::optionsGraph (sf::RenderWindow* window) {
     display.scale({scale, scale});
     res.scale({scale, scale});
 
-    Button currentFPS(395.f, 70.f, "..\\src\\textures\\background\\Options\\ENG\\60.png");
-    Button secondFPS(395.f, 105.f, "..\\src\\textures\\background\\Options\\ENG\\30.png");
-    Button thirdFPS(395.f, 140.f, "..\\src\\textures\\background\\Options\\ENG\\140.png");
+    Button currentFPS(395.f, 70.f, window, "..\\src\\textures\\background\\Options\\ENG\\60.png");
+    Button secondFPS(395.f, 105.f, window, "..\\src\\textures\\background\\Options\\ENG\\30.png");
+    Button thirdFPS(395.f, 140.f, window, "..\\src\\textures\\background\\Options\\ENG\\140.png");
     if (option.getFPS() == FPS::_30) {
         currentFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\30.png");
         secondFPS.setNewTexturePath("..\\src\\textures\\background\\Options\\ENG\\60.png");
@@ -2250,9 +2251,9 @@ bool game::optionsGraph (sf::RenderWindow* window) {
         f3 = "..\\src\\textures\\background\\Options\\PL\\okno.png";
     }
 
-    Button currentMode(370.f, 120.f, f1);
-    Button secondMode(370.f, 155.f, f2);
-    Button thirdMode(370.f, 190.f, f3);
+    Button currentMode(370.f, 120.f, window, f1);
+    Button secondMode(370.f, 155.f, window, f2);
+    Button thirdMode(370.f, 190.f, window, f3);
     if (option.getMode() == Mode::borderless) {
         currentMode.setNewTexturePath(f2);
         secondMode.setNewTexturePath(f1);
@@ -2262,9 +2263,9 @@ bool game::optionsGraph (sf::RenderWindow* window) {
         secondMode.setNewTexturePath(f1);
         thirdMode.setNewTexturePath(f2);
     }
-    Button currentRes(395.f, 170.f, "..\\src\\textures\\background\\Options\\1080p.png");
-    Button secondRes(395.f, 205.f, "..\\src\\textures\\background\\Options\\360p.png");
-    Button thirdRes(395.f, 240.f, "..\\src\\textures\\background\\Options\\1440p.png");
+    Button currentRes(395.f, 170.f, window, "..\\src\\textures\\background\\Options\\1080p.png");
+    Button secondRes(395.f, 205.f, window, "..\\src\\textures\\background\\Options\\360p.png");
+    Button thirdRes(395.f, 240.f,window, "..\\src\\textures\\background\\Options\\1440p.png");
     if (option.getResolution() == Resolution::p360) {
         currentRes.setNewTexturePath("..\\src\\textures\\background\\Options\\360p.png");
         secondRes.setNewTexturePath("..\\src\\textures\\background\\Options\\1080p.png");
@@ -2521,10 +2522,10 @@ bool game::optionsGraph (sf::RenderWindow* window) {
 }
 
 bool game::optionsS (sf::RenderWindow* window) {
-    Button general(66.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
-    Button sound(247.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
-    Button graphics(435.f, 10.f, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
-    Button back(170.f, 300.f, "..\\src\\textures\\background\\Saves\\powrot.png");
+    Button general(66.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\ogolne.png");
+    Button sound(247.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\dzwiek.png");
+    Button graphics(435.f, 10.f, window, "..\\src\\textures\\background\\Options\\PL\\grafika.png");
+    Button back(170.f, 300.f, window, "..\\src\\textures\\background\\Saves\\powrot.png");
     std::string enviromentPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_dzwiekow_otoczenia.png";
     std::string effectPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_efektow_dzwiekowych.png";
     std::string musicPath = "..\\src\\textures\\background\\Options\\PL\\glosnosc_muzyki.png";
@@ -2661,9 +2662,9 @@ bool game::optionsS (sf::RenderWindow* window) {
 }
 
 bool game::pauseMenu (sf::RenderWindow* window) {
-    Button options(170.f, 200.f, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
-    Button quit(270.f, 280.f, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
+    Button options(170.f, 200.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\opcje_button.png");
+    Button quit(270.f, 280.f, window, "..\\src\\textures\\background\\MainMenu\\PL\\wyjdz_button.png");
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
     if (option.getLanguage() == Language::ENG) {
         options.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\options_button.png");
         quit.setNewTexturePath("..\\src\\textures\\background\\MainMenu\\ENG\\quit_button.png");
@@ -2706,16 +2707,12 @@ bool game::pauseMenu (sf::RenderWindow* window) {
 }
 
 void game::worldMap (sf::RenderWindow* window) {
-    Button back(593.f, 44.f, "..\\src\\textures\\GUI\\x.png");
-    Button forestButton(100.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    Button cavesButton(200.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    Button icePeaksButton(300.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    Button swampButton(400.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-    Button volcanoButton(500.f, 100.f, "..\\src\\textures\\GUI\\32x32border.png");
-
-    // if (!isUnlocked(Location::Forest)) {
-    //
-    // }
+    Button back(593.f, 44.f, window, "..\\src\\textures\\GUI\\x.png");
+    Button forestButton(100.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    Button cavesButton(200.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    Button icePeaksButton(300.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    Button swampButton(400.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
+    Button volcanoButton(500.f, 100.f, window, "..\\src\\textures\\GUI\\32x32border.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
@@ -2770,12 +2767,12 @@ void game::worldMap (sf::RenderWindow* window) {
 }
 
 void game::city (sf::RenderWindow* window) {
-    HUD gui(hero, &time);
-    Button forge(60.f, 170.f, "..\\src\\textures\\background\\City\\Buildings\\blacksmith.png");
-    Button tavern_building(420.f, 190.f, "..\\src\\textures\\background\\City\\Buildings\\tavern.png");
-    Button gate(246.f, 100.f, "..\\src\\textures\\background\\City\\Buildings\\city_gate.png");
-    Button church_building(360.f, 143.f, "..\\src\\textures\\background\\City\\Buildings\\church.png");
-    Button inv(15.f, 45.f, "..\\src\\textures\\GUI\\32x32border.png");
+    HUD gui(hero, &time, window);
+    Button forge(60.f, 170.f, window, "..\\src\\textures\\background\\City\\Buildings\\blacksmith.png");
+    Button tavern_building(420.f, 190.f, window, "..\\src\\textures\\background\\City\\Buildings\\tavern.png");
+    Button gate(246.f, 100.f, window, "..\\src\\textures\\background\\City\\Buildings\\city_gate.png");
+    Button church_building(360.f, 143.f, window, "..\\src\\textures\\background\\City\\Buildings\\church.png");
+    Button inv(15.f, 45.f, window, "..\\src\\textures\\GUI\\32x32border.png");
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {
