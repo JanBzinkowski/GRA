@@ -1,5 +1,0 @@
-C:\mingw64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=C:/mingw64/bin/mingw32-make.exe -DCMAKE_C_COMPILER=C:/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER=C:/mingw64/bin/g++.exe -G "MinGW Makefiles" -S C:\Users\janek\Desktop\gra\GRA -B C:\Users\janek\Desktop\gra\GRA\cmake-build-release-mingw-ucrt
--- Found SFML 3.0.0 in C:/SFML/SFML-3.0.0/lib/cmake/SFML
--- Configuring done (0.2s)
--- Generating done (0.1s)
--- Build files have been written to: C:/Users/janek/Desktop/gra/GRA/cmake-build-release-mingw-ucrt

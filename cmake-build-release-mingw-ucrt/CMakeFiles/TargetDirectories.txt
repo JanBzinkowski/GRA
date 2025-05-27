@@ -1,3 +1,0 @@
-C:/Users/janek/Desktop/gra/GRA/cmake-build-release-mingw-ucrt/CMakeFiles/GRA.dir
-C:/Users/janek/Desktop/gra/GRA/cmake-build-release-mingw-ucrt/CMakeFiles/edit_cache.dir
-C:/Users/janek/Desktop/gra/GRA/cmake-build-release-mingw-ucrt/CMakeFiles/rebuild_cache.dir
