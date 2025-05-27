@@ -1143,10 +1143,10 @@ void game::blacksmith (sf::RenderWindow* window) {
                     break;
                 }
             }
-            if (checkEqp && hero->getAvaiableAmount() > 0) {
+            if (checkEqp) {
                 for (int i = 0; i < eqp.size(); ++i) {
                     if (eqp[i].second.isPressed(mousePos)) {
-                        if (blacksmithInv[isDragged].getType() == types[i]) {
+                        if ((blacksmithInv[isDragged].getType() == types[i]) && (hero->checkIfEqp(types[i]) == hero->getAvaiableAmount() > 0)) {
                             if (hero->checkIfEqp(types[i])) {
                                 backpack[hero->get1stAvaiableIndex()].setNewTexturePath(hero->getItemFromEqp(types[i]).getPath());
                                 texts_inv[hero->get1stAvaiableIndex()] = hero->getItemFromEqp(types[i]).getData();
@@ -1199,7 +1199,7 @@ void game::blacksmith (sf::RenderWindow* window) {
                         }
                     }
                 }
-            if (checkEqp && !checkShop && hero->getAvaiableAmount() > 0) {
+            if (checkEqp && !checkShop) {
                 for (int i = 0; i < eqp.size(); ++i) {
                     if (eqp[i].second.isPressed(mousePos)) {
                         if (hero->getItemFromInventory(isDraggedInv).getType() == types[i]) {
